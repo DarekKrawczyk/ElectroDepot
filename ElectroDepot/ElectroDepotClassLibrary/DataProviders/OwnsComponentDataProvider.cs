@@ -10,7 +10,7 @@ namespace ElectroDepotClassLibrary.DataProviders
     {
         public OwnsComponentDataProvider(string url) : base(url) { }
         #region API Calls
-        public async Task<bool> CreateOwnComponent(OwnsComponent ownsComponent)
+        public async Task<OwnsComponent> CreateOwnComponent(OwnsComponent ownsComponent)
         {
             var json = JsonSerializer.Serialize(ownsComponent.ToCreateDTO());
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -18,7 +18,19 @@ namespace ElectroDepotClassLibrary.DataProviders
             string url = OwnsComponentEndpoints.Create();
             var response = HTTPClient.PostAsync(url, content).Result;
 
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+
+                var resultJson = await response.Content.ReadAsStringAsync();
+                OwnsComponentDTO images = JsonSerializer.Deserialize<OwnsComponentDTO>(resultJson, options);
+                return images.ToModel();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<IEnumerable<OwnsComponent>> GetAllOwnsComponents()
@@ -34,8 +46,8 @@ namespace ElectroDepotClassLibrary.DataProviders
                     options.PropertyNameCaseInsensitive = true;
 
                     var json = await response.Content.ReadAsStringAsync();
-                    IEnumerable<OwnsComponentDTO> components = JsonSerializer.Deserialize<IEnumerable<OwnsComponentDTO>>(json, options);
-                    return components.Select(x=>x.ToModel()).ToList();
+                    IEnumerable<OwnsComponentDTO> images = JsonSerializer.Deserialize<IEnumerable<OwnsComponentDTO>>(json, options);
+                    return images.Select(x=>x.ToModel()).ToList();
                 }
                 else
                 {

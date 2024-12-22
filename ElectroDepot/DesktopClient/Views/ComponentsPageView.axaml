@@ -3,11 +3,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="using:DesktopClient.ViewModels"
              xmlns:cont="using:DesktopClient.Containers"
+             xmlns:CustomControls="using:DesktopClient.CustomControls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="720"
              x:Class="DesktopClient.Views.ComponentsPageView"
              x:DataType="vm:ComponentsPageViewModel">
-  
+
   <UserControl.Styles>
     <StyleInclude Source="avares://DesktopClient/Styles/ButtonDefaultOverrideStyle.axaml"/>
     <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
@@ -16,78 +17,492 @@
     <StyleInclude Source="avares://DesktopClient/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
   </UserControl.Styles>
 
-  <Grid ColumnDefinitions="10, *, 10">
-    <Grid RowDefinitions="10, auto, 10, *, 10, auto, 10" Grid.Column="1">
+  <UserControl.Resources>
+    <MenuFlyout x:Key="SharedMenuFlyout">
+      <MenuItem Header="From device" Command="{Binding LoadImageFromDeviceCommand}"/>
+      <MenuItem Header="Find in internet" IsEnabled="False"/>
+      <MenuItem Header="From default images" Command="{Binding OpenPredefinedImagesCommand}"/>
+    </MenuFlyout>
+    <Flyout Placement="Bottom" x:Key="BasicFlyout">
+      <Panel Width="100" Height="100">
+        <TextBlock Text="Flyout Content!" />
+      </Panel>
+    </Flyout>
+  </UserControl.Resources>
 
-        <!-- Header with filters, selectors and search-->
-        <StackPanel Grid.Row="1" 
-                    Spacing="10"
-                    Orientation="Horizontal"
-                    VerticalAlignment="Center">
-          <!-- Manufacturer -->
-          <Label HorizontalAlignment="Right">Manufacturer</Label>
-          <ComboBox ItemsSource="{Binding Manufacturers}" SelectedItem="{Binding SelectedManufacturer, Mode=TwoWay}" PlaceholderText="">
-          </ComboBox>
+  <Grid ColumnDefinitions="0, *, 0" x:Name="MainGrid">
+    <DockPanel Grid.Column="1">
+      <TabControl TabStripPlacement="Top"
+                  SelectedIndex="{Binding SelectedTab}">
+        <TabItem Header="Collection">
+          <Grid RowDefinitions="auto, *, auto">
+            <!-- Header with filters, selectors, and search -->
+            <StackPanel Grid.Row="0"
+                        Spacing="10"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        Margin="0 10 0 10">
+              <!-- Manufacturer -->
+              <Label HorizontalAlignment="Right">Manufacturer</Label>
+              <ComboBox ItemsSource="{Binding Manufacturers}" SelectedItem="{Binding SelectedManufacturer, Mode=TwoWay}" PlaceholderText="">
+              </ComboBox>
 
-          <!-- Separator -->
-          <Border Width="4" 
-                  Margin="0, 0"
-                  VerticalAlignment="Stretch"/>
-        
-          <!-- Category -->
-          <Label HorizontalAlignment="Right">Category</Label>
-          <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" PlaceholderText="">
-          </ComboBox>
+              <!-- Separator -->
+              <Border Width="4"
+                      Margin="0, 0"
+                      VerticalAlignment="Stretch"/>
 
-          <!-- Separator -->
-          <Border Width="4"
-                  Margin="0, 0"
-                  VerticalAlignment="Stretch"/>
+              <!-- Category -->
+              <Label HorizontalAlignment="Right">Category</Label>
+              <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" PlaceholderText="">
+              </ComboBox>
 
-          <!-- Only avaiable -->
-          <ToggleButton IsChecked="{Binding OnlyAvailableFlag, Mode=TwoWay}">Only available</ToggleButton>
+              <!-- Separator -->
+              <Border Width="4"
+                      Margin="0, 0"
+                      VerticalAlignment="Stretch"/>
 
-          <!-- Separator -->
-          <Border Width="4"
-                  Margin="0, 0"
-                  VerticalAlignment="Stretch"/>
+              <!-- Only available -->
+              <ToggleButton IsChecked="{Binding OnlyAvailableFlag, Mode=TwoWay}">Only available</ToggleButton>
 
+              <!-- Separator -->
+              <Border Width="4"
+                      Margin="0, 0"
+                      VerticalAlignment="Stretch"/>
 
-          <!-- Search bar -->
-          <TextBox Watermark="Search by Name or Description"
-                   Text="{Binding SearchByNameOrDesc}"
-                   />
+              <!-- Search bar -->
+              <TextBox Watermark="Search by Name or Description"
+                       Text="{Binding SearchByNameOrDesc}" />
 
-          <!-- Separator -->
-          <Border Width="4"
-                  Margin="0, 0"
-                  VerticalAlignment="Stretch"/>
+              <!-- Separator -->
+              <Border Width="4"
+                      Margin="0, 0"
+                      VerticalAlignment="Stretch"/>
 
-          <!-- Clear settings -->
-          <Button Command="{Binding ClearAllFiltersAndSorting}">Clear settings</Button>
-        </StackPanel>
+              <!-- Clear settings -->
+              <Button Command="{Binding ClearAllFiltersAndSorting}">Clear settings</Button>
+            </StackPanel>
 
-      <!-- Components grid -->
-      <DataGrid ItemsSource="{Binding Components}"
-                AutoGenerateColumns="False" IsReadOnly="True"
-                GridLinesVisibility="All"
-                Grid.Row="3"
-                BorderThickness="1" BorderBrush="Gray">
-        <DataGrid.Columns>
-          <DataGridTextColumn Header="Manufacturer" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Manufacturer}" Width="200"/>
-          <DataGridTextColumn Header="Name" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Name}" Width="200"/>
-          <DataGridTextColumn Header="Category" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Category.Name}" Width="200"/>
-          <DataGridTextColumn Header="Available" x:DataType="cont:DetailedComponentContainer" Binding="{Binding AvailableAmount}" Width="200"/>
-          <DataGridTextColumn Header="Description" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Description}" Width="*"/>
-        </DataGrid.Columns>
-      </DataGrid>
-      
-      <!-- Footer with buttons -->
-      <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
-        <Button>Delete</Button>
-        <Button>Update</Button>
-        <Button>Add</Button>
-      </StackPanel>
-    </Grid>
+            <!-- Components grid -->
+            <DataGrid ItemsSource="{Binding Components}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      x:Name="Comps"
+                      GridLinesVisibility="All"
+                      Grid.Row="1"
+                      BorderThickness="1"
+                      BorderBrush="Gray"
+                      HorizontalAlignment="Stretch"
+                      DoubleTapped="DataGrid_DoubleTapped"
+                      VerticalAlignment="Stretch">
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Name}" Width="200"/>
+                <DataGridTextColumn Header="Manufacturer" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Manufacturer}" Width="200"/>
+                <DataGridTextColumn Header="Category" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Category.Name}" Width="200"/>
+                <DataGridTextColumn Header="Available" x:DataType="cont:DetailedComponentContainer" Binding="{Binding AvailableAmount}" Width="200"/>
+                <DataGridTextColumn Header="Description" x:DataType="cont:DetailedComponentContainer" Binding="{Binding ShortDescription}" Width="*"/>
+              </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Footer with buttons -->
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        Spacing="10"
+                        HorizontalAlignment="Right"
+                        Margin="0 10 0 10">
+              <Button IsEnabled="{Binding PreviewEnabled}" Command="{Binding GoToPreviewCommand}">Preview</Button>
+              <!--<Button IsEnabled="{Binding PreviewEnabled}">Modify</Button>-->
+              <Button Command="{Binding GoToAddNewCommand}">Add new</Button>
+            </StackPanel>
+          </Grid>
+        </TabItem>
+        <TabItem Header="Add" >
+          <Grid RowDefinitions="*" ColumnDefinitions="60*, auto, auto">
+            <!-- Left section -->
+            <Grid Grid.Column="0" RowDefinitions="auto, *, auto">
+              <!-- Component basic data -->
+              <Grid Grid.Row="0" ColumnDefinitions="auto, auto, 60*">
+                <!-- Image + Find/Upload buttons-->
+                <Grid Grid.Column="0">
+                  <StackPanel Spacing="10">
+                    <Border BorderBrush="Black" BorderThickness="1">
+                      <Image Source="{Binding CurrentAddPredefinedImage}"
+                             Height="142"
+                             Margin="0"></Image>
+                    </Border>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                      <Button Content="Upload image" Flyout="{StaticResource SharedMenuFlyout}"/>
+                      <Button Command="{Binding Add_ClearImageCommand}">Clear</Button>
+                    </StackPanel>
+                  </StackPanel>
+                </Grid>
+
+                <!-- Separator-->
+                <Grid Grid.Column="1">
+                  <Border Width ="1"
+                          Background="{DynamicResource UIMediumGray}"
+                          Margin="10,0"
+                          HorizontalAlignment="Stretch"/>
+                </Grid>
+
+                <!-- Component Name/Manufacturer/Datasheet/Category labels -->
+                <Grid Grid.Column="2">
+                  <StackPanel>
+                    <!-- First row -->
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                      <!-- Name -->
+                      <StackPanel Orientation="Vertical">
+                        <Label FontWeight="Bold" HorizontalAlignment="Left">Name</Label>
+                        <TextBox HorizontalAlignment="Left" Text="{Binding Add_ComponentName}"></TextBox>
+                      </StackPanel>
+
+                      <!-- Manufacturer -->
+                      <StackPanel Orientation="Vertical">
+                        <Label FontWeight="Bold" HorizontalAlignment="Left">Manufacturer</Label>
+                        <TextBox HorizontalAlignment="Left" Text="{Binding Add_Manufacturer}"></TextBox>
+                      </StackPanel>
+                    </StackPanel>
+
+                    <!-- Second row - Category -->
+                    <StackPanel Orientation="Vertical">
+                      <Label FontWeight="Bold" HorizontalAlignment="Left">Category</Label>
+                      <ComboBox ItemsSource="{Binding Categories}" HorizontalAlignment="Left" SelectedItem="{Binding Add_Category}"></ComboBox>
+                    </StackPanel>
+
+                    <!-- Third row -->
+                    <StackPanel Orientation="Vertical">
+                      <Label FontWeight="Bold" HorizontalAlignment="Left">Datasheet</Label>
+                      <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBox HorizontalAlignment="Stretch" Text="{Binding Add_DatasheetLink}"></TextBox>
+                        <Button IsEnabled="False">Preview</Button>
+                      </StackPanel>
+                    </StackPanel>
+                  </StackPanel>
+
+                </Grid>
+              </Grid>
+
+              <!-- Component description -->
+              <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                  <!-- 30% for Short description -->
+                  <RowDefinition Height="3*" />
+                  <!-- 70% for Full description -->
+                  <RowDefinition Height="7*" />
+                </Grid.RowDefinitions>
+
+                <!-- Short Description Section -->
+                <Grid Grid.Row="0">
+                  <Grid.RowDefinitions>
+                    <!-- Short description Label -->
+                    <RowDefinition Height="Auto" />
+                    <!-- Short description TextBox -->
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+
+                  <Label Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Left">Short description</Label>
+                  <TextBox Grid.Row="1"
+                           TextWrapping="Wrap"
+                           VerticalContentAlignment="Top"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch"
+                           Text="{Binding Add_ShortDescription}"/>
+                </Grid>
+
+                <!-- Full Description Section -->
+                <Grid Grid.Row="1">
+                  <Grid.RowDefinitions>
+                    <!-- Full description Label -->
+                    <RowDefinition Height="Auto" />
+                    <!-- Full description TextBox -->
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+
+                  <Label Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Left">Full description</Label>
+                  <TextBox Grid.Row="1"
+                           Text="{Binding Add_FullDescription}"
+                           TextWrapping="Wrap"
+                           VerticalContentAlignment="Top"
+                           AcceptsReturn="True"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch" />
+                </Grid>
+              </Grid>
+
+              <!-- Component buttons -->
+              <Grid Grid.Row="2"
+                    Margin="0 10 0 10">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="10">
+                  <Button IsEnabled="{Binding Add_CanAdd}" Command="{Binding Add_AddComponentCommand}">Add</Button>
+                  <Button Command="{Binding Add_ClearComponentCommand}">Clear</Button>
+                  <Button Command="{Binding NavigateToCollectionCommand}">Cancel</Button>
+                </StackPanel>
+              </Grid>
+            </Grid>
+
+            <!-- Separator-->
+            <Grid Grid.Column="1">
+              <Border Width="2"
+                      Background="{DynamicResource UIMediumGray}"
+                      Margin="10,5"
+                      HorizontalAlignment="Stretch"/>
+            </Grid>
+
+            <!-- Right section -->
+            <Grid Grid.Column="2" RowDefinitions="auto, 20*, auto, 80*">
+              <!-- Purchases -->
+              <StackPanel Spacing="10">
+                <Label Grid.Row="0" FontWeight="Bold">Purchased</Label>
+                <TextBox Grid.Row="1" Height="110">
+                  Insert files here
+                </TextBox>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10">
+                  <Button IsEnabled="False">Import</Button>
+                  <Button IsEnabled="False">Clean</Button>
+                </StackPanel>
+              </StackPanel>
+            </Grid>
+
+          </Grid>
+        </TabItem>
+        <TabItem Header="Preview" IsEnabled="{Binding PreviewEnabled}">
+          <Grid RowDefinitions="*" ColumnDefinitions="auto, auto, *">
+            <!-- Left section -->
+            <Grid Grid.Column="0" RowDefinitions="auto, *, auto">
+              <!-- Component basic data -->
+              <Grid Grid.Row="0" ColumnDefinitions="auto, auto, 60*">
+                <!-- Image + Find/Upload buttons-->
+                <Grid Grid.Column="0">
+                  <StackPanel Spacing="10">
+                    <Border BorderBrush="Black" BorderThickness="1">
+                      <Image Source="{Binding SelectedComponent.Image}"
+                             Height="173"
+                             Margin="0"></Image>
+                    </Border>
+                  </StackPanel>
+                </Grid>
+
+                <!-- Separator-->
+                <Grid Grid.Column="1">
+                  <Border Width ="1"
+                          Background="{DynamicResource UIMediumGray}"
+                          Margin="10,0"
+                          HorizontalAlignment="Stretch"/>
+                </Grid>
+
+                <!-- Component Name/Manufacturer/Datasheet/Category labels -->
+                <Grid Grid.Column="2">
+                  <StackPanel>
+                    <!-- First row -->
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                      <!-- Name -->
+                      <StackPanel Orientation="Vertical">
+                        <Label FontWeight="Bold" HorizontalAlignment="Left">Name</Label>
+                        <Label HorizontalAlignment="Left" Content="{Binding SelectedComponent.Name}">Name</Label>
+                      </StackPanel>
+
+                      <!-- Manufacturer -->
+                      <StackPanel Orientation="Vertical">
+                        <Label FontWeight="Bold" HorizontalAlignment="Left">Manufacturer</Label>
+                        <Label HorizontalAlignment="Left" Content="{Binding SelectedComponent.Manufacturer}">Manufacturer</Label>
+                      </StackPanel>
+                      <StackPanel Orientation="Vertical">
+                        <Label FontWeight="Bold" HorizontalAlignment="Left">Category</Label>
+                        <Label Content="{Binding SelectedComponent.Category.Name}" HorizontalAlignment="Left">Category</Label>
+                      </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                      <StackPanel Orientation="Vertical">
+                        <Label FontWeight="Bold" HorizontalAlignment="Left">Owned</Label>
+                        <Label HorizontalAlignment="Left" Content="{Binding SelectedComponent.OwnedAmount}">Owned</Label>
+                      </StackPanel>
+                      <StackPanel Orientation="Vertical">
+                        <Label FontWeight="Bold" HorizontalAlignment="Left">Used</Label>
+                        <Label HorizontalAlignment="Left" Content="{Binding SelectedComponent.UsedInProjects}">Used</Label>
+                      </StackPanel>
+                      <StackPanel Orientation="Vertical">
+                        <Label FontWeight="Bold" HorizontalAlignment="Left">Available</Label>
+                        <Label HorizontalAlignment="Left" Content="{Binding SelectedComponent.AvailableAmount}">Available</Label>
+                      </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                    </StackPanel>
+
+                    <!-- Third row -->
+                    <StackPanel Orientation="Vertical">
+                      <Label FontWeight="Bold" HorizontalAlignment="Left">Datasheet</Label>
+                      <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button IsEnabled="{Binding Preview_CanPreview}" Command="{Binding Preview_OpenDatasheetLinkCommand}">Preview</Button>
+                        <Button IsEnabled="{Binding Preview_CanPreview}" Command="{Binding Preview_CopyToClipboardCommand}">Copy to clibboard</Button>
+                      </StackPanel>
+                    </StackPanel>
+                  </StackPanel>
+
+                </Grid>
+              </Grid>
+
+              <!-- Component description -->
+              <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                  <!-- 30% for Short description -->
+                  <RowDefinition Height="3*" />
+                  <!-- 70% for Full description -->
+                  <RowDefinition Height="7*" />
+                </Grid.RowDefinitions>
+
+                <!-- Short Description Section -->
+                <Grid Grid.Row="0">
+                  <Grid.RowDefinitions>
+                    <!-- Short description Label -->
+                    <RowDefinition Height="Auto" />
+                    <!-- Short description TextBox -->
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+
+                  <Label Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Left">Short description</Label>
+                  <TextBox Grid.Row="1"
+                           TextWrapping="Wrap"
+                           VerticalContentAlignment="Top"
+                           HorizontalAlignment="Stretch"
+                           IsReadOnly="True"
+                           VerticalAlignment="Stretch"
+                           Text="{Binding SelectedComponent.LongDescription}"/>
+                </Grid>
+
+                <!-- Full Description Section -->
+                <Grid Grid.Row="1" Margin="0 0 0 10">
+                  <Grid.RowDefinitions>
+                    <!-- Full description Label -->
+                    <RowDefinition Height="Auto" />
+                    <!-- Full description TextBox -->
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+
+                  <Label Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Left">Full description</Label>
+                  <TextBox Grid.Row="1"
+                           Text="{Binding SelectedComponent.LongDescription}"
+                           TextWrapping="Wrap"
+                           VerticalContentAlignment="Top"
+                           AcceptsReturn="True"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch" />
+                </Grid>
+              </Grid>
+
+            </Grid>
+
+            <!-- Separator-->
+            <Grid Grid.Column="1">
+              <Border Width="2"
+                      Background="{DynamicResource UIMediumGray}"
+                      Margin="10,5"
+                      HorizontalAlignment="Stretch"/>
+            </Grid>
+
+            <!-- Right section -->
+            <Grid Grid.Column="2" RowDefinitions="50*, auto, auto">
+              <!-- Upper section -->
+              <Grid Grid.Row="0" ColumnDefinitions="50*, auto, 50*">
+                <!-- Purchases -->
+                <Grid Grid.Column="0" RowDefinitions="auto, *">
+                  <Label Grid.Row="0" FontWeight="Bold">Purchased</Label>
+                  <DataGrid ItemsSource="{Binding PurchasesForSelected}"
+                            Grid.Row="1"
+                            AutoGenerateColumns="False"
+                            IsReadOnly="True"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            GridLinesVisibility="All"
+                            BorderThickness="1"
+                            BorderBrush="Gray">
+                    <DataGrid.Columns>
+                      <DataGridTextColumn Header="Supplier" x:DataType="cont:DetailedItemPurchaseContainer" Binding="{Binding SupplierName}" Width="*" />
+                      <DataGridTextColumn Header="Purchase date" x:DataType="cont:DetailedItemPurchaseContainer" Binding="{Binding PurchaseDate}" Width="140" />
+                      <DataGridTextColumn Header="Amount" x:DataType="cont:DetailedItemPurchaseContainer" Binding="{Binding BoughtAmount}" Width="90" />
+                    </DataGrid.Columns>
+                  </DataGrid>
+                </Grid>
+
+                <!-- Separator -->
+                <Grid Grid.Column="1">
+                  <Border Width="2"
+                          Background="{DynamicResource UIMediumGray}"
+                          Margin="10,0" />
+                </Grid>
+
+                <!-- Projects  -->
+                <Grid Grid.Column="2" RowDefinitions="auto, *">
+                  <Label Grid.Row="0" FontWeight="Bold">Used in projects</Label>
+                  <DataGrid ItemsSource="{Binding ProjectsForSelected}"
+                            Grid.Row="1"
+                            AutoGenerateColumns="False"
+                            IsReadOnly="True"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            GridLinesVisibility="All"
+                            BorderThickness="1"
+                            BorderBrush="Gray">
+                    <DataGrid.Columns>
+                      <DataGridTextColumn Header="Project" x:DataType="cont:DetailedItemProjectContainer" Binding="{Binding ProjectName}" Width="*" />
+                      <DataGridTextColumn Header="Amount" x:DataType="cont:DetailedItemProjectContainer" Binding="{Binding UsedInProject}" Width="90" />
+                    </DataGrid.Columns>
+                  </DataGrid>
+                </Grid>
+              </Grid>
+
+              <!-- Separator -->
+              <Grid Grid.Row="1">
+                <Border Height="2"
+                        Background="{DynamicResource UIMediumGray}"
+                        Margin="0,10" />
+              </Grid>
+
+              <!-- Bottom section -->
+              <Grid Grid.Row="2">
+                <StackPanel>
+                  <Label FontWeight="Bold">Find in suppliers</Label>
+                  <ScrollViewer x:Name="HorizontalScrollViewer"
+                                HorizontalScrollBarVisibility="Hidden"
+                                VerticalScrollBarVisibility="Disabled" Margin="0 0 0 10">
+                    <ItemsControl ItemsSource="{Binding Suppliers}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <UniformGrid Rows="1" />
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <CustomControls:SupplierNodeButton Image="{Binding Supplier.Image}"
+                                                             Command="{Binding ItemClickedCommand}"/>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </ScrollViewer>
+                </StackPanel>
+              </Grid>
+            </Grid>
+
+          </Grid>
+        </TabItem>
+      </TabControl>
+    </DockPanel>
+    <Popup Grid.Column="1"
+           IsOpen="{Binding IsSelectingPredefinedImagePopupOpen}"
+           IsLightDismissEnabled="True"
+               PlacementMode="AnchorAndGravity"
+               Width="{Binding Bounds.Width, ElementName=MainGrid}"
+               Height="{Binding Bounds.Height, ElementName=MainGrid}">
+      <Border Background="#80D3D3D3" CornerRadius="5" BorderBrush="Black" BorderThickness="1">
+        <CustomControls:ImageSelector CancelCommand="{Binding ClosePredefinedImagesCommand}"
+                                      SelectCommand="{Binding SelectPredefinedImagesCommand}"
+                                      SelectedImage="{Binding SelectedPredefinedImage}"
+                                      MyText="{Binding MyText}"
+                                      ImageContainers="{Binding PredefinedImages}">
+        </CustomControls:ImageSelector>
+      </Border>
+    </Popup>
   </Grid>
 </UserControl>

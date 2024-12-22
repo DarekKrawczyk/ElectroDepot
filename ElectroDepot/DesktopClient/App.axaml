@@ -17,6 +17,7 @@
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source='avares://DesktopClient/CustomControls/ImageSelector.axaml' />
         <ResourceInclude Source='avares://DesktopClient/CustomControls/SupplierNodeButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/CustomControls/ComponentNodeButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/CustomControls/ProjectNodeButton.axaml' />

@@ -77,6 +77,39 @@ namespace ElectroDepotClassLibrary.DataProviders
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="component"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<ProjectComponent>> GetAllProjectComponentsOfComponents(Component component)
+        {
+            try
+            {
+                string url = ProjectComponentEndpoints.GetAllProjectComponentsOfComponents(component.ID);
+                var response = await HTTPClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    JsonSerializerOptions options = new JsonSerializerOptions();
+                    options.PropertyNameCaseInsensitive = true;
+
+                    var json = await response.Content.ReadAsStringAsync();
+                    IEnumerable<ProjectComponentDTO> projectsOfUser = JsonSerializer.Deserialize<IEnumerable<ProjectComponentDTO>>(json, options);
+
+                    return projectsOfUser.Select(x => x.ToModel()).ToList();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<bool> UpdateProjectComponent(ProjectComponent ProjectComponent)
         {
             var json = JsonSerializer.Serialize(ProjectComponent.ToUpdateDTO());

@@ -6,7 +6,7 @@ namespace ElectroDepotClassLibrary.Stores
     public class UsersStore : RootStore
     {
         private readonly UserDataProvider _userDataProvider;
-        private User _loggedInUser;
+        private User _loggedInUser = new User(id: 1010, name: "test", email: "test@gmail.com", password: "password"); // Raw from DB!
 
         public User LoggedInUser { get { return _loggedInUser; } }
         public UserDataProvider UsersDP { get { return _userDataProvider; } }

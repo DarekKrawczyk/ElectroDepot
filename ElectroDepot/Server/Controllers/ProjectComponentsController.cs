@@ -64,6 +64,30 @@ namespace Server.Controllers
             return await _context.ProjectComponents.Where(x => x.ProjectID == ID).Select(x => x.ToProjectComponentDTO()).ToListAsync();
         }
 
+        [HttpGet("GetProjectComponentsOfComponents/{ComponentID}")]
+        public async Task<ActionResult<IEnumerable<ProjectComponentDTO>>> GetProjectComponentsOfComponents(int ComponentID)
+        {
+            Component? component = await _context.Components.FindAsync(ComponentID);
+            if(component == null)
+            {
+                return NotFound();
+            }
+            
+            IEnumerable<ProjectComponent> project = await (from projectComponent in _context.ProjectComponents
+                                                           join comp in _context.Components
+                                                           on projectComponent.ComponentID equals comp.ComponentID
+                                                           where projectComponent.ComponentID == ComponentID
+                                                           select new ProjectComponent()
+                                                           {
+                                                               ProjectComponentID = projectComponent.ComponentID,
+                                                               ComponentID = projectComponent.ComponentID,
+                                                               ProjectID = projectComponent.ProjectID,
+                                                               Quantity = projectComponent.Quantity,
+                                                           }).ToListAsync();
+
+            return Ok(project.Select(x=>x.ToProjectComponentDTO()).ToList());
+        }
+
         /// <summary>
         /// GET: ElectroDepot/ProjectComponents/GetProjectComponentForProject/{ProjectID}/Component/{ComponentID}
         /// </summary>

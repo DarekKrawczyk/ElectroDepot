@@ -6,16 +6,19 @@ namespace ElectroDepotClassLibrary.Stores
     public class PurchasesStore : RootStore
     {
         private readonly PurchaseDataProvider _purchaseDataProvider;
+        private readonly PurchaseItemDataProvider _purchaseItemDataProvider;
         private List<Purchase> _purchases;
 
         public IEnumerable<Purchase> Purchases { get { return _purchases; } }
-        public PurchaseDataProvider DB { get { return _purchaseDataProvider; } }
+        public PurchaseDataProvider PurchaseDP { get { return _purchaseDataProvider; } }
+        public PurchaseItemDataProvider PurchaseItemDP { get { return _purchaseItemDataProvider; } }
 
         public event Action PurchasesLoaded;
 
-        public PurchasesStore(DatabaseStore dbStore, PurchaseDataProvider purchaseDataProvider) : base(dbStore)
+        public PurchasesStore(DatabaseStore dbStore, PurchaseDataProvider purchaseDataProvider, PurchaseItemDataProvider purchaseItemDataProvider) : base(dbStore)
         {
             _purchaseDataProvider = purchaseDataProvider;
+            _purchaseItemDataProvider = purchaseItemDataProvider;
             _purchases = new List<Purchase>();
         }
 
@@ -23,7 +26,7 @@ namespace ElectroDepotClassLibrary.Stores
         {
             _purchases.Clear();
 
-            IEnumerable<Purchase> purchasesFromDB = await _purchaseDataProvider.GetAllPurchases();
+            IEnumerable<Purchase> purchasesFromDB = await _purchaseDataProvider.GetAllPurchasesFromUser(MainStore.UsersStore.LoggedInUser);
             _purchases.AddRange(purchasesFromDB);
 
             PurchasesLoaded?.Invoke();

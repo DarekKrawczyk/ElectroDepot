@@ -9,7 +9,9 @@ namespace ElectroDepotClassLibrary.Services
         private string RootFolder = "ImageStorage";
         private string UsersFolder = "Users";
         private string ProjectsFolder = "Projects";
+        private string ComponentsFolder = "Components";
         private string FullProjectFolder { get { return _path + RootFolder + "\\" + ProjectsFolder + "\\"; } }
+        private string FullComponentsFolder { get { return _path + RootFolder + "\\" + ComponentsFolder + "\\"; } }
         private string FullUsersFolder { get { return _path + RootFolder + "\\" + UsersFolder + "\\"; } }
         public ImageStorageService(string path)
         {
@@ -19,6 +21,11 @@ namespace ElectroDepotClassLibrary.Services
         public string InsertProjectImage(byte[] image)
         {
             return InsertImage(FullProjectFolder, image);
+        }
+
+        public string InsertComponentImage(byte[] image)
+        {
+            return InsertImage(FullComponentsFolder, image);
         }
 
         public string InsertUserImage(byte[] image)
@@ -35,6 +42,11 @@ namespace ElectroDepotClassLibrary.Services
                 image.Save(folder + imageName + "." + ImageFormat.Png.ToString().ToLower(), ImageFormat.Png);
                 return imageName;
             }
+        }
+
+        public void UpdateComponentImage(string imageName, byte[] image)
+        {
+            UpdateImage(FullComponentsFolder, imageName, image);
         }
 
         public void UpdateProjectImage(string imageName, byte[] image)
@@ -60,6 +72,11 @@ namespace ElectroDepotClassLibrary.Services
                 Image image = Image.FromStream(ms);
                 image.Save(fullPath, ImageFormat.Png);
             }
+        }
+
+        public byte[] RetrieveComponentImage(string imageName)
+        {
+            return RetrieveImage(FullComponentsFolder, imageName);
         }
 
         public byte[] RetrieveProjectImage(string imageName)

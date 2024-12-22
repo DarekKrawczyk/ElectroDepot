@@ -8,7 +8,9 @@ namespace ElectroDepotClassLibrary.Utility
         {
             try
             {
-                throw new NotImplementedException();
+                using var memoryStream = new MemoryStream();
+                image.Save(memoryStream);
+                return memoryStream.ToArray();
             }
             catch(Exception ex)
             {

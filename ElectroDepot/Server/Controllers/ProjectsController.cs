@@ -31,7 +31,7 @@ namespace Server.Controllers
         public async Task<ActionResult<ProjectDTO>> CreateProject(CreateProjectDTO project)
         {
             Project newProject = project.ToProject(ISS);
-            
+
             newProject.CreatedAt = DateTime.Now;
 
             _context.Projects.Add(newProject);
@@ -67,6 +67,21 @@ namespace Server.Controllers
             }
 
             return await _context.Projects.Where(x => x.UserID == ID).Select(x => x.ToProjectDTO(ISS)).ToListAsync();
+        }
+
+        [HttpGet("GetProjectOfProjectComponent/{ProjectComponentID}")]
+        public async Task<ActionResult<ProjectDTO>> GetProjectOfProjectComponent(int ProjectComponentID)
+        {
+            ProjectComponent? pc = await _context.ProjectComponents.FindAsync(ProjectComponentID);
+
+            if (pc == null)
+            {
+                return NotFound();
+            }
+
+            Project? project = await _context.Projects.Where(x => x.ProjectID == pc.ProjectID).FirstOrDefaultAsync();
+
+            return Ok(project.ToProjectDTO(ISS));
         }
 
         /// <summary>
@@ -136,7 +151,8 @@ namespace Server.Controllers
                                                                         CategoryID = components.CategoryID,
                                                                         Name = components.Name,
                                                                         Manufacturer = components.Manufacturer,
-                                                                        Description = components.Description
+                                                                        ShortDescription = components.ShortDescription,
+                                                                        LongDescription = components.LongDescription
                                                                     }).ToListAsync();
 
                 List<int> componentsIDs = componentsOfProject.Select(x => x.ComponentID).ToList();
@@ -153,9 +169,9 @@ namespace Server.Controllers
                                                                          }).ToListAsync();
 
                 double result = projectPurchaseItemss.Sum(x => x.Quantity * x.PricePerUnit);
-                return Ok(result);  
+                return Ok(result);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return BadRequest();
             }
@@ -177,17 +193,20 @@ namespace Server.Controllers
                 {
                     return NotFound();
                 }
-                IEnumerable<ComponentDTO> componentsFromProject = await (from projectComponents in _context.ProjectComponents
-                                                                         join components in _context.Components
-                                                                         on projectComponents.ComponentID equals components.ComponentID
-                                                                         where projectComponents.ProjectID == ID
-                                                                         select new ComponentDTO(
-                                                                             components.ComponentID,
-                                                                             components.CategoryID,
-                                                                             components.Name,
-                                                                             components.Manufacturer,
-                                                                             components.Description)
-                                                                       ).ToListAsync();
+                IEnumerable<Component> componentsFromProject = await (from projectComponents in _context.ProjectComponents
+                                                                      join components in _context.Components
+                                                                      on projectComponents.ComponentID equals components.ComponentID
+                                                                      where projectComponents.ProjectID == ID
+                                                                      select new Component
+                                                                      {
+
+                                                                          ComponentID = components.ComponentID,
+                                                                          CategoryID = components.CategoryID,
+                                                                          Name = components.Name,
+                                                                          Manufacturer = components.Manufacturer,
+                                                                          ShortDescription = components.ShortDescription,
+                                                                          LongDescription = components.LongDescription
+                                                                      }).ToListAsync();
                 return Ok(componentsFromProject);
             }
             catch (Exception exception)
@@ -222,7 +241,7 @@ namespace Server.Controllers
                 {
                     ISS.UpdateProjectImage(project.ImageURI, projectDTO.Image);
                 }
-                catch(Exception exception)
+                catch (Exception exception)
                 {
                     Console.WriteLine($"Eception while updating image for '{project.Name}' project");
                 }
@@ -261,7 +280,7 @@ namespace Server.Controllers
             {
                 ISS.RemoveProjectImage(imageURI);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 Console.WriteLine($"Exception while removing image for deleted project!");
             }

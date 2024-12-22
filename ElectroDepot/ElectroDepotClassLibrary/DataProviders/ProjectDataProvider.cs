@@ -22,7 +22,34 @@ namespace ElectroDepotClassLibrary.DataProviders
 
             return response.IsSuccessStatusCode;
         }
+        
+        public async Task<Project> GetProjectOfProjectComponent(ProjectComponent projectComponent)
+        {
+            try
+            {
+                string url = ProjectEndpoints.GetProjectOfProjectComponent(projectComponent.ID);
+                var response = await HTTPClient.GetAsync(url);
 
+                if (response.IsSuccessStatusCode)
+                {
+                    JsonSerializerOptions options = new JsonSerializerOptions();
+                    options.PropertyNameCaseInsensitive = true;
+
+                    var json = await response.Content.ReadAsStringAsync();
+                    ProjectDTO projectWithID = JsonSerializer.Deserialize<ProjectDTO>(json, options);
+
+                    return projectWithID.ToModel();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         public async Task<Project> GetProjectByID(int ProjectID)
         {
             try

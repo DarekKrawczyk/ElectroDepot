@@ -23,6 +23,36 @@ namespace ElectroDepotClassLibrary.DataProviders
             return response.IsSuccessStatusCode;
         }
 
+        
+        public async Task<IEnumerable<PurchaseItem>> GetPurchaseItemsFromComponent(Component component)
+        {
+            try
+            {
+                string url = ComponentEndpoints.GetPurchaseItemsFromComponent(component.ID);
+                var response = await HTTPClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    JsonSerializerOptions options = new JsonSerializerOptions();
+                    options.PropertyNameCaseInsensitive = true;
+
+                    var json = await response.Content.ReadAsStringAsync();
+                    IEnumerable<PurchaseItemDTO> purchaseItems = JsonSerializer.Deserialize<IEnumerable<PurchaseItemDTO>>(json, options);
+
+                    return purchaseItems.Select(x => x.ToModel()).ToList();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
         public async Task<IEnumerable<PurchaseItem>> GetAllPurchaseItems()
         {
             try

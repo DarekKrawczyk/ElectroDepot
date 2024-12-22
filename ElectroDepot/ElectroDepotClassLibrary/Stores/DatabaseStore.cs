@@ -10,6 +10,16 @@ namespace ElectroDepotClassLibrary.Stores
         private ProjectsStore _projectsStore;
         private PurchasesStore _purchasesStore;
         private UsersStore _usersStore;
+        private PredefinedImagesStore _predefinedImagesStore;
+        
+        public PredefinedImagesStore PredefinedImagesStore
+        {
+            get
+            {
+                return _predefinedImagesStore;
+            }
+        }
+
         public SuppliersStore SupplierStore
         {
             get
@@ -62,14 +72,16 @@ namespace ElectroDepotClassLibrary.Stores
             SupplierDataProvider supplierDataProvider, ComponentDataProvider componentDataProvider, 
             CategoryDataProvider categoryDataProvider, ProjectDataProvider projectDataProvider,
             PurchaseDataProvider purchaseDataProvicer, UserDataProvider userDataProvider,
-            OwnsComponentDataProvider ownsComponentDataProvider, ProjectComponentDataProvider projectComponentDataProvider)
+            OwnsComponentDataProvider ownsComponentDataProvider, ProjectComponentDataProvider projectComponentDataProvider,
+            PurchaseItemDataProvider purchaseItemDataProvider, PredefinedImageDataProvider predefinedImageDataProvider)
         {
             _supplierStore = new SuppliersStore(this, supplierDataProvider);
             _componentsStore = new ComponentsStore(this, componentDataProvider, ownsComponentDataProvider);
             _categoriesStore = new CategoriesStore(this, categoryDataProvider);
-            _projectsStore = new ProjectsStore(this, projectDataProvider);
-            _purchasesStore = new PurchasesStore(this, purchaseDataProvicer);
+            _projectsStore = new ProjectsStore(this, projectDataProvider, projectComponentDataProvider);
+            _purchasesStore = new PurchasesStore(this, purchaseDataProvicer, purchaseItemDataProvider);
             _usersStore = new UsersStore(this, userDataProvider);
+            _predefinedImagesStore = new PredefinedImagesStore(this, predefinedImageDataProvider);
         }
     }
 }

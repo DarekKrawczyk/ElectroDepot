@@ -27,5 +27,6 @@ namespace Server.Context
         {
  
         }
+        public DbSet<Server.Models.PredefinedImage> PredefinedImage { get; set; } = default!;
     }
 }

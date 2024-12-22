@@ -4,7 +4,7 @@ using System;
 
 namespace DesktopClient.ViewModels
 {
-    public abstract class ViewModelBase : ObservableObject, IDisposable
+    public abstract class ViewModelBase : ObservableValidator, IDisposable
     {
         protected DatabaseStore DatabaseStore { get; }
         public ViewModelBase(DatabaseStore databaseStore)
