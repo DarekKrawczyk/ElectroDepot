@@ -26,7 +26,7 @@ namespace ElectroDepotClassLibraryTests.Tests
                 Component? component = components.FirstOrDefault();
                 Assert.NotNull(component);
 
-                ProjectComponent projectComponent = new ProjectComponent(id: 0, projectID: project.ID, componentID: component.ID, quantity: 20);
+                ProjectComponent projectComponent = new ProjectComponent(id: 0, projectID: project.ID, componentID: component.ID, component: component, quantity: 20);
                 bool wasCreated = await ProjectComponentDP.CreateProjectComponent(projectComponent);
                 Assert.True(wasCreated);
 
@@ -92,7 +92,7 @@ namespace ElectroDepotClassLibraryTests.Tests
                 ProjectComponent? projectComp = projectComponents.FirstOrDefault();
                 Assert.NotNull(projectComp);
 
-                ProjectComponent projectCompUpdated = new ProjectComponent(id: projectComp.ID, componentID: projectComp.ComponentID, projectID: projectComp.ProjectID, quantity: 300); ;
+                ProjectComponent projectCompUpdated = new ProjectComponent(id: projectComp.ID, componentID: projectComp.ComponentID, component: null, projectID: projectComp.ProjectID, quantity: 300); ;
 
                 bool wasUpdated = await ProjectComponentDP.UpdateProjectComponent(projectCompUpdated);
                 Assert.True(wasUpdated);

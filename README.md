@@ -54,16 +54,16 @@ ElectroDepot is designed to be the ultimate tool for organizing components, stre
 Once basic functionalities are be implemented, application will recieve UI upgrade.
 
 #### ✅ Raw implementation  
-- Basic **Home Page**  
-![Desktop Application](PresentationFiles/BasicUI.gif)  
-- **Projects Component**  
-  ![Components tab](PresentationFiles/components.gif)  
+- **Home**  
+![Home tab](Assets/Panel_Home.gif)  
+- **Components**  
+![Components tab](Assets/Panel_Components.gif)  
 
 #### 🛠️ To Be Implemented  
-- **Components Component**  
-- **Purchases Component**  
-- **Tracking Component**
-- **User Profile Component**  
+- **Projects**  
+- **Purchases**  
+- **Tracking**
+- **User Profile**  
 - **User Login and Authentication**  
 
 

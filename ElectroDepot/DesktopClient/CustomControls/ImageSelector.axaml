@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:DesktopClient.Containers"
+        xmlns:controls="using:DesktopClient.CustomControls"
+        x:DataType="controls:ImageSelector">
+
+  <Design.PreviewWith>
+    <controls:ImageSelector />
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type controls:ImageSelector}" TargetType="controls:ImageSelector">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="Transparent" Height="500" MaxWidth="300" BorderBrush="Black" BorderThickness="1">
+          <Grid RowDefinitions="Auto, *, Auto">
+            <!-- TextBox at the top -->
+            <TextBox Grid.Row="0" x:Name="TextBoxInput"></TextBox>
+            <!-- Scrollable content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+              <ListBox ItemsSource="{TemplateBinding FilteredImages}" 
+                       SelectedItem="{TemplateBinding SelectedImage}"
+                       x:Name="ImagesListBox">
+                <ListBox.ItemTemplate>
+                  <DataTemplate DataType="{x:Type local:ImageContainer}">
+                    <Border Padding="0,5,0,0">
+                      <StackPanel>
+                        <Label Content="{Binding Name}" HorizontalAlignment="Center"
+                               VerticalAlignment="Center"></Label>
+                        <Image Source="{Binding Image}" Width="128"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
+                      </StackPanel>
+                    </Border>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </ScrollViewer>
+
+            <!-- Buttons at the bottom -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+              <Button x:Name="SelectButton" Command="{TemplateBinding SelectCommand}">Select</Button>
+              <Button Command="{TemplateBinding CancelCommand}">Cancel</Button>
+            </StackPanel>
+          </Grid>
+        </Border>
+
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

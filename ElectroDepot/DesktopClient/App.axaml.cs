@@ -6,7 +6,6 @@ using DesktopClient.ViewModels;
 using DesktopClient.Views;
 using ElectroDepotClassLibrary.DataProviders;
 using ElectroDepotClassLibrary.Stores;
-using LiveChartsCore.Geo;
 
 namespace DesktopClient
 {
@@ -24,6 +23,8 @@ namespace DesktopClient
             UserDataProvider usersDataProvider = new UserDataProvider(ConnectionURL);
             OwnsComponentDataProvider ownsComponentDataProvider = new OwnsComponentDataProvider(ConnectionURL);
             ProjectComponentDataProvider projectComponentDataProvider = new ProjectComponentDataProvider(ConnectionURL);
+            PurchaseItemDataProvider purchaseItemDataProvider = new PurchaseItemDataProvider(ConnectionURL);
+            PredefinedImageDataProvider predefinedImageDataProvider = new PredefinedImageDataProvider(ConnectionURL);
             _databaseStore = new DatabaseStore(supplierDataProvider, 
                 componentDataProvider, 
                 categoryDataProvider, 
@@ -31,9 +32,12 @@ namespace DesktopClient
                 purchaseDataProvider,
                 usersDataProvider,
                 ownsComponentDataProvider,
-                projectComponentDataProvider);
+                projectComponentDataProvider,
+                purchaseItemDataProvider,
+                predefinedImageDataProvider);
+            // TODO: Implement login, for now this will do
+            //_databaseStore.UsersStore.TryLoginUser("test", "test");
 
-            _databaseStore.UsersStore.TryLoginUser("test", "test");
 
             AvaloniaXamlLoader.Load(this);
         }

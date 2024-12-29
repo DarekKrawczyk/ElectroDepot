@@ -16,6 +16,8 @@ namespace ElectroDepotClassLibrary.Stores
             }
         }
 
+        public SupplierDataProvider SupplierDP { get { return _supplierDataProvider; } }
+
         public event Action SuppliersLoaded;
 
         public SuppliersStore(DatabaseStore dbStore, SupplierDataProvider supplierDataProvider) : base(dbStore)

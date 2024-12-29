@@ -53,9 +53,9 @@ public static class BasicDataSeeder
             // Seed Components
             var components = new List<Component>
             {
-                new Component { Name = "Czujnik temperatury DS18B20", Manufacturer = "Dallas", Description = "Dokładny czujnik temperatury", CategoryID = categories[0].CategoryID },
-                new Component { Name = "Czujnik wilgotności DHT22", Manufacturer = "AOSONG", Description = "Pomiar wilgotności i temperatury", CategoryID = categories[1].CategoryID },
-                new Component { Name = "Fotorezystor LDR", Manufacturer = "ResistorCo", Description = "Oświetlenie na podstawie światła", CategoryID = categories[2].CategoryID }
+                new Component { Name = "Czujnik temperatury DS18B20", Manufacturer = "Dallas", ShortDescription = "Dokładny czujnik temperatury", CategoryID = categories[0].CategoryID },
+                new Component { Name = "Czujnik wilgotności DHT22", Manufacturer = "AOSONG", ShortDescription = "Pomiar wilgotności i temperatury", CategoryID = categories[1].CategoryID },
+                new Component { Name = "Fotorezystor LDR", Manufacturer = "ResistorCo", ShortDescription = "Oświetlenie na podstawie światła", CategoryID = categories[2].CategoryID }
             };
             context.Components.AddRange(components);
             await context.SaveChangesAsync();

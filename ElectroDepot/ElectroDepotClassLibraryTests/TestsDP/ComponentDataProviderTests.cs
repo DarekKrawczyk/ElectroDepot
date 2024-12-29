@@ -44,10 +44,12 @@ namespace ElectroDepotClassLibraryTests.Tests
                     Assert.NotNull(category);
                 }
 
-                Component component = new Component(id: 0, categoryID: category.ID, category: null, name: "LM35", manufacturer: "Texas Instruments", description: "Analog temperature gauge");
+                Component component = new Component(id: 0, categoryID: category.ID, category: null, name: "LM35",
+                    manufacturer: "Texas Instruments", shortDescription: "Analog temperature gauge", longDescription: "long desc",
+                    datasheetLink: "google.com", new byte[0]{ });
 
-                bool wasCreated = await ComponentDP.CreateComponent(component);
-                Assert.True(wasCreated);
+                var obj = await ComponentDP.CreateComponent(component);
+                Assert.True(obj != null);
                 Console.WriteLine(component.ToString());
             }
             catch (Exception ex)
@@ -118,9 +120,11 @@ namespace ElectroDepotClassLibraryTests.Tests
                 }
 
                 // Create component with category
-                Component component = new Component(id: 0, categoryID: foundCategory.ID, category:null, name: "Silniczek", manufacturer: "Texus fujara", description: "Ale kręci");
-                bool wasComponentCreated = await ComponentDP.CreateComponent(component);
-                Assert.True(wasComponentCreated);
+                Component component = new Component(id: 0, categoryID: foundCategory.ID, category:null, name: "Silniczek", 
+                    manufacturer: "Texus fujara", shortDescription: "Ale kręci", longDescription: "long desc",
+                    datasheetLink: "google.com", new byte[0] { });
+                var obj = await ComponentDP.CreateComponent(component);
+                Assert.True(obj != null);
 
                 // Find create component
                 Component createdComponent = await ComponentDP.GetComponentByName(component.Name);
@@ -148,7 +152,9 @@ namespace ElectroDepotClassLibraryTests.Tests
                 Assert.NotNull(foundComponent);
 
                 // Update
-                Component editedCategoryDTO = new Component(id: foundComponent.ID, categoryID: foundComponent.CategoryID, category: null, name: foundComponent.Name, manufacturer: foundComponent.Manufacturer, description: "Edited component");
+                Component editedCategoryDTO = new Component(id: foundComponent.ID, categoryID: foundComponent.CategoryID, category: null, 
+                    name: foundComponent.Name, manufacturer: foundComponent.Manufacturer, shortDescription: "Edited component",
+                    longDescription: "long desc", datasheetLink: "google.com", new byte[0] { });
                 bool wasUpdated = await ComponentDP.UpdateComponent(editedCategoryDTO);
                 Assert.True(wasUpdated);
             }

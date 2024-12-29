@@ -31,6 +31,38 @@ namespace ElectroDepotClassLibrary.Stores
             // TODO: OwnsComponent model requires implementation of User model just like the rest of Models....
         }
 
+        public async Task<bool> InsertNewComponent(Component component)
+        {
+
+
+            Component componentFromDB = await ComponentDP.CreateComponent(component);
+
+            if(componentFromDB == null)
+            {
+                return false;
+            }
+
+            OwnsComponent ownsComponent = new OwnsComponent(id: 0, userID: MainStore.UsersStore.LoggedInUser.ID, componentID: componentFromDB.ID, quantity: 0);
+
+            OwnsComponent ownsComponentFromDB = await OwnsComponentDP.CreateOwnComponent(ownsComponent);
+
+            if(ownsComponentFromDB == null)
+            {
+                return false;
+            }
+
+            componentFromDB.ByteImage = component.ByteImage;
+
+            // TODO: Maybe change endpoint to return data if operation was correct? Because we have to have current id's in those lists. For now this must do.
+            _components.Add(componentFromDB);
+            _ownedComponents.Add(ownsComponentFromDB);
+            _unusedComponents.Add(ownsComponentFromDB);
+
+            ComponentsLoaded?.Invoke();
+
+            return true;
+        }
+
         public async Task Load()
         {
             User loggedInUser = MainStore.UsersStore.LoggedInUser;
@@ -41,7 +73,7 @@ namespace ElectroDepotClassLibrary.Stores
             _unusedComponents.Clear();
 
             IEnumerable<OwnsComponent> ownedComponentsFromDB = await OwnsComponentDP.GetAllOwnsComponentsFromUser(loggedInUser);
-            IEnumerable<Component> componentsFromDB = await ComponentDP.GetAllAvailableComponentsFromUser(loggedInUser);
+            IEnumerable<Component> componentsFromDB = await ComponentDP.GetAllAvailableComponentsFromUserWithImage(loggedInUser);
             IEnumerable<OwnsComponent> unusedComponentsFromDB = await OwnsComponentDP.GetAllUnusedComponents(loggedInUser);
 
             if (ownedComponentsFromDB.Count() != componentsFromDB.Count() || componentsFromDB.Count() != unusedComponentsFromDB.Count()) throw new Exception("Data retrieved from db doesn't match!!!");

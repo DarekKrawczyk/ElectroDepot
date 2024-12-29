@@ -57,8 +57,15 @@ namespace Server.Migrations
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("DatasheetLink")
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ImageURI")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("LongDescription")
+                        .HasColumnType("nvarchar(4000)");
 
                     b.Property<string>("Manufacturer")
                         .IsRequired()
@@ -67,6 +74,9 @@ namespace Server.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ShortDescription")
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("ComponentID");
 
@@ -99,6 +109,31 @@ namespace Server.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("OwnsComponent");
+                });
+
+            modelBuilder.Entity("Server.Models.PredefinedImage", b =>
+                {
+                    b.Property<int>("PredefinedImageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PredefinedImageID"));
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("PredefinedImageID");
+
+                    b.ToTable("PredefinedImage");
                 });
 
             modelBuilder.Entity("Server.Models.Project", b =>

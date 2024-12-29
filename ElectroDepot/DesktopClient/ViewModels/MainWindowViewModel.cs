@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using ElectroDepotClassLibrary.Stores;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace DesktopClient.ViewModels
 {
@@ -20,6 +21,7 @@ namespace DesktopClient.ViewModels
 
         public MainWindowViewModel(DatabaseStore databaseStore) : base(databaseStore)
         {
+            DatabaseStore.PredefinedImagesStore.Load();
             OnSelectedListItemChanged(Items[0]);
             //CurrentPage = new ComponentsPageViewModel();
             //_currentPage = new HomePageViewModel();

@@ -30,7 +30,16 @@ namespace Server.Models
         public string Manufacturer { get; set; }
 
         [Column(TypeName = "nvarchar(255)")]
-        public string? Description { get; set; }
+        public string? ShortDescription { get; set; }
+
+        [Column(TypeName = "nvarchar(4000)")]
+        public string? LongDescription { get; set; }
+
+        [Column(TypeName = "nvarchar(255)")]
+        public string? DatasheetLink { get; set; }
+
+        [Column(TypeName = "nvarchar(255)")]
+        public string ImageURI { get; set; }
         #endregion
     }
 }

@@ -8,11 +8,13 @@ namespace ElectroDepotClassLibrary.Models
         public int ComponentID { get; }
         public int ProjectID { get; }
         public int Quantity { get; }
-        public ProjectComponent(int id, int projectID, int componentID, int quantity)
+        public Component Component { get; }
+        public ProjectComponent(int id, int projectID, int componentID, Component component, int quantity)
         {
             ID = id;
             ProjectID = projectID;
             ComponentID = componentID;
+            Component = component;
             Quantity = quantity;
         }
 
@@ -38,7 +40,7 @@ namespace ElectroDepotClassLibrary.Models
         }
         public static ProjectComponent ToModel(this ProjectComponentDTO projectComponentDTO)
         {
-            return new ProjectComponent(id: projectComponentDTO.ID, projectID: projectComponentDTO.ProjectID, componentID: projectComponentDTO.ComponentID, quantity: projectComponentDTO.Quantity);
+            return new ProjectComponent(id: projectComponentDTO.ID, projectID: projectComponentDTO.ProjectID, componentID: projectComponentDTO.ComponentID, component: null, quantity: projectComponentDTO.Quantity);
         }
     }
 }

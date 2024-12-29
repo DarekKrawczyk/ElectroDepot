@@ -10,20 +10,25 @@ namespace ElectroDepotClassLibrary.DataProviders
     {
         public ComponentDataProvider(string url) : base(url) { }
         #region API Calls
-        public async Task<bool> CreateComponent(Component component)
+        public async Task<Component> CreateComponent(Component component)
         {
             var json = JsonSerializer.Serialize(component.ToCreateDTO());
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             string url = ComponentEndpoints.Create();
-            var response = HTTPClient.PostAsync(url, content).Result;
+            var response = await HTTPClient.PostAsync(url, content);
 
             if (response.IsSuccessStatusCode)
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return true;
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+
+                var resultJson = await response.Content.ReadAsStringAsync();
+                ComponentDTO? resultComponent = JsonSerializer.Deserialize<ComponentDTO>(resultJson, options);
+
+                return resultComponent.ToModel();
             }
-            return false;
+            return null;
         }
 
         public async Task<Component> GetComponentByName(string name)
@@ -125,6 +130,34 @@ namespace ElectroDepotClassLibrary.DataProviders
                     var json = await response.Content.ReadAsStringAsync();
                     IEnumerable<ComponentDTO> components = JsonSerializer.Deserialize<IEnumerable<ComponentDTO>>(json, options);
                     List<Component> componentsModels = components.Select(x=>x.ToModel()).ToList();
+                    return componentsModels;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<Component>> GetAllAvailableComponentsFromUserWithImage(User user)
+        {
+            try
+            {
+                string url = ComponentEndpoints.GetAvailableComponentsFromUserWithImage(user.ID);
+                var response = await HTTPClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    JsonSerializerOptions options = new JsonSerializerOptions();
+                    options.PropertyNameCaseInsensitive = true;
+
+                    var json = await response.Content.ReadAsStringAsync();
+                    IEnumerable<ComponentDTO> components = JsonSerializer.Deserialize<IEnumerable<ComponentDTO>>(json, options);
+                    List<Component> componentsModels = components.Select(x => x.ToModel()).ToList();
                     return componentsModels;
                 }
                 else

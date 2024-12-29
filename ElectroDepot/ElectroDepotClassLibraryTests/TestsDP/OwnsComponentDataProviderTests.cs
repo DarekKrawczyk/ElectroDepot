@@ -32,8 +32,8 @@ namespace ElectroDepotClassLibraryTests.Tests
                 Assert.NotNull(foundComponent);
 
                 OwnsComponent ownsComponentDTO = new OwnsComponent(id: 0, userID: foundUser.ID, componentID: foundComponent.ID, quantity: 20);
-                bool wasCreated = await OwnsComponentDP.CreateOwnComponent(ownsComponentDTO);
-                Assert.True(wasCreated);
+                var obj = await OwnsComponentDP.CreateOwnComponent(ownsComponentDTO);
+                Assert.True(obj != null);
             }
             catch (Exception ex)
             {

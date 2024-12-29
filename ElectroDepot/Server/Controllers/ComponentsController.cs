@@ -1,4 +1,5 @@
 ﻿using ElectroDepotClassLibrary.DTOs;
+using ElectroDepotClassLibrary.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Context;
@@ -12,10 +13,13 @@ namespace Server.Controllers
     public class ComponentsController : ControllerBase
     {
         private readonly DatabaseContext _context;
+        private readonly ImageStorageService ISS;
 
         public ComponentsController(DatabaseContext context)
         {
             _context = context;
+            ISS = new ImageStorageService(AppDomain.CurrentDomain.BaseDirectory);
+            ISS.Initialize();
         }
         #region Create
         /// <summary>
@@ -38,12 +42,14 @@ namespace Server.Controllers
                 return Conflict(new { title = "Conflict", status = 409, message = "Component with this name already exists." });
             }
 
-            Component newComponent = component.ToCategory();
+            Component newComponent = component.ToModel();
+            newComponent.ImageURI = ISS.InsertComponentImage(component.Image);
 
             _context.Components.Add(newComponent);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetComponent), new { id = newComponent.ComponentID}, newComponent);
+
+            return Ok(newComponent.ToDTO());
         }
         #endregion
         #region Read
@@ -55,6 +61,28 @@ namespace Server.Controllers
         public async Task<ActionResult<IEnumerable<ComponentDTO>>> GetComponents()
         {
             return Ok(await _context.Components.Select(x=>x.ToDTO()).ToListAsync());
+        }
+
+        [HttpGet("GetImageOfComponent/{ComponentID}")]
+        public async Task<ActionResult<byte[]>> GetImageOfComponent(int ComponentID)
+        {
+            byte[] image = new byte[0] { };
+            try
+            {
+                Component? component = await _context.Components.FindAsync(ComponentID);
+
+                if(component == null)
+                {
+                    return NotFound();
+                }
+
+                image = ISS.RetrieveComponentImage(component.ImageURI);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Unable to retrieve image");
+            }
+            return Ok(image);   
         }
 
         /// <summary>
@@ -138,18 +166,57 @@ namespace Server.Controllers
                 //                                                    Description = groupedByComponentID.FirstOrDefault().Description
                 //                                                }).ToListAsync();
                 //return Ok(usersComponents.Select(x => x.ToDTO()).ToList());
-                IEnumerable<ComponentDTO> usersComponents = await (from ownsComponent in _context.OwnsComponent
+                IEnumerable<Component> usersComponents = await (from ownsComponent in _context.OwnsComponent
                                                                    join component in _context.Components
                                                                    on ownsComponent.ComponentID equals component.ComponentID
                                                                    where ownsComponent.UserID == user.UserID
-                                                                   select new ComponentDTO(
-                                                                       component.ComponentID,
-                                                                       component.CategoryID,
-                                                                       component.Name,
-                                                                       component.Manufacturer,
-                                                                       component.Description)
-                                                                   ).ToListAsync();
-                return Ok(usersComponents);
+                                                                   select new Component()
+                                                                   {
+                                                                       ComponentID = component.ComponentID,
+                                                                       CategoryID = component.CategoryID,
+                                                                       Name = component.Name,
+                                                                       Manufacturer = component.Manufacturer,
+                                                                       ShortDescription = component.ShortDescription,
+                                                                       LongDescription = component.LongDescription,
+                                                                       DatasheetLink = component.DatasheetLink,
+                                                                       ImageURI = component.ImageURI,
+                                                                   }).ToListAsync();
+                return Ok(usersComponents.Select(x=>x.ToDTO()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error ocurred");
+            }
+        }
+
+        [HttpGet("GetAvailableComponentsFromUserWithImage/{ID}")]
+        public async Task<ActionResult<IEnumerable<ComponentDTO>>> GetAvailableComponentsFromUserWithImage(int ID)
+        {
+            User? user = await _context.Users.FindAsync(ID);
+
+            if (user == null)
+            {
+                return BadRequest("User not found");
+            }
+
+            try
+            {
+                IEnumerable<Component> usersComponents = await (from ownsComponent in _context.OwnsComponent
+                                                                join component in _context.Components
+                                                                on ownsComponent.ComponentID equals component.ComponentID
+                                                                where ownsComponent.UserID == user.UserID
+                                                                select new Component()
+                                                                {
+                                                                    ComponentID = component.ComponentID,
+                                                                    CategoryID = component.CategoryID,
+                                                                    Name = component.Name,
+                                                                    Manufacturer = component.Manufacturer,
+                                                                    ShortDescription = component.ShortDescription,
+                                                                    DatasheetLink = component.DatasheetLink,
+                                                                    LongDescription = component.LongDescription,
+                                                                    ImageURI = component.ImageURI,
+                                                                }).ToListAsync();
+                return Ok(usersComponents.Select(x => x.ToDTOWithImage(ISS)));
             }
             catch (Exception ex)
             {
@@ -174,17 +241,21 @@ namespace Server.Controllers
 
             try
             {
-                IEnumerable<ComponentDTO> usersComponents = await (from ownsComponent in _context.OwnsComponent
+                IEnumerable<Component> usersComponents = await (from ownsComponent in _context.OwnsComponent
                                                                    join component in _context.Components
                                                                    on ownsComponent.ComponentID equals component.ComponentID
                                                                    where ownsComponent.UserID == user.UserID
-                                                                   select new ComponentDTO(
-                                                                       component.ComponentID,
-                                                                       component.CategoryID,
-                                                                       component.Name,
-                                                                       component.Manufacturer,
-                                                                       component.Description)
-                                                                   ).ToListAsync();
+                                                                   select new Component()
+                                                                   {
+                                                                       ComponentID = component.ComponentID,
+                                                                       CategoryID = component.CategoryID,
+                                                                       Name = component.Name,
+                                                                       Manufacturer = component.Manufacturer,
+                                                                       ShortDescription = component.ShortDescription,
+                                                                       LongDescription = component.LongDescription,
+                                                                       DatasheetLink = component.DatasheetLink,
+                                                                       ImageURI = component.ImageURI,
+                                                                   }).ToListAsync();
                 return Ok(usersComponents);
             }
             catch(Exception ex)
@@ -192,6 +263,27 @@ namespace Server.Controllers
                 return BadRequest("Error ocurred");
             }
 
+        }
+
+        [HttpGet("GetPurchaseItemsFromComponent/{ComponentID}")]
+        public async Task<ActionResult<IEnumerable<PurchaseItemDTO>>> GetPurchaseItemsFromComponent(int ComponentID)
+        {
+            Component? component = await _context.Components.FindAsync(ComponentID);
+
+            if (component == null)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                IEnumerable<PurchaseItem> purchaseItemFromComponent = await _context.PurchaseItems.Where(x=>x.ComponentID == ComponentID).ToListAsync();
+                return Ok(purchaseItemFromComponent.Select(x=>x.ToPurchaseItemDTO()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error ocurred");
+            }
         }
         #endregion
         #region Update
@@ -213,7 +305,9 @@ namespace Server.Controllers
 
             existingComponent.Name = component.Name;
             existingComponent.Manufacturer = component.Manufacturer;
-            existingComponent.Description = component.Description;
+            existingComponent.ShortDescription = component.ShortDescription;
+            existingComponent.LongDescription = component.LongDescription;
+            existingComponent.DatasheetLink = component.DatasheetLink;
 
             try
             {

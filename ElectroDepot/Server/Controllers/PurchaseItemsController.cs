@@ -130,19 +130,23 @@ namespace Server.Controllers
 
             try
             {
-                IEnumerable<ComponentDTO> componentsFromPurchase = await (from purchase in _context.Purchases
+                IEnumerable<Component> componentsFromPurchase = await (from purchase in _context.Purchases
                                                                           join purchaseItem in _context.PurchaseItems
                                                                           on purchase.PurchaseID equals purchaseItem.PurchaseID
                                                                           join component in _context.Components
                                                                           on purchaseItem.ComponentID equals component.ComponentID
                                                                           where purchase.PurchaseID == PurchaseID
-                                                                          select new ComponentDTO(
-                                                                              component.ComponentID,
-                                                                              component.CategoryID,
-                                                                              component.Name,
-                                                                              component.Manufacturer,
-                                                                              component.Description)
-                                                                         ).ToListAsync();
+                                                                          select new Component()
+                                                                          {
+                                                                              ComponentID = component.ComponentID,
+                                                                              CategoryID = component.CategoryID,
+                                                                              Name = component.Name,
+                                                                              Manufacturer = component.Manufacturer,
+                                                                              ShortDescription = component.ShortDescription,
+                                                                              LongDescription = component.LongDescription,
+                                                                              DatasheetLink = component.DatasheetLink,
+                                                                              ImageURI = component.ImageURI
+                                                                          }).ToListAsync();
 
                 return Ok(componentsFromPurchase);
             }

@@ -84,123 +84,123 @@ public static class TestingDataSeeder
             List<Component> components = new List<Component>
             {
                 // Czujniki ciśnienia
-                new Component { Name = "BMP180", Manufacturer = "Bosch", Description = "Czujnik ciśnienia barometrycznego", CategoryID = categories[0].CategoryID },
-                new Component { Name = "MPX5700AP", Manufacturer = "NXP", Description = "Czujnik ciśnienia absolutnego", CategoryID = categories[0].CategoryID },
-                new Component { Name = "MPX5010", Manufacturer = "NXP", Description = "Czujnik ciśnienia różnicowego o zakresie 0-10 kPa", CategoryID = categories[0].CategoryID },
-                new Component { Name = "BMP280", Manufacturer = "Bosch", Description = "Czujnik ciśnienia atmosferycznego i wysokościomierz", CategoryID = categories[0].CategoryID },
-                new Component { Name = "APC301", Manufacturer = "Amphenol", Description = "Analogowy, przemysłowy czujnik ciśnienia", CategoryID = categories[0].CategoryID },
+                new Component { Name = "BMP180", Manufacturer = "Bosch", ShortDescription   = "Czujnik ciśnienia barometrycznego", CategoryID = categories[0].CategoryID },
+                new Component { Name = "MPX5700AP", Manufacturer = "NXP", ShortDescription  = "Czujnik ciśnienia absolutnego", CategoryID = categories[0].CategoryID },
+                new Component { Name = "MPX5010", Manufacturer = "NXP", ShortDescription  = "Czujnik ciśnienia różnicowego o zakresie 0-10 kPa", CategoryID = categories[0].CategoryID },
+                new Component { Name = "BMP280", Manufacturer = "Bosch", ShortDescription  = "Czujnik ciśnienia atmosferycznego i wysokościomierz", CategoryID = categories[0].CategoryID },
+                new Component { Name = "APC301", Manufacturer = "Amphenol", ShortDescription  = "Analogowy, przemysłowy czujnik ciśnienia", CategoryID = categories[0].CategoryID },
 
                 // Czujniki czystości powietrza
-                new Component { Name = "MQ-135", Manufacturer = "Winsen", Description = "Czujnik jakości powietrza", CategoryID = categories[1].CategoryID },
-                new Component { Name = "CCS811", Manufacturer = "AMS", Description = "Czujnik gazów organicznych i CO2", CategoryID = categories[1].CategoryID },
-                new Component { Name = "MQ-7", Manufacturer = "Winsen", Description = "Czujnik gazu do detekcji CO", CategoryID = categories[1].CategoryID },
-                new Component { Name = "AQS-1", Manufacturer = "Air Quality Sensor", Description = "Czujnik jakości powietrza do pomiaru zanieczyszczeń i CO2", CategoryID = categories[1].CategoryID },
+                new Component { Name = "MQ-135", Manufacturer = "Winsen", ShortDescription  = "Czujnik jakości powietrza", CategoryID = categories[1].CategoryID },
+                new Component { Name = "CCS811", Manufacturer = "AMS", ShortDescription  = "Czujnik gazów organicznych i CO2", CategoryID = categories[1].CategoryID },
+                new Component { Name = "MQ-7", Manufacturer = "Winsen", ShortDescription  = "Czujnik gazu do detekcji CO", CategoryID = categories[1].CategoryID },
+                new Component { Name = "AQS-1", Manufacturer = "Air Quality Sensor", ShortDescription  = "Czujnik jakości powietrza do pomiaru zanieczyszczeń i CO2", CategoryID = categories[1].CategoryID },
 
                 // Czujniki gestów
-                new Component { Name = "APDS-9960", Manufacturer = "Broadcom", Description = "Czujnik gestów, światła i koloru", CategoryID = categories[2].CategoryID },
-                new Component { Name = "AS3935", Manufacturer = "ams AG", Description = "Czujnik gestów oraz detekcji burzy", CategoryID = categories[2].CategoryID },
-                new Component { Name = "MTGesture", Manufacturer = "Microchip", Description = "Czujnik gestów 3D z funkcją zdalnego sterowania", CategoryID = categories[2].CategoryID },
-                new Component { Name = "ADPD188GG", Manufacturer = "Analog Devices", Description = "Czujnik optyczny do detekcji gestów i monitorowania zdrowia", CategoryID = categories[2].CategoryID },
+                new Component { Name = "APDS-9960", Manufacturer = "Broadcom", ShortDescription  = "Czujnik gestów, światła i koloru", CategoryID = categories[2].CategoryID },
+                new Component { Name = "AS3935", Manufacturer = "ams AG", ShortDescription  = "Czujnik gestów oraz detekcji burzy", CategoryID = categories[2].CategoryID },
+                new Component { Name = "MTGesture", Manufacturer = "Microchip", ShortDescription  = "Czujnik gestów 3D z funkcją zdalnego sterowania", CategoryID = categories[2].CategoryID },
+                new Component { Name = "ADPD188GG", Manufacturer = "Analog Devices", ShortDescription  = "Czujnik optyczny do detekcji gestów i monitorowania zdrowia", CategoryID = categories[2].CategoryID },
 
                 // Czujniki krańcowe
-                new Component { Name = "Limit Switch KW12-3", Manufacturer = "Omron", Description = "Mechaniczny czujnik krańcowy", CategoryID = categories[3].CategoryID },
-                new Component { Name = "ME-8108", Manufacturer = "Heschen", Description = "Przemysłowy czujnik krańcowy z dźwignią rolkową", CategoryID = categories[3].CategoryID },
-                new Component { Name = "Omron D4MC", Manufacturer = "Omron", Description = "Mikroprzełącznik krańcowy z wysoką trwałością", CategoryID = categories[3].CategoryID },
-                new Component { Name = "V-156-1C25", Manufacturer = "Honeywell", Description = "Przełącznik krańcowy z dźwignią rolkową", CategoryID = categories[3].CategoryID },
-                new Component { Name = "MLC-S-130L", Manufacturer = "Honeywell", Description = "Kompaktowy krańcowy czujnik z krótkim ramieniem", CategoryID = categories[3].CategoryID },
+                new Component { Name = "Limit Switch KW12-3", Manufacturer = "Omron", ShortDescription = "Mechaniczny czujnik krańcowy", CategoryID = categories[3].CategoryID },
+                new Component { Name = "ME-8108", Manufacturer = "Heschen", ShortDescription  = "Przemysłowy czujnik krańcowy z dźwignią rolkową", CategoryID = categories[3].CategoryID },
+                new Component { Name = "Omron D4MC", Manufacturer = "Omron", ShortDescription  = "Mikroprzełącznik krańcowy z wysoką trwałością", CategoryID = categories[3].CategoryID },
+                new Component { Name = "V-156-1C25", Manufacturer = "Honeywell", ShortDescription = "Przełącznik krańcowy z dźwignią rolkową", CategoryID = categories[3].CategoryID },
+                new Component { Name = "MLC-S-130L", Manufacturer = "Honeywell", ShortDescription  = "Kompaktowy krańcowy czujnik z krótkim ramieniem", CategoryID = categories[3].CategoryID },
 
                 // Czujniki gazów
-                new Component { Name = "MQ-2", Manufacturer = "Hanwei", Description = "Czujnik gazów palnych i dymu", CategoryID = categories[4].CategoryID },
-                new Component { Name = "MH-Z19B", Manufacturer = "Winsen", Description = "Czujnik dwutlenku węgla (CO2)", CategoryID = categories[4].CategoryID },
-                new Component { Name = "MQ-3", Manufacturer = "Hanwei Electronics", Description = "Czujnik alkoholu do wykrywania oparów alkoholu", CategoryID = categories[4].CategoryID },
-                new Component { Name = "ZP07-O3", Manufacturer = "Winsen", Description = "Czujnik ozonu (O3) do pomiaru jakości powietrza", CategoryID = categories[4].CategoryID },
+                new Component { Name = "MQ-2", Manufacturer = "Hanwei", ShortDescription  = "Czujnik gazów palnych i dymu", CategoryID = categories[4].CategoryID },
+                new Component { Name = "MH-Z19B", Manufacturer = "Winsen", ShortDescription  = "Czujnik dwutlenku węgla (CO2)", CategoryID = categories[4].CategoryID },
+                new Component { Name = "MQ-3", Manufacturer = "Hanwei Electronics", ShortDescription  = "Czujnik alkoholu do wykrywania oparów alkoholu", CategoryID = categories[4].CategoryID },
+                new Component { Name = "ZP07-O3", Manufacturer = "Winsen", ShortDescription  = "Czujnik ozonu (O3) do pomiaru jakości powietrza", CategoryID = categories[4].CategoryID },
 
                 // Czujniki magnetyczne
-                new Component { Name = "A3144", Manufacturer = "Allegro", Description = "Czujnik Halla do wykrywania pola magnetycznego", CategoryID = categories[5].CategoryID },
-                new Component { Name = "TLE493D", Manufacturer = "Infineon", Description = "Czujnik Halla z trzema osiami do pomiaru pola magnetycznego", CategoryID = categories[5].CategoryID },
-                new Component { Name = "LIS3MDL", Manufacturer = "STMicroelectronics", Description = "Czujnik magnetyczny 3-osiowy z możliwością pomiaru pól magnetycznych", CategoryID = categories[5].CategoryID },
-                new Component { Name = "HMC5883L", Manufacturer = "Honeywell", Description = "Czujnik kompasu 3-osiowego, który wykorzystuje technologię magnetyczną", CategoryID = categories[5].CategoryID },
-                new Component { Name = "MMT-3D", Manufacturer = "Microchip", Description = "Czujnik Halla do pomiaru pola magnetycznego w trzech wymiarach", CategoryID = categories[5].CategoryID },
+                new Component { Name = "A3144", Manufacturer = "Allegro", ShortDescription  = "Czujnik Halla do wykrywania pola magnetycznego", CategoryID = categories[5].CategoryID },
+                new Component { Name = "TLE493D", Manufacturer = "Infineon", ShortDescription  = "Czujnik Halla z trzema osiami do pomiaru pola magnetycznego", CategoryID = categories[5].CategoryID },
+                new Component { Name = "LIS3MDL", Manufacturer = "STMicroelectronics", ShortDescription  = "Czujnik magnetyczny 3-osiowy z możliwością pomiaru pól magnetycznych", CategoryID = categories[5].CategoryID },
+                new Component { Name = "HMC5883L", Manufacturer = "Honeywell", ShortDescription  = "Czujnik kompasu 3-osiowego, który wykorzystuje technologię magnetyczną", CategoryID = categories[5].CategoryID },
+                new Component { Name = "MMT-3D", Manufacturer = "Microchip", ShortDescription  = "Czujnik Halla do pomiaru pola magnetycznego w trzech wymiarach", CategoryID = categories[5].CategoryID },
 
                 // Czujniki odbiciowe
-                new Component { Name = "TCRT5000", Manufacturer = "Vishay", Description = "Odbiciowy czujnik optyczny", CategoryID = categories[6].CategoryID },
-                new Component { Name = "QRD1114", Manufacturer = "Fairchild", Description = "Odbiciowy czujnik optyczny do detekcji obiektów", CategoryID = categories[6].CategoryID },
-                new Component { Name = "TSOP4838", Manufacturer = "Vishay", Description = "Odbiciowy czujnik optyczny, odbiornik IR", CategoryID = categories[6].CategoryID },
-                new Component { Name = "GP2Y0A21YK0F", Manufacturer = "Sharp", Description = "Odbiciowy czujnik odległości z analogowym wyjściem", CategoryID = categories[6].CategoryID },
-                new Component { Name = "TCS3200", Manufacturer = "Texas Instruments", Description = "Odbiciowy czujnik koloru z detekcją światła", CategoryID = categories[6].CategoryID },
+                new Component { Name = "TCRT5000", Manufacturer = "Vishay", ShortDescription  = "Odbiciowy czujnik optyczny", CategoryID = categories[6].CategoryID },
+                new Component { Name = "QRD1114", Manufacturer = "Fairchild", ShortDescription  = "Odbiciowy czujnik optyczny do detekcji obiektów", CategoryID = categories[6].CategoryID },
+                new Component { Name = "TSOP4838", Manufacturer = "Vishay", ShortDescription  = "Odbiciowy czujnik optyczny, odbiornik IR", CategoryID = categories[6].CategoryID },
+                new Component { Name = "GP2Y0A21YK0F", Manufacturer = "Sharp", ShortDescription  = "Odbiciowy czujnik odległości z analogowym wyjściem", CategoryID = categories[6].CategoryID },
+                new Component { Name = "TCS3200", Manufacturer = "Texas Instruments", ShortDescription  = "Odbiciowy czujnik koloru z detekcją światła", CategoryID = categories[6].CategoryID },
 
                 // Czujniki odległości
-                new Component { Name = "HC-SR04", Manufacturer = "Elecfreaks", Description = "Ultradźwiękowy czujnik odległości", CategoryID = categories[7].CategoryID },
-                new Component { Name = "VL53L0X", Manufacturer = "STMicroelectronics", Description = "Czujnik odległości oparty na pomiarze czasu przelotu", CategoryID = categories[7].CategoryID },
-                new Component { Name = "SRF05", Manufacturer = "SRF", Description = "Ultradźwiękowy czujnik odległości z pomiarem do 4 metrów", CategoryID = categories[7].CategoryID },
-                new Component { Name = "GP2Y0A02YK0F", Manufacturer = "Sharp", Description = "Czujnik odległości z analogowym wyjściem do 2 metrów", CategoryID = categories[7].CategoryID },
-                new Component { Name = "LIDAR-Lite v3", Manufacturer = "Garmin", Description = "Czujnik LIDAR do dokładnego pomiaru odległości", CategoryID = categories[7].CategoryID },
-                new Component { Name = "ToF Rangefinder", Manufacturer = "Benewake", Description = "Czujnik odległości Time-of-Flight, wysoka dokładność i szybki pomiar", CategoryID = categories[7].CategoryID },
+                new Component { Name = "HC-SR04", Manufacturer = "Elecfreaks", ShortDescription  = "Ultradźwiękowy czujnik odległości", CategoryID = categories[7].CategoryID },
+                new Component { Name = "VL53L0X", Manufacturer = "STMicroelectronics", ShortDescription  = "Czujnik odległości oparty na pomiarze czasu przelotu", CategoryID = categories[7].CategoryID },
+                new Component { Name = "SRF05", Manufacturer = "SRF", ShortDescription  = "Ultradźwiękowy czujnik odległości z pomiarem do 4 metrów", CategoryID = categories[7].CategoryID },
+                new Component { Name = "GP2Y0A02YK0F", Manufacturer = "Sharp", ShortDescription  = "Czujnik odległości z analogowym wyjściem do 2 metrów", CategoryID = categories[7].CategoryID },
+                new Component { Name = "LIDAR-Lite v3", Manufacturer = "Garmin", ShortDescription  = "Czujnik LIDAR do dokładnego pomiaru odległości", CategoryID = categories[7].CategoryID },
+                new Component { Name = "ToF Rangefinder", Manufacturer = "Benewake", ShortDescription  = "Czujnik odległości Time-of-Flight, wysoka dokładność i szybki pomiar", CategoryID = categories[7].CategoryID },
 
                 // Czujniki temperatury
-                new Component { Name = "DS18B20", Manufacturer = "Maxim Integrated", Description = "Cyfrowy czujnik temperatury", CategoryID = categories[8].CategoryID },
-                new Component { Name = "LM35", Manufacturer = "Texas Instruments", Description = "Analogowy czujnik temperatury", CategoryID = categories[8].CategoryID },
-                new Component { Name = "BME280", Manufacturer = "Bosch", Description = "Czujnik temperatury, wilgotności i ciśnienia atmosferycznego", CategoryID = categories[8].CategoryID },
-                new Component { Name = "TMP36", Manufacturer = "Analog Devices", Description = "Analogowy czujnik temperatury o wysokiej dokładności", CategoryID = categories[8].CategoryID },
-                new Component { Name = "HDC1080", Manufacturer = "Texas Instruments", Description = "Cyfrowy czujnik temperatury i wilgotności, niskopoborowy", CategoryID = categories[8].CategoryID },
+                new Component { Name = "DS18B20", Manufacturer = "Maxim Integrated", ShortDescription  = "Cyfrowy czujnik temperatury", CategoryID = categories[8].CategoryID },
+                new Component { Name = "LM35", Manufacturer = "Texas Instruments", ShortDescription  = "Analogowy czujnik temperatury", CategoryID = categories[8].CategoryID },
+                new Component { Name = "BME280", Manufacturer = "Bosch", ShortDescription = "Czujnik temperatury, wilgotności i ciśnienia atmosferycznego", CategoryID = categories[8].CategoryID },
+                new Component { Name = "TMP36", Manufacturer = "Analog Devices", ShortDescription  = "Analogowy czujnik temperatury o wysokiej dokładności", CategoryID = categories[8].CategoryID },
+                new Component { Name = "HDC1080", Manufacturer = "Texas Instruments", ShortDescription  = "Cyfrowy czujnik temperatury i wilgotności, niskopoborowy", CategoryID = categories[8].CategoryID },
 
                 // Czujniki wilgotności
-                new Component { Name = "DHT22", Manufacturer = "AOSONG", Description = "Cyfrowy czujnik wilgotności i temperatury", CategoryID = categories[9].CategoryID },
-                new Component { Name = "AM2301", Manufacturer = "AOSONG", Description = "Cyfrowy czujnik wilgotności i temperatury", CategoryID = categories[9].CategoryID },
-                new Component { Name = "SHT31", Manufacturer = "Sensirion", Description = "Cyfrowy czujnik wilgotności i temperatury o wysokiej precyzji", CategoryID = categories[9].CategoryID },
-                new Component { Name = "SHTC3", Manufacturer = "Sensirion", Description = "Miniaturowy cyfrowy czujnik wilgotności i temperatury", CategoryID = categories[9].CategoryID },
+                new Component { Name = "DHT22", Manufacturer = "AOSONG", ShortDescription  = "Cyfrowy czujnik wilgotności i temperatury", CategoryID = categories[9].CategoryID },
+                new Component { Name = "AM2301", Manufacturer = "AOSONG", ShortDescription  = "Cyfrowy czujnik wilgotności i temperatury", CategoryID = categories[9].CategoryID },
+                new Component { Name = "SHT31", Manufacturer = "Sensirion", ShortDescription  = "Cyfrowy czujnik wilgotności i temperatury o wysokiej precyzji", CategoryID = categories[9].CategoryID },
+                new Component { Name = "SHTC3", Manufacturer = "Sensirion", ShortDescription  = "Miniaturowy cyfrowy czujnik wilgotności i temperatury", CategoryID = categories[9].CategoryID },
 
                 // Enkodery
-                new Component { Name = "KY-040", Manufacturer = "Keyes", Description = "Obrotowy enkoder do wykrywania położenia kątowego", CategoryID = categories[10].CategoryID },
-                new Component { Name = "EC11", Manufacturer = "Bourns", Description = "Obrotowy enkoder z przyciskiem, idealny do regulacji i nawigacji", CategoryID = categories[10].CategoryID },
-                new Component { Name = "Bourns PEC11R", Manufacturer = "Bourns", Description = "Ciche, rotacyjne enkodery z wieloma wyjściami, idealne do projektów audio", CategoryID = categories[10].CategoryID },
-                new Component { Name = "AMT102", Manufacturer = "CUI Devices", Description = "Inkrementalny enkoder obrotowy z wyjściem cyfrowym, wysokiej precyzji", CategoryID = categories[10].CategoryID },
+                new Component { Name = "KY-040", Manufacturer = "Keyes", ShortDescription  = "Obrotowy enkoder do wykrywania położenia kątowego", CategoryID = categories[10].CategoryID },
+                new Component { Name = "EC11", Manufacturer = "Bourns", ShortDescription  = "Obrotowy enkoder z przyciskiem, idealny do regulacji i nawigacji", CategoryID = categories[10].CategoryID },
+                new Component { Name = "Bourns PEC11R", Manufacturer = "Bourns", ShortDescription  = "Ciche, rotacyjne enkodery z wieloma wyjściami, idealne do projektów audio", CategoryID = categories[10].CategoryID },
+                new Component { Name = "AMT102", Manufacturer = "CUI Devices", ShortDescription  = "Inkrementalny enkoder obrotowy z wyjściem cyfrowym, wysokiej precyzji", CategoryID = categories[10].CategoryID },
 
                 // Fotorezystory
-                new Component { Name = "GL5528", Manufacturer = "GLT", Description = "Fotorezystor reagujący na poziom światła", CategoryID = categories[11].CategoryID },
-                new Component { Name = "GL5537", Manufacturer = "GLT", Description = "Fotorezystor reagujący na światło, stosowany w automatyce", CategoryID = categories[11].CategoryID },
-                new Component { Name = "LDR", Manufacturer = "General", Description = "Czujnik światła, fotorezystor o dużej czułości, używany w aplikacjach DIY", CategoryID = categories[11].CategoryID },
-                new Component { Name = "TSL2591", Manufacturer = "Adafruit", Description = "Cyfrowy czujnik światła o wysokiej czułości z interfejsem I2C", CategoryID = categories[11].CategoryID },
-                new Component { Name = "VEML6075", Manufacturer = "Vishay", Description = "Fotorezystor UV do pomiaru poziomu promieniowania ultrafioletowego", CategoryID = categories[11].CategoryID },
+                new Component { Name = "GL5528", Manufacturer = "GLT", ShortDescription  = "Fotorezystor reagujący na poziom światła", CategoryID = categories[11].CategoryID },
+                new Component { Name = "GL5537", Manufacturer = "GLT", ShortDescription  = "Fotorezystor reagujący na światło, stosowany w automatyce", CategoryID = categories[11].CategoryID },
+                new Component { Name = "LDR", Manufacturer = "General", ShortDescription  = "Czujnik światła, fotorezystor o dużej czułości, używany w aplikacjach DIY", CategoryID = categories[11].CategoryID },
+                new Component { Name = "TSL2591", Manufacturer = "Adafruit", ShortDescription  = "Cyfrowy czujnik światła o wysokiej czułości z interfejsem I2C", CategoryID = categories[11].CategoryID },
+                new Component { Name = "VEML6075", Manufacturer = "Vishay", ShortDescription  = "Fotorezystor UV do pomiaru poziomu promieniowania ultrafioletowego", CategoryID = categories[11].CategoryID },
 
                 // Fototranzystory
-                new Component { Name = "PT333-3C", Manufacturer = "Everlight", Description = "Fototranzystor czuły na światło widzialne", CategoryID = categories[12].CategoryID },
-                new Component { Name = "LPT-80", Manufacturer = "Lite-On", Description = "Fototranzystor czuły na światło widzialne, idealny do detekcji obiektów", CategoryID = categories[12].CategoryID },
-                new Component { Name = "HPT-20", Manufacturer = "Everlight", Description = "Fototranzystor o wysokiej czułości, przeznaczony do zastosowań optoelektronicznych", CategoryID = categories[12].CategoryID },
-                new Component { Name = "PT203-3C", Manufacturer = "Everlight", Description = "Fototranzystor do zastosowań ogólnych, czuły na światło widzialne", CategoryID = categories[12].CategoryID },
+                new Component { Name = "PT333-3C", Manufacturer = "Everlight", ShortDescription  = "Fototranzystor czuły na światło widzialne", CategoryID = categories[12].CategoryID },
+                new Component { Name = "LPT-80", Manufacturer = "Lite-On", ShortDescription  = "Fototranzystor czuły na światło widzialne, idealny do detekcji obiektów", CategoryID = categories[12].CategoryID },
+                new Component { Name = "HPT-20", Manufacturer = "Everlight", ShortDescription  = "Fototranzystor o wysokiej czułości, przeznaczony do zastosowań optoelektronicznych", CategoryID = categories[12].CategoryID },
+                new Component { Name = "PT203-3C", Manufacturer = "Everlight", ShortDescription  = "Fototranzystor do zastosowań ogólnych, czuły na światło widzialne", CategoryID = categories[12].CategoryID },
 
                 // Odbiorniki podczerwieni
-                new Component { Name = "TSOP38238", Manufacturer = "Vishay", Description = "Odbiornik podczerwieni do dekodowania sygnałów IR", CategoryID = categories[13].CategoryID },
-                new Component { Name = "TSOP38240", Manufacturer = "Vishay", Description = "Odbiornik podczerwieni do dekodowania sygnałów IR w zakresie 40 kHz", CategoryID = categories[13].CategoryID },
-                new Component { Name = "VS1838B", Manufacturer = "Vishay", Description = "Odbiornik podczerwieni o dużej czułości i niskim poborze mocy", CategoryID = categories[13].CategoryID },
-                new Component { Name = "GP1UX511QS", Manufacturer = "Sharp", Description = "Odbiornik podczerwieni z dużym zasięgiem i wąskim kątem detekcji", CategoryID = categories[13].CategoryID },
-                new Component { Name = "RPR-220", Manufacturer = "Rohm", Description = "Odbiornik podczerwieni, przeznaczony do różnych zastosowań IR", CategoryID = categories[13].CategoryID },
+                new Component { Name = "TSOP38238", Manufacturer = "Vishay", ShortDescription  = "Odbiornik podczerwieni do dekodowania sygnałów IR", CategoryID = categories[13].CategoryID },
+                new Component { Name = "TSOP38240", Manufacturer = "Vishay", ShortDescription  = "Odbiornik podczerwieni do dekodowania sygnałów IR w zakresie 40 kHz", CategoryID = categories[13].CategoryID },
+                new Component { Name = "VS1838B", Manufacturer = "Vishay", ShortDescription  = "Odbiornik podczerwieni o dużej czułości i niskim poborze mocy", CategoryID = categories[13].CategoryID },
+                new Component { Name = "GP1UX511QS", Manufacturer = "Sharp", ShortDescription  = "Odbiornik podczerwieni z dużym zasięgiem i wąskim kątem detekcji", CategoryID = categories[13].CategoryID },
+                new Component { Name = "RPR-220", Manufacturer = "Rohm", ShortDescription  = "Odbiornik podczerwieni, przeznaczony do różnych zastosowań IR", CategoryID = categories[13].CategoryID },
 
                 // Akcelerometry
-                new Component { Name = "ADXL345", Manufacturer = "Analog Devices", Description = "Trójosiowy akcelerometr", CategoryID = categories[14].CategoryID },
-                new Component { Name = "LIS3DH", Manufacturer = "STMicroelectronics", Description = "Trójosiowy akcelerometr z cyfrowym wyjściem I2C/SPI", CategoryID = categories[14].CategoryID },
-                new Component { Name = "BMA220", Manufacturer = "Bosch", Description = "Miniaturowy trójosiowy akcelerometr z niskim poborem mocy", CategoryID = categories[14].CategoryID },
-                new Component { Name = "MPU6050", Manufacturer = "InvenSense", Description = "Akcelerometr 3-osiowy z żyroskopem 3-osiowym w jednym chipie", CategoryID = categories[14].CategoryID },
-                new Component { Name = "ADXL362", Manufacturer = "Analog Devices", Description = "Trójosiowy akcelerometr z ultra-niskim poborem mocy i funkcją detekcji ruchu", CategoryID = categories[14].CategoryID },
+                new Component { Name = "ADXL345", Manufacturer = "Analog Devices", ShortDescription  = "Trójosiowy akcelerometr", CategoryID = categories[14].CategoryID },
+                new Component { Name = "LIS3DH", Manufacturer = "STMicroelectronics", ShortDescription  = "Trójosiowy akcelerometr z cyfrowym wyjściem I2C/SPI", CategoryID = categories[14].CategoryID },
+                new Component { Name = "BMA220", Manufacturer = "Bosch", ShortDescription  = "Miniaturowy trójosiowy akcelerometr z niskim poborem mocy", CategoryID = categories[14].CategoryID },
+                new Component { Name = "MPU6050", Manufacturer = "InvenSense", ShortDescription  = "Akcelerometr 3-osiowy z żyroskopem 3-osiowym w jednym chipie", CategoryID = categories[14].CategoryID },
+                new Component { Name = "ADXL362", Manufacturer = "Analog Devices", ShortDescription  = "Trójosiowy akcelerometr z ultra-niskim poborem mocy i funkcją detekcji ruchu", CategoryID = categories[14].CategoryID },
 
                 // Czujniki hallotronowe
-                new Component { Name = "DRV5053", Manufacturer = "Texas Instruments", Description = "Czujnik Halla, liniowy pomiar pola magnetycznego", CategoryID = categories[15].CategoryID },
-                new Component { Name = "A3141", Manufacturer = "Allegro", Description = "Czujnik Halla do pomiaru pola magnetycznego z analogowym wyjściem", CategoryID = categories[15].CategoryID },
-                new Component { Name = "HMC5883L", Manufacturer = "Honeywell", Description = "Czujnik 3-osiowy Halla do pomiaru pola magnetycznego", CategoryID = categories[15].CategoryID },
-                new Component { Name = "TLE493D-W2B6", Manufacturer = "Infineon", Description = "Czujnik Halla o niskim poborze mocy z możliwością pomiaru pól magnetycznych", CategoryID = categories[15].CategoryID },
-                new Component { Name = "DRV5055", Manufacturer = "Texas Instruments", Description = "Czujnik Halla, liniowy pomiar pola magnetycznego z wyjściem analogowym", CategoryID = categories[15].CategoryID },
+                new Component { Name = "DRV5053", Manufacturer = "Texas Instruments", ShortDescription  = "Czujnik Halla, liniowy pomiar pola magnetycznego", CategoryID = categories[15].CategoryID },
+                new Component { Name = "A3141", Manufacturer = "Allegro", ShortDescription  = "Czujnik Halla do pomiaru pola magnetycznego z analogowym wyjściem", CategoryID = categories[15].CategoryID },
+                new Component { Name = "HMC5883L", Manufacturer = "Honeywell", ShortDescription  = "Czujnik 3-osiowy Halla do pomiaru pola magnetycznego", CategoryID = categories[15].CategoryID },
+                new Component { Name = "TLE493D-W2B6", Manufacturer = "Infineon", ShortDescription  = "Czujnik Halla o niskim poborze mocy z możliwością pomiaru pól magnetycznych", CategoryID = categories[15].CategoryID },
+                new Component { Name = "DRV5055", Manufacturer = "Texas Instruments", ShortDescription  = "Czujnik Halla, liniowy pomiar pola magnetycznego z wyjściem analogowym", CategoryID = categories[15].CategoryID },
 
                 // Mikrokontrolery
-                new Component { Name = "ATmega328P", Manufacturer = "Microchip", Description = "8-bitowy mikrokontroler AVR używany w platformach Arduino", CategoryID = categories[16].CategoryID },
-                new Component { Name = "STM32F103C8T6", Manufacturer = "STMicroelectronics", Description = "32-bitowy mikrokontroler z rdzeniem ARM Cortex-M3, popularny w rozwoju STM32", CategoryID = categories[16].CategoryID },
-                new Component { Name = "ESP8266", Manufacturer = "Espressif", Description = "Mikrokontroler WiFi o niskiej mocy, często używany w IoT", CategoryID = categories[16].CategoryID },
-                new Component { Name = "ESP32", Manufacturer = "Espressif", Description = "Mikrokontroler z dwurdzeniowym procesorem i wbudowanym WiFi i Bluetooth", CategoryID = categories[16].CategoryID },
-                new Component { Name = "PIC16F877A", Manufacturer = "Microchip", Description = "Mikrokontroler 8-bitowy z rodziny PIC, popularny w aplikacjach embedded", CategoryID = categories[16].CategoryID },
-                new Component { Name = "ATtiny85", Manufacturer = "Microchip", Description = "Mały mikrokontroler AVR, idealny do projektów o ograniczonej przestrzeni", CategoryID = categories[16].CategoryID },
-                new Component { Name = "RP2040", Manufacturer = "Raspberry Pi Foundation", Description = "Mikrokontroler z dwurdzeniowym procesorem ARM Cortex-M0+, stosowany w Raspberry Pi Pico", CategoryID = categories[16].CategoryID },
-                new Component { Name = "MSP430G2553", Manufacturer = "Texas Instruments", Description = "16-bitowy mikrokontroler z ultraniskim poborem mocy", CategoryID = categories[16].CategoryID },
-                new Component { Name = "nRF52840", Manufacturer = "Nordic Semiconductor", Description = "Mikrokontroler z wbudowanym Bluetooth Low Energy (BLE) i NFC, stosowany w aplikacjach IoT", CategoryID = categories[16].CategoryID },
-                new Component { Name = "SAMD21", Manufacturer = "Microchip", Description = "Mikrokontroler 32-bitowy z rdzeniem ARM Cortex-M0+, używany w Arduino Zero", CategoryID = categories[16].CategoryID }
+                new Component { Name = "ATmega328P", Manufacturer = "Microchip", ShortDescription  = "8-bitowy mikrokontroler AVR używany w platformach Arduino", CategoryID = categories[16].CategoryID },
+                new Component { Name = "STM32F103C8T6", Manufacturer = "STMicroelectronics", ShortDescription  = "32-bitowy mikrokontroler z rdzeniem ARM Cortex-M3, popularny w rozwoju STM32", CategoryID = categories[16].CategoryID },
+                new Component { Name = "ESP8266", Manufacturer = "Espressif", ShortDescription  = "Mikrokontroler WiFi o niskiej mocy, często używany w IoT", CategoryID = categories[16].CategoryID },
+                new Component { Name = "ESP32", Manufacturer = "Espressif", ShortDescription  = "Mikrokontroler z dwurdzeniowym procesorem i wbudowanym WiFi i Bluetooth", CategoryID = categories[16].CategoryID },
+                new Component { Name = "PIC16F877A", Manufacturer = "Microchip", ShortDescription  = "Mikrokontroler 8-bitowy z rodziny PIC, popularny w aplikacjach embedded", CategoryID = categories[16].CategoryID },
+                new Component { Name = "ATtiny85", Manufacturer = "Microchip", ShortDescription  = "Mały mikrokontroler AVR, idealny do projektów o ograniczonej przestrzeni", CategoryID = categories[16].CategoryID },
+                new Component { Name = "RP2040", Manufacturer = "Raspberry Pi Foundation", ShortDescription  = "Mikrokontroler z dwurdzeniowym procesorem ARM Cortex-M0+, stosowany w Raspberry Pi Pico", CategoryID = categories[16].CategoryID },
+                new Component { Name = "MSP430G2553", Manufacturer = "Texas Instruments", ShortDescription  = "16-bitowy mikrokontroler z ultraniskim poborem mocy", CategoryID = categories[16].CategoryID },
+                new Component { Name = "nRF52840", Manufacturer = "Nordic Semiconductor", ShortDescription  = "Mikrokontroler z wbudowanym Bluetooth Low Energy (BLE) i NFC, stosowany w aplikacjach IoT", CategoryID = categories[16].CategoryID },
+                new Component { Name = "SAMD21", Manufacturer = "Microchip", ShortDescription  = "Mikrokontroler 32-bitowy z rdzeniem ARM Cortex-M0+, używany w Arduino Zero", CategoryID = categories[16].CategoryID }
             };
             context.Components.AddRange(components);
             await context.SaveChangesAsync();
