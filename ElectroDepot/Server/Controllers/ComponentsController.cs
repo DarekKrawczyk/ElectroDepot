@@ -60,7 +60,7 @@ namespace Server.Controllers
         [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<ComponentDTO>>> GetComponents()
         {
-            return Ok(await _context.Components.Select(x=>x.ToDTO()).ToListAsync());
+            return Ok(await _context.Components.Select(x=>x.ToDTOWithImage(ISS)).ToListAsync());
         }
 
         [HttpGet("GetImageOfComponent/{ComponentID}")]

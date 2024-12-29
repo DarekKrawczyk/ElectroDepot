@@ -2,7 +2,349 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="720"
+             xmlns:vm="using:DesktopClient.ViewModels"
+             xmlns:cont="using:ElectroDepotClassLibrary.Containers"
+             xmlns:spccont="using:DesktopClient.Containers"
+             xmlns:CustomControls="using:DesktopClient.CustomControls"
+             x:DataType="vm:PurchasesPageViewModel"
+             xmlns:rs="using:RangeSlider.Avalonia.Controls"
              x:Class="DesktopClient.Views.PurchasesPageView">
-  Purchases
+
+  <UserControl.Styles>
+    <StyleInclude Source="avares://DesktopClient/Styles/ButtonDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/LabelDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/TextBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
+  </UserControl.Styles>
+
+
+  <Grid ColumnDefinitions="0, *, 0" x:Name="MainGrid">
+    <DockPanel Grid.Column="1">
+      <TabControl TabStripPlacement="Top" SelectedIndex="{Binding SelectedTab}">
+        <TabItem Header="Collection">
+          <Grid RowDefinitions="auto, *, auto">
+            <!-- Header with filters, selectors, and search -->
+            <StackPanel Grid.Row="0"
+                        Spacing="20"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        Margin="0 10 0 10">
+
+              <!-- Date -->
+              <StackPanel Spacing="10">
+                <StackPanel Orientation="Horizontal">
+                  <Label HorizontalAlignment="Left">From</Label>
+                  <DatePicker MaxYear="{Binding Collection_DateMaxYear}"
+                              MinYear="{Binding Collection_DateMinYear}"
+                              SelectedDate="{Binding Collection_SelectedFromDate, Mode=TwoWay}"></DatePicker>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                  <Label HorizontalAlignment="Left">To</Label>
+                  <DatePicker MaxYear="{Binding Collection_DateMaxYear}"
+                              MinYear="{Binding Collection_DateMinYear}>"
+                              SelectedDate="{Binding Collection_SelectedToDate, Mode=TwoWay}"></DatePicker>
+                </StackPanel>
+              </StackPanel>
+
+              <!-- Price -->
+              <StackPanel Orientation="Vertical" Spacing="0">
+                <StackPanel Orientation="Horizontal">
+                  <Label>From</Label>
+                  <TextBox Text="{Binding Collection_PriceFrom}"></TextBox>
+                  <Label>To</Label>
+                  <TextBox Text="{Binding Collection_PriceTo}"></TextBox>
+                </StackPanel>
+                <rs:RangeSlider Minimum="{Binding Collection_MinPrice}"
+                                Maximum="{Binding Collection_MaxPrice}"
+                                LowerSelectedValue="{Binding Collection_SelectedLowPrice}"
+                                UpperSelectedValue="{Binding Collection_SelectedHighPrice}"
+                                IsThumbOverlap="False">
+                </rs:RangeSlider>
+              </StackPanel>
+
+              <!-- Supplier -->
+              <StackPanel Orientation="Vertical" Spacing="10">
+                <Label HorizontalAlignment="Left">Supplier</Label>
+                <ComboBox SelectedItem="{Binding Collection_SelectedSupplier, Mode=TwoWay}" ItemsSource="{Binding SupplierSource}" HorizontalAlignment="Left" VerticalAlignment="Center"></ComboBox>
+              </StackPanel>
+
+
+              <!-- Clear settings -->
+              <StackPanel Orientation="Vertical" Spacing="10">
+                <Label>...</Label>
+                <Button Command="{Binding Collection_ClearSettingsCommand}" >Clear settings</Button>
+              </StackPanel>
+            </StackPanel>
+
+            <!-- Components grid -->
+            <DataGrid ItemsSource="{Binding Purchases}"
+                      SelectedItem="{Binding SelectedPurchase}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      x:Name="Comps"
+                      GridLinesVisibility="All"
+                      Grid.Row="1"
+                      BorderThickness="1"
+                      BorderBrush="Gray"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.PurchaseDateAsDate}" Width="*"/>
+                <DataGridTextColumn Header="Supplier" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.SupplierName}" Width="*"/>
+                <DataGridTextColumn Header="Components" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.ComponentsQuantity}" Width="200"/>
+                <DataGridTextColumn Header="Price" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.TotalPrice}" Width="200"/>
+              </DataGrid.Columns>
+              <DataGrid.Styles>
+                <Style Selector="DataGridRow">
+                  <Setter Property="ContextMenu">
+                    <ContextMenu>
+                      <MenuItem Header="Preview" x:DataType="spccont:DetailedPurchaseContainerHolder" Command="{Binding PreviewPurchaseCommand}"/>
+                    </ContextMenu>
+                  </Setter>
+                </Style>
+              </DataGrid.Styles>
+            </DataGrid>
+
+            <!-- Footer with buttons -->
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        Spacing="10"
+                        HorizontalAlignment="Right"
+                        Margin="0 10 0 10">
+              <Button Command="{Binding Collection_RefreshCommand}">Refresh</Button>
+            </StackPanel>
+          </Grid>
+        </TabItem>
+        <TabItem Header="Add">
+          <Grid ColumnDefinitions="50* auto 50*" Margin="0 0 0 10">
+            
+            <!-- Left side -->
+            <Grid Grid.Column="0" RowDefinitions="auto auto * auto">
+              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
+                <StackPanel Orientation="Vertical" Spacing="10">
+                  <Label HorizontalAlignment="Left" FontWeight="Bold">Supplier</Label>
+                  <ComboBox ItemsSource="{Binding SupplierSource}" SelectedItem="{Binding Add_SelectedSupplier}"></ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" Spacing="10">
+                  <Label HorizontalAlignment="Left" FontWeight="Bold">Purchase date</Label>
+                  <!-- This date size is because of custom buttons styles ... -->
+                  <CalendarDatePicker Watermark="Insert date" Width="300" SelectedDate="{Binding Add_SelectedDate, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" Spacing="10">
+                  <Label HorizontalAlignment="Left" FontWeight="Bold">Total price</Label>
+                  <Label HorizontalAlignment="Left" Content="{Binding Add_TotalPrice, Mode = TwoWay}"></Label>
+                </StackPanel>
+              </StackPanel>
+
+              <!-- Separator -->
+              <Grid Grid.Row="1">
+                <Border Height = "1"
+                        Background = "{DynamicResource UIMediumGray}"
+                        Margin = "10,5"
+                        HorizontalAlignment = "Stretch"/>
+              </Grid>
+
+                <Grid Grid.Row="2" RowDefinitions="auto *">
+                  <DataGrid Grid.Row="1" Margin="0 0 0 10" ItemsSource="{Binding PurchaseComponents}">
+                    <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Image">
+                      <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                          <Image x:DataType="spccont:PurchaseItemComponentContainerHolder"  Source="{Binding Image}" Width="64" Height="64" Stretch="UniformToFill" />
+                        </DataTemplate>
+                      </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Name" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding Name}" Width="*"/>
+                    <DataGridTextColumn Header="Category" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding CategoryName}" Width="*"/>
+                    <DataGridTextColumn Header="Quantity" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding Quantity, Mode = TwoWay}" Width="*"/>
+                    <DataGridTextColumn Header="Price" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding UnitPrice, Mode = TwoWay}" Width="*"/>
+                  </DataGrid.Columns>
+                    <DataGrid.Styles>
+                      <Style Selector="DataGridRow">
+                        <Setter Property="ContextMenu">
+                          <ContextMenu>
+                            <MenuItem Header="Details"/>
+                            <MenuItem Header="Datasheet"/>
+                            <MenuItem Header="Footprint"/>
+                            <MenuItem Header="Find at suppliers">
+                              <MenuItem Header="Digikey" />
+                              <MenuItem Header="Mouser" />
+                              <MenuItem Header="Botland" />
+                              <MenuItem Header="..." />
+                            </MenuItem>
+                            <MenuItem Header="Remove from purchase" x:DataType="spccont:PurchaseItemComponentContainerHolder" Command="{Binding RemoveFromCollectionCommand}"/>
+                          </ContextMenu>
+                        </Setter>
+                      </Style>
+                    </DataGrid.Styles>
+                  </DataGrid>
+                </Grid>
+              
+              <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10">
+                <Button Command="{Binding Add_ClearCommand}">Clear</Button>
+                <Button IsEnabled="{Binding Add_CanAdd}" Command="{Binding Add_AddPurchaseCommand}">Add</Button>
+              </StackPanel>
+            </Grid>
+            
+            <!-- Separator -->
+            <Grid Grid.Column="1">
+              <Border Width="1"
+                      Background="{DynamicResource UIMediumGray}"
+                      Margin="10,5"
+                      HorizontalAlignment="Stretch"/>
+            </Grid>
+            
+            <!-- Right side -->
+            <Grid Grid.Column="2" RowDefinitions="auto *">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBox Text="{Binding Purchase_AddAllComponentsFilter}"></TextBox>
+                <ComboBox></ComboBox>
+                <Button Command="{Binding Purchase_ClearFiltersForAllComponentsCommand}">Clear</Button>
+              </StackPanel>
+              <DataGrid Grid.Row="1" Margin="0 0 0 10" ItemsSource="{Binding AllComponents}">
+                <DataGrid.Columns>
+                  <DataGridTemplateColumn Header="Image">
+                    <DataGridTemplateColumn.CellTemplate>
+                      <DataTemplate>
+                        <Image x:DataType="spccont:ComponentWithCategoryContainerHolder" Source="{Binding Component.Image}" Width="64" Height="64" Stretch="UniformToFill" />
+                      </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                  </DataGridTemplateColumn>
+                  <DataGridTextColumn Header="Name" x:DataType="spccont:ComponentWithCategoryContainerHolder" Binding="{Binding Component.Name}" Width="*"/>
+                  <DataGridTextColumn Header="Manufacturer" x:DataType="spccont:ComponentWithCategoryContainerHolder" Binding="{Binding Component.Manufacturer}" Width="*"/>
+                  <DataGridTextColumn Header="Category" x:DataType="spccont:ComponentWithCategoryContainerHolder" Binding="{Binding Component.CategoryName}" Width="*"/>
+                </DataGrid.Columns>
+                <DataGrid.Styles>
+                  <Style Selector="DataGridRow">
+                    <Setter Property="ContextMenu">
+                      <ContextMenu>
+                        <MenuItem Header="Add to purchase" x:DataType="spccont:ComponentWithCategoryContainerHolder" Command="{Binding AddToPurchasedComponentsCommand}" />
+                      </ContextMenu>
+                    </Setter>
+                  </Style>
+                </DataGrid.Styles>
+              </DataGrid>
+            </Grid>
+          </Grid>
+        </TabItem>
+        <TabItem Header="Import" IsEnabled="False"></TabItem>
+        <TabItem Header="Preview" IsEnabled="{Binding PreviewEnabled}">
+          <Grid RowDefinitions="*" ColumnDefinitions="50*, auto, 50*">
+            <!-- Left section -->
+            <Grid Grid.Column="0" RowDefinitions="auto, auto, *">
+              <!-- Purchase Data -->
+              <StackPanel Spacing="10" Grid.Row="0">
+
+                <StackPanel Orientation="Vertical">
+                  <Label HorizontalAlignment="Left" FontWeight="Bold">Supplier</Label>
+                  <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Border BorderBrush="Black" BorderThickness="1">
+                      <Image Source="{Binding SelectedPurchase.Container.Supplier.Image}"
+                             Height="128"
+                             Margin="0"/>
+                    </Border>
+                    <Label Content="{Binding SelectedPurchase.Container.Supplier.Name}"></Label>
+                  </StackPanel>
+                </StackPanel>
+                
+                <StackPanel Orientation="Vertical">
+                  <Label HorizontalAlignment="Left" FontWeight="Bold">Purchase date</Label>
+                  <Label HorizontalAlignment="Left" Content="{Binding SelectedPurchase.Container.PurchaseDateAsDate}">21.04.2002</Label>
+                </StackPanel>
+                
+                <StackPanel Orientation="Vertical">
+                  <Label HorizontalAlignment="Left" FontWeight="Bold">Total price</Label>
+                  <Label HorizontalAlignment="Left" Content="{Binding SelectedPurchase.Container.TotalPriceAsCurrency}">0 zł</Label>
+                </StackPanel>
+              
+              </StackPanel>
+
+              <!-- Separator-->
+              <Grid Grid.Row="1">
+                <Border Height="1"
+                        Background="{DynamicResource UIMediumGray}"
+                        Margin="0, 10"
+                        HorizontalAlignment="Stretch"/>
+              </Grid>
+
+              <!-- Component description -->
+              <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto"/>
+                  <!-- For the label -->
+                  <RowDefinition Height="*"/>
+                  <!-- For the ScrollViewer -->
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" FontWeight="Bold">Faktura</Label>
+                <Border Grid.Row="1" BorderBrush="{DynamicResource UIMediumGray}" BorderThickness="1" Margin="0 10 0 10">
+                  <ScrollViewer>
+                    <Image Source="/Assets/NoImage.png" />
+                  </ScrollViewer>
+                </Border>
+              </Grid>
+
+
+            </Grid>
+
+            <!-- Separator-->
+            <Grid Grid.Column="1">
+              <Border Width="1"
+                      Background="{DynamicResource UIMediumGray}"
+                      Margin="10,5"
+                      HorizontalAlignment="Stretch"/>
+            </Grid>
+
+            <!-- Right section -->
+            <Grid Grid.Column="2" RowDefinitions="*" Margin="0 0 0 10">
+              <!-- Purchases -->
+                  <DataGrid ItemsSource="{Binding Preview_ProjectItems}"
+                            AutoGenerateColumns="False"
+                            IsReadOnly="True"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            GridLinesVisibility="All"
+                            BorderThickness="1"
+                            BorderBrush="Gray">
+                    <DataGrid.Columns>
+                      <DataGridTemplateColumn Header="Image">
+                        <DataGridTemplateColumn.CellTemplate>
+                          <DataTemplate>
+                            <Image x:DataType="cont:PurchaseItemContainer"  Source="{Binding Image}" Width="64" Height="64" Stretch="UniformToFill" />
+                          </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                      </DataGridTemplateColumn>
+                      <DataGridTextColumn Header="Name" x:DataType="cont:PurchaseItemContainer" Binding="{Binding Name}" Width="*"/>
+                      <DataGridTextColumn Header="Quantity" x:DataType="cont:PurchaseItemContainer" Binding="{Binding Quantity}" Width="*"/>
+                      <DataGridTextColumn Header="Price" x:DataType="cont:PurchaseItemContainer" Binding="{Binding PricePerUnitAsCurrency}" Width="*"/>
+                    </DataGrid.Columns>
+                    <DataGrid.Styles>
+                      <Style Selector="DataGridRow">
+                        <Setter Property="ContextMenu">
+                          <ContextMenu>
+                            <MenuItem Header="Details"/>
+                            <MenuItem Header="Datasheet"/>
+                            <MenuItem Header="Footprint"/>
+                            <MenuItem Header="Find at suppliers">
+                              <MenuItem Header="Digikey" />
+                              <MenuItem Header="Mouser" />
+                              <MenuItem Header="Botland" />
+                              <MenuItem Header="..." />
+                            </MenuItem>
+                          </ContextMenu>
+                        </Setter>
+                      </Style>
+                    </DataGrid.Styles>
+                  </DataGrid>
+            </Grid>
+          </Grid>
+        </TabItem>
+      </TabControl>
+    </DockPanel>
+  </Grid>
 </UserControl>
+

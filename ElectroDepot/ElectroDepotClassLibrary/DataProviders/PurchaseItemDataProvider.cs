@@ -12,7 +12,7 @@ namespace ElectroDepotClassLibrary.DataProviders
         {
         }
         #region API Calls
-        public async Task<bool> CreatePurchaseItem(PurchaseItem PurchaseItem)
+        public async Task<PurchaseItem> CreatePurchaseItem(PurchaseItem PurchaseItem)
         {
             var json = JsonSerializer.Serialize(PurchaseItem.ToCreateDTO());
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -20,7 +20,19 @@ namespace ElectroDepotClassLibrary.DataProviders
             string url = PurchaseItemEndpoints.Create();
             var response = await HTTPClient.PostAsync(url, content);
 
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+
+                var resjson = await response.Content.ReadAsStringAsync();
+                PurchaseItemDTO purchaseItems = JsonSerializer.Deserialize<PurchaseItemDTO>(resjson, options);
+                return purchaseItems.ToModel();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         

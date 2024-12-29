@@ -4,11 +4,11 @@ namespace ElectroDepotClassLibrary.Models
 {
     public class PurchaseItem
     {
-        public int ID { get; }
-        public int PurchaseID { get; }
-        public int ComponentID { get; }
-        public int Quantity { get; }
-        public double PricePerUnit { get; }
+        public int ID { get; set; }
+        public int PurchaseID { get; set; }
+        public int ComponentID { get; set; }
+        public int Quantity { get; set; }
+        public double PricePerUnit { get; set; }
         public PurchaseItem(int id, int purchaseID, int componentID, int quantity, double pricePerUnit)
         {
             ID = id;

@@ -17,7 +17,7 @@ namespace ElectroDepotClassLibrary.DataProviders
         /// </summary>
         /// <param name="purchase"></param>
         /// <returns></returns>
-        public async Task<bool> CreatePurchase(Purchase purchase)
+        public async Task<Purchase> CreatePurchase(Purchase purchase)
         {
             var json = JsonSerializer.Serialize(purchase);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -27,10 +27,14 @@ namespace ElectroDepotClassLibrary.DataProviders
 
             if (response.IsSuccessStatusCode)
             {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return true;
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+
+                var resjson = await response.Content.ReadAsStringAsync();
+                PurchaseDTO? dbpurchase = JsonSerializer.Deserialize<PurchaseDTO>(resjson, options);
+                return dbpurchase?.ToModel();
             }
-            return false;
+            return null;
         }
 
         public async Task<Purchase> GetPurchaseByID(int ID)

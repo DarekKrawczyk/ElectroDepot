@@ -58,10 +58,11 @@ Once basic functionalities are be implemented, application will recieve UI upgra
 ![Home tab](Assets/Panel_Home.gif)  
 - **Components**  
 ![Components tab](Assets/Panel_Components.gif)  
+- **Purchases**  
+![Components tab](Assets/Panel_Purchases.gif)  
 
 #### 🛠️ To Be Implemented  
 - **Projects**  
-- **Purchases**  
 - **Tracking**
 - **User Profile**  
 - **User Login and Authentication**  
