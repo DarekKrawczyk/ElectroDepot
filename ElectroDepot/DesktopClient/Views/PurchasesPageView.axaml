@@ -9,7 +9,7 @@
              x:DataType="vm:PurchasesPageViewModel"
              xmlns:rs="using:RangeSlider.Avalonia.Controls"
              x:Class="DesktopClient.Views.PurchasesPageView">
-  
+
   <UserControl.Styles>
     <StyleInclude Source="avares://DesktopClient/Styles/ButtonDefaultOverrideStyle.axaml"/>
     <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
@@ -21,7 +21,7 @@
 
   <Grid ColumnDefinitions="0, *, 0" x:Name="MainGrid">
     <DockPanel Grid.Column="1">
-      <TabControl TabStripPlacement="Top">
+      <TabControl TabStripPlacement="Top" SelectedIndex="{Binding SelectedTab}">
         <TabItem Header="Collection">
           <Grid RowDefinitions="auto, *, auto">
             <!-- Header with filters, selectors, and search -->
@@ -36,13 +36,15 @@
                 <StackPanel Orientation="Horizontal">
                   <Label HorizontalAlignment="Left">From</Label>
                   <DatePicker MaxYear="{Binding Collection_DateMaxYear}"
-                              MinYear="{Binding Collection_DateMinYear}"></DatePicker>
+                              MinYear="{Binding Collection_DateMinYear}"
+                              SelectedDate="{Binding Collection_SelectedFromDate, Mode=TwoWay}"></DatePicker>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                   <Label HorizontalAlignment="Left">To</Label>
                   <DatePicker MaxYear="{Binding Collection_DateMaxYear}"
-                              MinYear="{Binding Collection_DateMinYear}>"></DatePicker>
+                              MinYear="{Binding Collection_DateMinYear}>"
+                              SelectedDate="{Binding Collection_SelectedToDate, Mode=TwoWay}"></DatePicker>
                 </StackPanel>
               </StackPanel>
 
@@ -65,19 +67,20 @@
               <!-- Supplier -->
               <StackPanel Orientation="Vertical" Spacing="10">
                 <Label HorizontalAlignment="Left">Supplier</Label>
-                <ComboBox PlaceholderText="" HorizontalAlignment="Left" VerticalAlignment="Center"></ComboBox>
+                <ComboBox SelectedItem="{Binding Collection_SelectedSupplier, Mode=TwoWay}" ItemsSource="{Binding SupplierSource}" HorizontalAlignment="Left" VerticalAlignment="Center"></ComboBox>
               </StackPanel>
-              
+
 
               <!-- Clear settings -->
               <StackPanel Orientation="Vertical" Spacing="10">
                 <Label>...</Label>
-                <Button>Clear settings</Button>
+                <Button Command="{Binding Collection_ClearSettingsCommand}" >Clear settings</Button>
               </StackPanel>
             </StackPanel>
 
             <!-- Components grid -->
             <DataGrid ItemsSource="{Binding Purchases}"
+                      SelectedItem="{Binding SelectedPurchase}"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
                       x:Name="Comps"
@@ -110,148 +113,67 @@
         </TabItem>
         <TabItem Header="Add"></TabItem>
         <TabItem Header="Import"></TabItem>
-        <TabItem Header="Preview">
-          <Grid RowDefinitions="*" ColumnDefinitions="auto, auto, *">
+        <TabItem Header="Preview" IsEnabled="{Binding PreviewEnabled}">
+          <Grid RowDefinitions="*" ColumnDefinitions="50*, auto, 50*">
             <!-- Left section -->
-            <Grid Grid.Column="0" RowDefinitions="auto, *, auto">
-              <!-- Component basic data -->
-              <Grid Grid.Row="0" ColumnDefinitions="auto, auto, 60*">
-                <!-- Image + Find/Upload buttons-->
-                <Grid Grid.Column="0">
-                  <StackPanel Spacing="10">
+            <Grid Grid.Column="0" RowDefinitions="auto, auto, *">
+              <!-- Purchase Data -->
+              <StackPanel Spacing="10" Grid.Row="0">
+
+                <StackPanel Orientation="Vertical">
+                  <Label HorizontalAlignment="Left" FontWeight="Bold">Supplier</Label>
+                  <StackPanel Orientation="Horizontal" Spacing="10">
                     <Border BorderBrush="Black" BorderThickness="1">
-                      <Image 
-                             Height="173"
-                             Margin="0"></Image>
+                      <Image Source="{Binding SelectedPurchase.Supplier.Image}"
+                             Height="128"
+                             Margin="0"/>
                     </Border>
+                    <Label Content="{Binding SelectedPurchase.Supplier.Name}"></Label>
                   </StackPanel>
-                </Grid>
+                </StackPanel>
+                
+                <StackPanel Orientation="Vertical">
+                  <Label HorizontalAlignment="Left" FontWeight="Bold">Purchase date</Label>
+                  <Label HorizontalAlignment="Left" Content="{Binding SelectedPurchase.PurchaseDateAsDate}">21.04.2002</Label>
+                </StackPanel>
+                
+                <StackPanel Orientation="Vertical">
+                  <Label HorizontalAlignment="Left" FontWeight="Bold">Total price</Label>
+                  <Label HorizontalAlignment="Left" Content="{Binding SelectedPurchase.TotalPriceAsCurrency}">0 zł</Label>
+                </StackPanel>
+              
+              </StackPanel>
 
-                <!-- Separator-->
-                <Grid Grid.Column="1">
-                  <Border Width ="1"
-                          Background="{DynamicResource UIMediumGray}"
-                          Margin="10,0"
-                          HorizontalAlignment="Stretch"/>
-                </Grid>
-
-                <!-- Component Name/Manufacturer/Datasheet/Category labels -->
-                <Grid Grid.Column="2">
-                  <StackPanel>
-                    <!-- First row -->
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                      <!-- Name -->
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Name</Label>
-                        <Label HorizontalAlignment="Left" >Name</Label>
-                      </StackPanel>
-
-                      <!-- Manufacturer -->
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Manufacturer</Label>
-                        <Label HorizontalAlignment="Left">Manufacturer</Label>
-                      </StackPanel>
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Category</Label>
-                        <Label HorizontalAlignment="Left">Category</Label>
-                      </StackPanel>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Owned</Label>
-                        <Label HorizontalAlignment="Left">Owned</Label>
-                      </StackPanel>
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Used</Label>
-                        <Label HorizontalAlignment="Left">Used</Label>
-                      </StackPanel>
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Available</Label>
-                        <Label HorizontalAlignment="Left">Available</Label>
-                      </StackPanel>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical">
-                    </StackPanel>
-
-                    <!-- Third row -->
-                    <StackPanel Orientation="Vertical">
-                      <Label FontWeight="Bold" HorizontalAlignment="Left">Datasheet</Label>
-                      <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Button>Preview</Button>
-                        <Button>Copy to clibboard</Button>
-                      </StackPanel>
-                    </StackPanel>
-                  </StackPanel>
-
-                </Grid>
+              <!-- Separator-->
+              <Grid Grid.Row="1">
+                <Border Height="1"
+                        Background="{DynamicResource UIMediumGray}"
+                        Margin="0, 10"
+                        HorizontalAlignment="Stretch"/>
               </Grid>
 
               <!-- Component description -->
-              <Grid Grid.Row="1">
-                <Grid.RowDefinitions>
-                  <!-- 30% for Short description -->
-                  <RowDefinition Height="3*" />
-                  <!-- 70% for Full description -->
-                  <RowDefinition Height="7*" />
-                </Grid.RowDefinitions>
-
-                <!-- Short Description Section -->
-                <Grid Grid.Row="0">
-                  <Grid.RowDefinitions>
-                    <!-- Short description Label -->
-                    <RowDefinition Height="Auto" />
-                    <!-- Short description TextBox -->
-                    <RowDefinition Height="*" />
-                  </Grid.RowDefinitions>
-
-                  <Label Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Left">Short description</Label>
-                  <TextBox Grid.Row="1"
-                           TextWrapping="Wrap"
-                           VerticalContentAlignment="Top"
-                           HorizontalAlignment="Stretch"
-                           IsReadOnly="True"
-                           VerticalAlignment="Stretch"/>
-                </Grid>
-
-                <!-- Full Description Section -->
-                <Grid Grid.Row="1" Margin="0 0 0 10">
-                  <Grid.RowDefinitions>
-                    <!-- Full description Label -->
-                    <RowDefinition Height="Auto" />
-                    <!-- Full description TextBox -->
-                    <RowDefinition Height="*" />
-                  </Grid.RowDefinitions>
-
-                  <Label Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Left">Full description</Label>
-                  <TextBox Grid.Row="1"
-                           TextWrapping="Wrap"
-                           VerticalContentAlignment="Top"
-                           AcceptsReturn="True"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Stretch" />
-                </Grid>
+              <Grid Grid.Row="2" RowDefinitions="auto *">
+                <Label Grid.Row="0" FontWeight="Bold">Faktura</Label>
+                <ScrollViewer Grid.Row="1">
+                  <Image Source="/Assets/NoImage.png"></Image>
+                </ScrollViewer>
               </Grid>
 
             </Grid>
 
             <!-- Separator-->
             <Grid Grid.Column="1">
-              <Border Width="2"
+              <Border Width="1"
                       Background="{DynamicResource UIMediumGray}"
                       Margin="10,5"
                       HorizontalAlignment="Stretch"/>
             </Grid>
 
             <!-- Right section -->
-            <Grid Grid.Column="2" RowDefinitions="50*, auto, auto">
-              <!-- Upper section -->
-              <Grid Grid.Row="0" ColumnDefinitions="50*, auto, 50*">
-                <!-- Purchases -->
-                <Grid Grid.Column="0" RowDefinitions="auto, *">
-                  <Label Grid.Row="0" FontWeight="Bold">Purchased</Label>
-                  <DataGrid 
-                            Grid.Row="1"
+            <Grid Grid.Column="2" RowDefinitions="*" Margin="0 0 0 10">
+              <!-- Purchases -->
+                  <DataGrid ItemsSource="{Binding Preview_ProjectItems}"
                             AutoGenerateColumns="False"
                             IsReadOnly="True"
                             VerticalAlignment="Stretch"
@@ -260,66 +182,36 @@
                             BorderThickness="1"
                             BorderBrush="Gray">
                     <DataGrid.Columns>
+                      <DataGridTemplateColumn Header="Image">
+                        <DataGridTemplateColumn.CellTemplate>
+                          <DataTemplate>
+                            <Image x:DataType="cont:PurchaseItemContainer"  Source="{Binding Image}" Width="64" Height="64" Stretch="UniformToFill" />
+                          </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                      </DataGridTemplateColumn>
+                      <DataGridTextColumn Header="Name" x:DataType="cont:PurchaseItemContainer" Binding="{Binding Name}" Width="*"/>
+                      <DataGridTextColumn Header="Quantity" x:DataType="cont:PurchaseItemContainer" Binding="{Binding Quantity}" Width="*"/>
+                      <DataGridTextColumn Header="Price" x:DataType="cont:PurchaseItemContainer" Binding="{Binding PricePerUnitAsCurrency}" Width="*"/>
                     </DataGrid.Columns>
+                    <DataGrid.Styles>
+                      <Style Selector="DataGridRow">
+                        <Setter Property="ContextMenu">
+                          <ContextMenu>
+                            <MenuItem Header="Details"/>
+                            <MenuItem Header="Datasheet"/>
+                            <MenuItem Header="Footprint"/>
+                            <MenuItem Header="Find at suppliers">
+                              <MenuItem Header="Digikey" />
+                              <MenuItem Header="Mouser" />
+                              <MenuItem Header="Botland" />
+                              <MenuItem Header="..." />
+                            </MenuItem>
+                          </ContextMenu>
+                        </Setter>
+                      </Style>
+                    </DataGrid.Styles>
                   </DataGrid>
-                </Grid>
-
-                <!-- Separator -->
-                <Grid Grid.Column="1">
-                  <Border Width="2"
-                          Background="{DynamicResource UIMediumGray}"
-                          Margin="10,0" />
-                </Grid>
-
-                <!-- Projects  -->
-                <Grid Grid.Column="2" RowDefinitions="auto, *">
-                  <Label Grid.Row="0" FontWeight="Bold">Used in projects</Label>
-                  <DataGrid 
-                            Grid.Row="1"
-                            AutoGenerateColumns="False"
-                            IsReadOnly="True"
-                            VerticalAlignment="Stretch"
-                            HorizontalAlignment="Stretch"
-                            GridLinesVisibility="All"
-                            BorderThickness="1"
-                            BorderBrush="Gray">
-                    <DataGrid.Columns>
-                    </DataGrid.Columns>
-                  </DataGrid>
-                </Grid>
-              </Grid>
-
-              <!-- Separator -->
-              <Grid Grid.Row="1">
-                <Border Height="2"
-                        Background="{DynamicResource UIMediumGray}"
-                        Margin="0,10" />
-              </Grid>
-
-              <!-- Bottom section -->
-              <Grid Grid.Row="2">
-                <StackPanel>
-                  <Label FontWeight="Bold">Find in suppliers</Label>
-                  <ScrollViewer x:Name="HorizontalScrollViewer"
-                                HorizontalScrollBarVisibility="Hidden"
-                                VerticalScrollBarVisibility="Disabled" Margin="0 0 0 10">
-                    <ItemsControl>
-                      <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                          <UniformGrid Rows="1" />
-                        </ItemsPanelTemplate>
-                      </ItemsControl.ItemsPanel>
-
-                      <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                        </DataTemplate>
-                      </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                  </ScrollViewer>
-                </StackPanel>
-              </Grid>
             </Grid>
-
           </Grid>
         </TabItem>
       </TabControl>
