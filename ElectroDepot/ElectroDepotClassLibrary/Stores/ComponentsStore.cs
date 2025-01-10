@@ -1,6 +1,8 @@
-﻿using ElectroDepotClassLibrary.DataProviders;
+﻿using ElectroDepotClassLibrary.Containers;
+using ElectroDepotClassLibrary.DataProviders;
 using ElectroDepotClassLibrary.Models;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace ElectroDepotClassLibrary.Stores
 {
@@ -9,9 +11,11 @@ namespace ElectroDepotClassLibrary.Stores
         private readonly ComponentDataProvider _componentDataProvider;
         private readonly OwnsComponentDataProvider _ownsComponentDataProvider;
         private List<Component> _components;
+        private List<ComponentWithCategoryContainer> _componentsFromSystem;
         private List<OwnsComponent> _ownedComponents;
         private List<OwnsComponent> _unusedComponents;
 
+        public IEnumerable<ComponentWithCategoryContainer> ComponentsFromSystem {  get { return _componentsFromSystem; } }
         public IEnumerable<Component> Components {  get { return _components; } }
         public IEnumerable<OwnsComponent> OwnedComponents {  get { return _ownedComponents; } }
         public IEnumerable<OwnsComponent> UnusedComponents {  get { return _unusedComponents; } }
@@ -20,12 +24,14 @@ namespace ElectroDepotClassLibrary.Stores
         public OwnsComponentDataProvider OwnsComponentDP { get { return _ownsComponentDataProvider; } }
 
         public event Action ComponentsLoaded;
+        public event Action ComponentsFromSystemLoaded;
 
         public ComponentsStore(DatabaseStore dbStore, ComponentDataProvider componentDataProvider, OwnsComponentDataProvider ownsComponentDataProvider) : base(dbStore)
         {
             _componentDataProvider = componentDataProvider;
             _ownsComponentDataProvider = ownsComponentDataProvider;
             _components = new List<Component>();
+            _componentsFromSystem = new List<ComponentWithCategoryContainer>();
             _ownedComponents = new List<OwnsComponent>();
             _unusedComponents = new List<OwnsComponent>();
             // TODO: OwnsComponent model requires implementation of User model just like the rest of Models....
@@ -61,6 +67,21 @@ namespace ElectroDepotClassLibrary.Stores
             ComponentsLoaded?.Invoke();
 
             return true;
+        }
+
+        public async Task LoadComponentsOfSystem()
+        {
+            _componentsFromSystem.Clear();
+
+            IEnumerable<Category> categories = await MainStore.CategorieStore.DB.GetAllCategories();
+            IEnumerable<Component> componentsFromDB = await _componentDataProvider.GetAllComponents();
+            foreach(Component component in componentsFromDB)
+            {
+                Category cat = categories.FirstOrDefault(c => c.ID == component.CategoryID);
+                _componentsFromSystem.Add(new ComponentWithCategoryContainer(component, cat));
+            }
+
+            ComponentsFromSystemLoaded?.Invoke();
         }
 
         public async Task Load()

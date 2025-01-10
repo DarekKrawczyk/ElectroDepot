@@ -34,8 +34,6 @@ namespace DesktopClient.ViewModels
         public List<DetailedItemProjectContainer> SelectedComponentsProjectSource { get; set; }
         #endregion
 
-
-
         [ObservableProperty]
         private bool _isSelectingPredefinedImagePopupOpen;
 

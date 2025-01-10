@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 
 namespace DesktopClient.Views
@@ -7,6 +8,7 @@ namespace DesktopClient.Views
         public MainWindow()
         {
             InitializeComponent();
+            this.AttachDevTools();
         }
     }
 }

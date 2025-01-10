@@ -28,8 +28,8 @@ namespace ElectroDepotClassLibraryTests.Tests
 
                 // Create new 'Purchase'
                 Purchase newPurchase = new Purchase(iD: 0, userID: user.ID, user: user, supplierID: supplier.ID, supplier: supplier, purchaseDate: DateTime.Now, totalPrice: 0);
-                bool wasCreated = await PurchaseDP.CreatePurchase(newPurchase);
-                Assert.True(wasCreated);
+                Purchase purchaseFromDB = await PurchaseDP.CreatePurchase(newPurchase);
+                Assert.True(purchaseFromDB != null);
 
                 Console.WriteLine(newPurchase.ToString());
             }

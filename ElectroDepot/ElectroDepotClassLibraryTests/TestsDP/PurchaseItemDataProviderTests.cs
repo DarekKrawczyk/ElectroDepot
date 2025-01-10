@@ -28,8 +28,8 @@ namespace ElectroDepotClassLibraryTests.Tests
                 Assert.NotNull(component);
 
                 PurchaseItem purchaseItem = new PurchaseItem(id: 0, purchaseID: purchase.ID, componentID: component.ID, quantity: 30, pricePerUnit: 19.99);
-                bool wasCreated = await PurchaseItemDP.CreatePurchaseItem(purchaseItem);
-                Assert.True(wasCreated);
+                PurchaseItem purchaseItemFromDB = await PurchaseItemDP.CreatePurchaseItem(purchaseItem);
+                Assert.True(purchaseItemFromDB != null);
 
                 Console.WriteLine(purchaseItem.ToString());
             }
