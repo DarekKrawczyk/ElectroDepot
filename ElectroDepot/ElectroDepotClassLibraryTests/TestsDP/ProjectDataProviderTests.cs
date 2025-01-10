@@ -21,8 +21,8 @@ namespace ElectroDepotClassLibraryTests.Tests
                 Assert.NotNull(user);
 
                 Project project = new Project(id: 0, userID: user.ID, user: user, name: "Stacja meterologiczna", image: null, description: "Na SMIW", createdAt: DateTime.Now);
-                bool wasCreate = await ProjectDP.CreateProject(project);
-                Assert.True(wasCreate);
+                Project wasCreate = await ProjectDP.CreateProject(project);
+                Assert.True(wasCreate != null);
 
                 Console.WriteLine($"Project created: {project.ToString()}");
             }

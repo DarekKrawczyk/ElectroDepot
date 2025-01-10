@@ -26,6 +26,33 @@ namespace ElectroDepotClassLibrary.Stores
             _projectComponents = new List<ProjectComponent>();
         }
 
+        public async Task<bool> InsertProjectComponentsToProject(Project project, IEnumerable<ProjectComponent> projectComponents)
+        {
+            try
+            {
+                foreach(ProjectComponent comp in projectComponents)
+                {
+                    comp.ProjectID = project.ID;
+                    await _projectComponentDataProvider.CreateProjectComponent(comp);
+                }
+            }
+            catch (Exception exception)
+            {
+                return false;
+            }
+            _projects.Add(project);
+            project.Image = await _projectDataProvider.GetImageOfProjectByID(project);
+
+            ProjectsLoaded?.Invoke();
+            return true;
+        }
+
+        public async Task<Project> InsertNewProject(Project project)
+        {
+            Project result = await _projectDataProvider.CreateProject(project);
+            return result;
+        }
+
         public async Task Load()
         {
             _projects.Clear();

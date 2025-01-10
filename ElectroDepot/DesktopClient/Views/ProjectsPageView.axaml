@@ -2,7 +2,263 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="DesktopClient.Views.ProjectsPageView">
-  Projects
+             mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="720"
+             xmlns:vm="using:DesktopClient.ViewModels"
+             xmlns:spccont="using:DesktopClient.Containers"
+             xmlns:cont="using:DesktopClient.Containers"
+              xmlns:CustomControls="clr-namespace:DesktopClient.CustomControls"
+             x:Class="DesktopClient.Views.ProjectsPageView"
+             x:DataType="vm:ProjectsPageViewModel">
+
+  <UserControl.Styles>
+    <StyleInclude Source="avares://DesktopClient/Styles/ButtonDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/LabelDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/TextBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
+  </UserControl.Styles>
+
+  <Grid>
+    <DockPanel>
+      <TabControl SelectedIndex="{Binding SelectedTab}">
+        <TabItem Header="Collection">
+          <Grid RowDefinitions="auto *">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+              <TextBox Text="{Binding Collection_TextInput}"></TextBox>
+              <Button>Clear</Button>
+            </StackPanel>
+            <ItemsControl Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding ProjectsDataView}">
+              <!-- Define the panel as UniformGrid -->
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <UniformGrid Columns="{Binding Collection_Rows}"/>
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+
+              <!-- Template for displaying each item -->
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="cont:ProjectContainerHolder">
+                  <CustomControls:ProjectNodeButton ProjectName ="{Binding Project.Name}"
+                                                    ProjectDescription="{Binding Project.Description}"
+                                                    ProjectImage="{Binding Project.Image}"
+                                                    Command="{Binding ItemClickedCommand}"
+                                                    Margin="10"/>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </Grid>
+        </TabItem>
+        <TabItem Header="Add">
+          <Grid ColumnDefinitions="25* auto 33* auto 33*">
+            <Grid RowDefinitions="auto auto * auto" Margin="0 10 0 10">
+              <StackPanel Spacing="10">
+                <Border BorderBrush="{DynamicResource UIMediumGray}" 
+                        BorderThickness="1"
+                        Height="256">
+                  <Image Source="{Binding CurrentAddPredefinedImage}" Width="256"></Image>
+                </Border>
+                <StackPanel Spacing="10" Orientation="Horizontal">
+                  <Button Command="{Binding LoadImageFromDeviceCommand}" >Insert</Button>
+                  <Button Command="{Binding ClearImageCommand}">Clear</Button>
+                </StackPanel>
+              </StackPanel>
+              
+              <!-- Basic info -->
+              <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="10" Margin="0 10 0 10">
+                <StackPanel Orientation="Vertical">
+                  <Label FontWeight="Bold" HorizontalAlignment="Left">Name</Label>
+                  <TextBox Watermark="Enter name" Text="{Binding Add_SelectedName}"></TextBox>
+                </StackPanel>
+                <StackPanel>
+                  <Label FontWeight="Bold" HorizontalAlignment="Left">Date</Label>
+                  <DatePicker SelectedDate="{Binding Add_SelectedDate}"></DatePicker>
+                </StackPanel>
+              </StackPanel>
+              
+              <!-- Description -->
+              <TextBox Grid.Row="2" Watermark="Enter description" Text="{Binding Add_SelectedDescription}">
+              </TextBox>
+              
+              <!-- Buttons -->
+              <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10" Margin="0 10 0 10">
+                <Button Command="{Binding Add_AddProjectCommand}" IsEnabled="{Binding Add_CanAddProject}">Add</Button>
+                <Button Command="{Binding Add_ClearProjectCommand}">Clear</Button>
+              </StackPanel>
+            </Grid>
+            
+            <!-- Separator -->
+            <Grid Grid.Column="1">
+              <Border Width="1"
+                      Background="{DynamicResource UIMediumGray}"
+                      Margin="10,5"
+                      HorizontalAlignment="Stretch"/>
+            </Grid>
+
+            <DataGrid Grid.Column="2" Margin="0 0 0 10" ItemsSource="{Binding ProjectComponents, Mode=TwoWay}">
+              <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Image">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <Image x:DataType="cont:ProjectPurchaseComponentHolder"  Source="{Binding Image}" Width="64" Height="64" Stretch="UniformToFill" />
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Name" x:DataType="cont:ProjectPurchaseComponentHolder" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Manufacturer" x:DataType="cont:ProjectPurchaseComponentHolder" Binding="{Binding Manufacturer}" Width="*"/>
+                <!--<DataGridTextColumn Header="Quantity" x:DataType="cont:ProjectPurchaseComponentHolder" Binding="{Binding Used, Mode = TwoWay}" Width="auto"/>-->
+                <DataGridTemplateColumn Header="Quantity" Width="*">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <NumericUpDown x:DataType="cont:ProjectPurchaseComponentHolder" 
+                                     Minimum="1" 
+                                     Value="{Binding Used, Mode = TwoWay}" 
+                                     Maximum="{Binding ComponentFromDBRefrence.AvaiableInSystem}" 
+                                     VerticalContentAlignment="Center"
+                                     HorizontalContentAlignment="Center"
+                                     Increment="1"
+                                     FormatString="F0"
+                                     VerticalAlignment="Stretch" 
+                                     HorizontalAlignment="Stretch"/>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+              </DataGrid.Columns>
+              <DataGrid.Styles>
+                <Style Selector="DataGridRow">
+                  <Setter Property="ContextMenu">
+                    <ContextMenu>
+                      <MenuItem Header="Details"/>
+                      <MenuItem Header="Datasheet"/>
+                      <MenuItem Header="Footprint"/>
+                      <MenuItem Header="Find at suppliers">
+                        <MenuItem Header="Digikey" />
+                        <MenuItem Header="Mouser" />
+                        <MenuItem Header="Botland" />
+                        <MenuItem Header="..." />
+                      </MenuItem>
+                      <MenuItem Header="Remove from project" 
+                                x:DataType="cont:ProjectPurchaseComponentHolder"
+                                Command="{Binding RemoveFromProjectCommand}"/>
+                    </ContextMenu>
+                  </Setter>
+                </Style>
+              </DataGrid.Styles>
+            </DataGrid>
+            
+            <!-- Separator -->
+            <Grid Grid.Column="3">
+              <Border Width="1"
+                      Background="{DynamicResource UIMediumGray}"
+                      Margin="10,5"
+                      HorizontalAlignment="Stretch"/>
+            </Grid>
+
+            <DataGrid Grid.Column="4" Margin="0 0 0 10" ItemsSource="{Binding PurchasedComponents, Mode=TwoWay}">
+              <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Image">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <Image x:DataType="cont:PurchaseComponentHolder" Source="{Binding Image}" Width="64" Height="64" Stretch="UniformToFill" />
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Name" x:DataType="cont:PurchaseComponentHolder" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Manufacturer" x:DataType="cont:PurchaseComponentHolder" Binding="{Binding Manufacturer}" Width="*"/>
+                <DataGridTextColumn Header="Available" x:DataType="cont:PurchaseComponentHolder" Binding="{Binding Avaiable, Mode=TwoWay}" Width="*"/>
+              </DataGrid.Columns>
+              <DataGrid.Styles>
+                <Style Selector="DataGridRow">
+                  <Setter Property="ContextMenu">
+                    <ContextMenu>
+                      <MenuItem Header="Add to project" x:DataType="cont:PurchaseComponentHolder" Command="{Binding AddToProjectCommand}" />
+                    </ContextMenu>
+                  </Setter>
+                </Style>
+              </DataGrid.Styles>
+            </DataGrid>
+
+          </Grid>
+        </TabItem>
+        <TabItem Header="Preview" IsEnabled="{Binding PreviewEnabled}">
+          <Grid ColumnDefinitions="50* auto 50*">
+            <!-- Left side -->
+            <Grid Grid.Column="0" RowDefinitions="auto * auto">
+
+              <!-- Image / basic info -->
+              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0 10 0 10">
+                <Border BorderBrush="{DynamicResource UIMediumGray}" BorderThickness="1">
+                  <Image Source="{Binding ClickedProject.Project.Image}" Width="256"></Image>
+                </Border>
+                <StackPanel Spacing="10">
+                  <StackPanel>
+                    <Label FontWeight="Bold" HorizontalAlignment="Left">Name</Label>
+                    <Label HorizontalAlignment="Left" Content="{Binding ClickedProject.Project.Name}"></Label>
+                  </StackPanel>
+                  <StackPanel>
+                    <Label FontWeight="Bold" HorizontalAlignment="Left">Created</Label>
+                    <Label HorizontalAlignment="Left" Content="{Binding ClickedProject.Project.CreatedAt}"></Label>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+
+              <!-- Description -->
+              <TextBox Grid.Row="1" Text="{Binding ClickedProject.Project.Description}">
+              </TextBox>
+
+              <!-- Buttons -->
+              <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10" Margin="0 10 0 10">
+                <Button>Export PDF</Button>
+                <Button>Export Excel</Button>
+              </StackPanel>
+            </Grid>
+
+            <!-- Separator -->
+            <Grid Grid.Column="1">
+              <Border Width="1"
+                      Background="{DynamicResource UIMediumGray}"
+                      Margin="10,5"
+                      HorizontalAlignment="Stretch"/>
+            </Grid>
+            
+            <!-- Right side -->
+              <DataGrid
+                  ItemsSource="{Binding ClickedProject.ProjectComponents}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  x:Name="Comps"
+                  Margin="0 0 0 10"
+                  GridLinesVisibility="All"
+                  Grid.Column="2"
+                  BorderThickness="1"
+                  BorderBrush="Gray"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch">
+                <DataGrid.Columns>
+                  <DataGridTemplateColumn Header="Image">
+                    <DataGridTemplateColumn.CellTemplate>
+                      <DataTemplate>
+                        <Image x:DataType="cont:ProjectComponentHolder" Source="{Binding Image}" Width="64" Height="64" Stretch="UniformToFill" />
+                      </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                  </DataGridTemplateColumn>
+                  <DataGridTextColumn Header="Name" x:DataType="cont:ProjectComponentHolder" Binding="{Binding Name}" Width="*"/>
+                  <DataGridTextColumn Header="Manufacturer" x:DataType="cont:ProjectComponentHolder" Binding="{Binding Manufacturer}" Width="*"/>
+                  <DataGridTextColumn Header="Category" x:DataType="cont:ProjectComponentHolder" Binding="{Binding CategoryName}" Width="*"/>
+                  <DataGridTextColumn Header="Quantity" x:DataType="cont:ProjectComponentHolder" Binding="{Binding Quantity}" Width="auto"/>
+                </DataGrid.Columns>
+                <DataGrid.Styles>
+                  <Style Selector="DataGridRow">
+                    <Setter Property="ContextMenu">
+                      <ContextMenu>
+                        <MenuItem Header="Preview"/>
+                      </ContextMenu>
+                    </Setter>
+                  </Style>
+                </DataGrid.Styles>
+              </DataGrid>
+            </Grid>
+        </TabItem>
+      </TabControl>
+    </DockPanel>
+  </Grid>
 </UserControl>
