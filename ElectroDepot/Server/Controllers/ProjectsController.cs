@@ -37,7 +37,7 @@ namespace Server.Controllers
             _context.Projects.Add(newProject);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProjectsOfUser), new { id = newProject.ProjectID }, newProject);
+            return Ok(newProject.ToProjectDTO(ISS));
         }
         #endregion
         #region Read

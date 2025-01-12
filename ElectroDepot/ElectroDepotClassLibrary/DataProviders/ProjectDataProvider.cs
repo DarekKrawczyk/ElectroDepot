@@ -12,7 +12,7 @@ namespace ElectroDepotClassLibrary.DataProviders
     {
         public ProjectDataProvider(string url) : base(url) { }
         #region API Calls
-        public async Task<bool> CreateProject(Project project)
+        public async Task<Project> CreateProject(Project project)
         {
             var json = JsonSerializer.Serialize(project.ToCreateDTO());
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -20,7 +20,20 @@ namespace ElectroDepotClassLibrary.DataProviders
             string url = ProjectEndpoints.Create();
             var response = await HTTPClient.PostAsync(url, content);
 
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+
+                var resjson = await response.Content.ReadAsStringAsync();
+                ProjectDTO projectWithID = JsonSerializer.Deserialize<ProjectDTO>(resjson, options);
+
+                return projectWithID.ToModel();
+            }
+            else
+            {
+                return null;
+            }
         }
         
         public async Task<Project> GetProjectOfProjectComponent(ProjectComponent projectComponent)

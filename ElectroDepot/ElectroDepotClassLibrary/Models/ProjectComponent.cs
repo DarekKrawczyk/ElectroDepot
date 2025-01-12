@@ -6,8 +6,8 @@ namespace ElectroDepotClassLibrary.Models
     {
         public int ID { get; }
         public int ComponentID { get; }
-        public int ProjectID { get; }
-        public int Quantity { get; }
+        public int ProjectID { get; set; }
+        public int Quantity { get; set; }
         public Component Component { get; }
         public ProjectComponent(int id, int projectID, int componentID, Component component, int quantity)
         {

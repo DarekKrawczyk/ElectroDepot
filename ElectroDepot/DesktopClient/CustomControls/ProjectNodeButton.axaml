@@ -10,7 +10,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <!-- MainButton -->
-        <Button x:Name="MainButton">
+        <Button x:Name="MainButton" Command="{TemplateBinding Command}">
           <Button.Content>
             <!-- OutterBorder -->
             <Border x:Name="OutterBorder">
