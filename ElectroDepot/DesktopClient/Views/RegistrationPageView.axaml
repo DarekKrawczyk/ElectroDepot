@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="720"
+             xmlns:vm="using:DesktopClient.ViewModels"
+             x:Class="DesktopClient.Views.RegistrationPageView"
+             x:DataType="vm:RegistrationPageViewModel">
+  
+  <UserControl.Styles>
+    <StyleInclude Source="avares://DesktopClient/Styles/ButtonDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/LabelDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/TextBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
+  </UserControl.Styles>
+
+  <Grid ColumnDefinitions="33* auto 33*" >
+    <Grid Grid.Column="1" RowDefinitions="33* auto 33*">
+      <Border Grid.Row="1" CornerRadius="10" BorderThickness="1" BorderBrush="{DynamicResource UIMediumGray}">
+        <StackPanel Spacing="20" Margin="10">
+          <Label FontSize="32">Sign up</Label>
+
+          <StackPanel Orientation="Vertical">
+            <Label HorizontalAlignment="Left" FontWeight="Bold">Name</Label>
+            <TextBox Text="{Binding Name}" Watermark="Enter name"></TextBox>
+          </StackPanel>
+          
+          <StackPanel Orientation="Vertical">
+            <Label HorizontalAlignment="Left" FontWeight="Bold">Username</Label>
+            <TextBox Text="{Binding Username}" Watermark="Enter username"></TextBox>
+          </StackPanel>
+
+          <StackPanel Orientation="Vertical">
+            <Label HorizontalAlignment="Left" FontWeight="Bold">E-mail</Label>
+            <TextBox Text="{Binding Email}" Watermark="Enter e-mail"></TextBox>
+          </StackPanel>
+
+          <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <Label FontWeight="Bold">Password</Label>
+              <CheckBox>Show</CheckBox>
+            </StackPanel>
+            <TextBox Text="{Binding Password}" Watermark="Enter password"></TextBox>
+          </StackPanel>
+
+          <StackPanel Orientation="Vertical">
+            <Label HorizontalAlignment="Left" FontWeight="Bold">Confirm password</Label>
+            <TextBox Text="{Binding ConfirmedPassword}" Watermark="Enter password"></TextBox>
+          </StackPanel>
+
+          <Button IsEnabled="{Binding CanRegister}" Command="{Binding RegisterCommand}">Sign up</Button>
+        </StackPanel>
+      </Border>
+    </Grid>
+  </Grid>
+</UserControl>

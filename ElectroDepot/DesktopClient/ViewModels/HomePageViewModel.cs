@@ -10,6 +10,7 @@ using DesktopClient.Containers;
 using ElectroDepotClassLibrary.Stores;
 using ElectroDepotClassLibrary.Models;
 using Avalonia.Controls;
+using DesktopClient.Navigation;
 
 namespace DesktopClient.ViewModels
 {
@@ -53,7 +54,7 @@ namespace DesktopClient.ViewModels
         ];
 
         [Obsolete("DO NOT USE THIS! THIS IS JUST FOR AVALONIA DESIGNER!")]
-        public HomePageViewModel() : base(null)
+        public HomePageViewModel(Navigator navigator) : base(null, navigator)
         {
             if (Design.IsDesignMode)
             {
@@ -63,7 +64,7 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        public HomePageViewModel(DatabaseStore databaseStore) : base(databaseStore)
+        public HomePageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
         {
             Suppliers = new ObservableCollection<SupplierContainer>();
             DatabaseStore.SupplierStore.SuppliersLoaded += SuppliersLoadedHandler;

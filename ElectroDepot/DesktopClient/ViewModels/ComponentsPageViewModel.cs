@@ -23,6 +23,7 @@ using System.Diagnostics;
 using Avalonia.Input;
 using Avalonia;
 using DesktopClient.Utils;
+using DesktopClient.Navigation;
 
 namespace DesktopClient.ViewModels
 {
@@ -612,7 +613,7 @@ namespace DesktopClient.ViewModels
         }
         #endregion
         #region Constructor
-        public ComponentsPageViewModel(DatabaseStore databaseStore) : base(databaseStore)
+        public ComponentsPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
         {
             PredefinedImages = new ObservableCollection<ImageContainer>();
 

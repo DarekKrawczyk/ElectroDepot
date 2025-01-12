@@ -20,10 +20,6 @@
         ExtendClientAreaToDecorationsHint="True"
         >
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-
   <Panel>
     <ExperimentalAcrylicBorder IsHitTestVisible="False">
       <ExperimentalAcrylicBorder.Material>
@@ -34,74 +30,8 @@
             MaterialOpacity="0.01" />
       </ExperimentalAcrylicBorder.Material>
     </ExperimentalAcrylicBorder>
+
+    <ContentControl Content="{Binding CurrentView, Mode=TwoWay}"/>
     
-    <!-- Whole window -->
-    <SplitView IsPaneOpen="{Binding IsPanelOpen}"
-               OpenPaneLength="250"
-               CompactPaneLength="115"
-               DisplayMode="CompactInline"
-               PaneBackground="Transparent"
-               >
-      <!-- Just panel -->
-      <SplitView.Pane>
-        <StackPanel Spacing="0"
-                    Margin="5"
-                    Background="Transparent">
-
-          <Button Command="{Binding TriggerPaneCommand}" 
-                  Margin="0 0 0 0" 
-                  BorderBrush="{DynamicResource UIDarkGray}"
-                  BorderThickness="1" >
-              <Image Source="avares://DesktopClient/Assets/Resize_icon.png"
-                     Width="230"
-                     Height="12"
-                     Margin="0 0 0 0"/>
-            <Button.Styles>
-              <Style Selector="Button">
-                <Setter Property="Background" 
-                        Value="{DynamicResource UIDeepPurple}"/>
-              </Style>
-            </Button.Styles>
-          </Button>
-
-
-          <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedListItem}">
-            <ListBox.ItemTemplate>
-              <DataTemplate DataType="{x:Type vm:ListItemTemplate}">
-                <Border Padding="0,5,0,0">
-                  <controls:MenuButton Name="{Binding Label}"
-                                       Icon="{Binding Icon}">
-                    
-                  </controls:MenuButton>
-                </Border>
-              </DataTemplate>
-            </ListBox.ItemTemplate>
-          </ListBox>
-        </StackPanel>
-      </SplitView.Pane>
-      
-      <!-- Page content -->
-      <SplitView.Content>
-        <Border CornerRadius="12 0 0 0">
-          <Grid>
-            
-            <Grid.RowDefinitions>
-              <RowDefinition Height="30" />
-              <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            
-            <Grid Grid.Row="1" Grid.Column="1"></Grid>
-            
-            <Grid Grid.Row="2" Grid.Column="1">
-              <TransitioningContentControl Content="{Binding CurrentPage}"/>
-            </Grid>
-          </Grid>
-        </Border>
-      </SplitView.Content>
-    </SplitView>
   </Panel>
 </Window>

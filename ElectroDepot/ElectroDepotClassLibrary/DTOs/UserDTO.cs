@@ -3,6 +3,7 @@
     public record UserDTO(
         int ID,
         string Username,
+        string Password,
         string Email
     );
 

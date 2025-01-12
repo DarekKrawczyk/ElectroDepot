@@ -15,7 +15,7 @@ public static class SingleUserTestingDataSeeder
         await context.Purchases.ExecuteDeleteAsync();
         await context.Components.ExecuteDeleteAsync();
 
-        await context.Users.ExecuteDeleteAsync();
+        //await context.Users.ExecuteDeleteAsync();
         await context.Suppliers.ExecuteDeleteAsync();
         await context.Categories.ExecuteDeleteAsync();
 
@@ -23,14 +23,14 @@ public static class SingleUserTestingDataSeeder
 
         await context.SaveChangesAsync();
 
-        if (!context.Users.Any())
+        if (true)
         {
             List<User> users = new List<User>
             {
-                new User { Username = "test", Password = "test", Email = "test@gmail.com" },
+                new User { UserID = 1011, Username = "username", Password = "AQAAAAIAAYagAAAAEA2lwymUiArgx0/bwiQEU85o0l1KusTazhFkiNvE48/Vr7EB8I26gkOyKQZvCuobeA==", Email = "valid.email@gmail.com" },
             };
 
-            context.Users.AddRange(users);
+            //context.Users.AddRange(users);
             await context.SaveChangesAsync();
 
             string fullPath = "D:\\Repo\\ElectronDepot\\ElectroDepot\\Server\\Assests\\";

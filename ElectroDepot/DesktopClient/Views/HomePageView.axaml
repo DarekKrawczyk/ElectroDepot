@@ -12,10 +12,6 @@
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              x:DataType="vm:HomePageViewModel">
 
-  <Design.DataContext>
-    <vm:HomePageViewModel/>
-  </Design.DataContext>
-
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="auto"></RowDefinition>

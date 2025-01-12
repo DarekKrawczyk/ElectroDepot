@@ -17,8 +17,8 @@ namespace ElectroDepotClassLibraryTests.Tests
             {
                 User user = new User(id: 0, name: "Darek", email: "Darek@gmail.com", password: "Pieczarka");
 
-                bool wasCreated = await UserDP.CreateUser(user);
-                Assert.True(wasCreated);
+                User wasCreated = await UserDP.CreateUser(user);
+                Assert.True(wasCreated != null);
 
                 Console.WriteLine($"User created: {user.ToString()}");
             }

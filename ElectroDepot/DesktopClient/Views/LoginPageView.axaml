@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="720"
+             xmlns:vm="using:DesktopClient.ViewModels"
+             x:Class="DesktopClient.Views.LoginPageView"
+             x:DataType="vm:LoginPageViewModel">
+
+  <UserControl.Styles>
+    <StyleInclude Source="avares://DesktopClient/Styles/ButtonDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/LabelDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/TextBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
+  </UserControl.Styles>
+
+  <Grid ColumnDefinitions="33* auto 33*" >
+    <Grid Grid.Column="1" RowDefinitions="33* auto 33*">
+      <Border Grid.Row="1" CornerRadius="10" BorderThickness="1" BorderBrush="{DynamicResource UIMediumGray}">
+      <StackPanel Spacing="20" Margin="10">
+        <Label FontSize="32">Log in</Label>
+
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <Label>Don't have an account?</Label>
+          <Button Command="{Binding CreateAccountCommand}" >Create an account</Button>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical">
+          <Label FontWeight="Bold">Username</Label>
+          <TextBox Text="{Binding UsernameText}" Watermark="Enter username"></TextBox>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical">
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Label FontWeight="Bold">Password</Label>
+            <CheckBox>Show</CheckBox>
+          </StackPanel>
+          <TextBox Text="{Binding PasswordText}" Watermark="Enter password"></TextBox>
+        </StackPanel>
+        
+        <CheckBox>Keep me logged in</CheckBox>
+        <Button IsEnabled="{Binding CanLogin}" Command="{Binding LoginCommand}">Login</Button>
+        <StackPanel Orientation="Horizontal">
+          <Button>Forgot password</Button>
+          <Button>Forgot username</Button>
+        </StackPanel>
+      </StackPanel>
+      </Border>
+    </Grid>
+  </Grid>
+</UserControl>
