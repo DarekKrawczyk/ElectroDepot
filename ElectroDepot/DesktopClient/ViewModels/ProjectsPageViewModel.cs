@@ -18,6 +18,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DesktopClient.Navigation;
 
 namespace DesktopClient.ViewModels
 {
@@ -294,7 +295,7 @@ namespace DesktopClient.ViewModels
         private int _collection_Rows;
         public List<ProjectContainerHolder> ProjectsSource { get; set; }
         public DataGridCollectionView ProjectsDataView { get; set; }
-        public ProjectsPageViewModel(DatabaseStore databaseStore) : base(databaseStore)
+        public ProjectsPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
         {
 
             DatabaseStore.CategorieStore.Load();

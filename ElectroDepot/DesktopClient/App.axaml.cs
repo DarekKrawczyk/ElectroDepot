@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using DesktopClient.Navigation;
 using DesktopClient.ViewModels;
 using DesktopClient.Views;
 using ElectroDepotClassLibrary.DataProviders;
@@ -36,7 +37,8 @@ namespace DesktopClient
                 purchaseItemDataProvider,
                 predefinedImageDataProvider);
             // TODO: Implement login, for now this will do
-            //_databaseStore.UsersStore.TryLoginUser("test", "test");
+            
+            
 
 
             AvaloniaXamlLoader.Load(this);
@@ -49,9 +51,18 @@ namespace DesktopClient
                 // Line below is needed to remove Avalonia data validation.
                 // Without this line you will get duplicate validations from both Avalonia and CT
                 BindingPlugins.DataValidators.RemoveAt(0);
+
+                //_databaseStore.UsersStore.UserLogin("username", "password"); // While using  async on this method, windows doesn't show up!
+
+                Navigator navigator = new Navigator(_databaseStore);
+                MainWindowViewModel window = new MainWindowViewModel(_databaseStore, new LoginPageViewModel(_databaseStore, navigator), navigator);
+                navigator.Window = window;
+
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(_databaseStore),
+                    //DataContext = new LoginPageViewModel(),
+
+                    DataContext = window,
                 };
             }
 

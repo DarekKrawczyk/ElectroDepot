@@ -1,10 +1,11 @@
-﻿using ElectroDepotClassLibrary.Stores;
+﻿using DesktopClient.Navigation;
+using ElectroDepotClassLibrary.Stores;
 
 namespace DesktopClient.ViewModels
 {
     public class MonitoringPageViewModel : ViewModelBase
     {
-        public MonitoringPageViewModel(DatabaseStore databaseStore) : base(databaseStore)
+        public MonitoringPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
         {
         }
 

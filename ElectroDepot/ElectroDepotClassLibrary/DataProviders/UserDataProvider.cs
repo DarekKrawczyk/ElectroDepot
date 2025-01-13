@@ -10,7 +10,7 @@ namespace ElectroDepotClassLibrary.DataProviders
     {
         public UserDataProvider(string url) : base(url) { }
         #region API Calls
-        public async Task<bool> CreateUser(User user)
+        public async Task<User> CreateUser(User user)
         {
             var json = JsonSerializer.Serialize(user.ToCreateDTO());
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -18,7 +18,20 @@ namespace ElectroDepotClassLibrary.DataProviders
             string url = UserEndpoints.Create();
             var response = await HTTPClient.PostAsync(url, content);
 
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+
+                var resjson = await response.Content.ReadAsStringAsync();
+                UserDTO? userDTO = JsonSerializer.Deserialize<UserDTO>(resjson, options);
+
+                return userDTO.ToModel();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<User> GetUserByUsername(string name)

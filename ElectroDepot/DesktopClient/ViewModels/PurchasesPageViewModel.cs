@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Avalonia.Platform.Storage;
+using DesktopClient.Navigation;
 
 namespace DesktopClient.ViewModels
 {
@@ -278,7 +279,7 @@ namespace DesktopClient.ViewModels
         public ObservableCollection<string> SupplierSource { get; set; }
         public List<DetailedPurchaseContainerHolder> PurchasesSource { get; set; }
         public DataGridCollectionView Purchases { get; set; }
-        public PurchasesPageViewModel(DatabaseStore databaseStore) : base(databaseStore)
+        public PurchasesPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
         {
             PurchasesSource = new List<DetailedPurchaseContainerHolder>();
             ProjectItems = new List<PurchaseItemContainer>();

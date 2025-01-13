@@ -10,6 +10,7 @@ namespace Server.ExtensionMethods
             return new UserDTO(
                 user.UserID,
                 user.Username,
+                user.Password,
                 user.Email
             );
         }

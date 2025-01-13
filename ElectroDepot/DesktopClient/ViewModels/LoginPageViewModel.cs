@@ -1,0 +1,92 @@
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using DesktopClient.Navigation;
+using ElectroDepotClassLibrary.Services;
+using ElectroDepotClassLibrary.Stores;
+using MsBox.Avalonia.Enums;
+using MsBox.Avalonia;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DesktopClient.ViewModels
+{
+    public partial class LoginPageViewModel : ViewModelBase
+    {
+        [ObservableProperty]
+        private string _usernameText;
+
+        partial void OnUsernameTextChanged(string value)
+        {
+            CanUserLogin();
+        }
+
+        [ObservableProperty]
+        private string _passwordText;
+
+        partial void OnPasswordTextChanged(string value)
+        {
+            CanUserLogin();
+        }
+
+        public void CanUserLogin()
+        {
+            if(PasswordText != null && PasswordText.Length > 0 && UsernameText != null && UsernameText.Length > 0)
+            {
+                CanLogin = true;
+            }
+            else
+            {
+                CanLogin = false;
+            }
+        }
+
+        public void ClearText()
+        {
+            UsernameText = string.Empty;
+            PasswordText = string.Empty;
+        }
+
+        [ObservableProperty]
+        private bool _canLogin;
+
+        [RelayCommand]
+        public async void Login()
+        {
+            CanLogin = false;
+
+            LoggingStatus status = await DatabaseStore.UsersStore.UserLogin(UsernameText, PasswordText);
+
+            if(status == LoggingStatus.Success)
+            {
+                var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Login successfull", ButtonEnum.Ok);
+                ButtonResult buttonResult = await box.ShowAsync();
+                _navigator.NavigateTo(Page.Root);
+            }
+            else
+            {
+                var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Failed to login!", ButtonEnum.Ok);
+                ButtonResult buttonResult = await box.ShowAsync();
+                ClearText();
+            }
+
+        }
+
+        public LoginPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
+        {
+        }
+
+        public override void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        [RelayCommand]
+        public void CreateAccount()
+        {
+            _navigator.NavigateTo(Page.Register);
+        }
+    }
+}

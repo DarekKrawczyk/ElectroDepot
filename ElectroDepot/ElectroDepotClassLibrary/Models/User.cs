@@ -18,7 +18,7 @@ namespace ElectroDepotClassLibrary.Models
 
         public override string ToString()
         {
-            return $"ID: '{ID}', Name: '{Name}', Password: '{Password}', Email: '{Email}'";
+            return $"ID: '{ID}', Name: '{Name}', Email: '{Email}'";
         }
     }
 
@@ -29,7 +29,8 @@ namespace ElectroDepotClassLibrary.Models
             return new UserDTO(
                 ID: user.ID,
                 Username: user.Name,
-                Email: user.Email);
+                Email: user.Email,
+                Password: user.Password);
         }
 
         internal static UpdateUserDTO ToUpdateDTO(this User user)
@@ -54,7 +55,7 @@ namespace ElectroDepotClassLibrary.Models
                 id: userDTO.ID,
                 email: userDTO.Email,
                 name: userDTO.Username,
-                password: string.Empty);
+                password: userDTO.Password);
         }
     }
 }
