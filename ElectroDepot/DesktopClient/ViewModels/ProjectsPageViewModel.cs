@@ -22,7 +22,7 @@ using DesktopClient.Navigation;
 
 namespace DesktopClient.ViewModels
 {
-    public partial class ProjectsPageViewModel : ViewModelBase
+    public partial class ProjectsPageViewModel : RootNavigatorViewModel, INavParamInterpreter
     {
         private bool _hasUserInteracterWithName = false;
         private bool _hasUserInteracterWithDescription = false;
@@ -295,9 +295,8 @@ namespace DesktopClient.ViewModels
         private int _collection_Rows;
         public List<ProjectContainerHolder> ProjectsSource { get; set; }
         public DataGridCollectionView ProjectsDataView { get; set; }
-        public ProjectsPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
+        public ProjectsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore) : base(defaultRootPageViewModel, databaseStore)
         {
-
             DatabaseStore.CategorieStore.Load();
             ProjectsSource = new List<ProjectContainerHolder>();
             DatabaseStore.ProjectStore.ProjectsLoaded += ProjectStore_ProjectsLoadedHandler;
@@ -448,8 +447,18 @@ namespace DesktopClient.ViewModels
             CalculateColumns();
         }
 
-        public override void Dispose()
+        public void InterpreteNavigationParameter(NavParam navigationParameter)
         {
+            switch (navigationParameter.Operation)
+            {
+                case NavOperation.Add:
+                    SelectedTab = 1;
+                    break;
+                case NavOperation.Preview:
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

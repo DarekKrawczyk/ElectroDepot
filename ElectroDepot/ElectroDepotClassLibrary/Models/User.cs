@@ -5,13 +5,15 @@ namespace ElectroDepotClassLibrary.Models
     public class User
     {
         public int ID { get; }
-        public string Name { get; set; }
+        public string Username { get; set; }
         public string Email{ get; set; }
         public string Password { get; set; }
-        public User(int id, string name, string email, string password)
+        public string Name { get; set; }
+        public User(int id, string username, string email, string password, string name)
         {
             ID = id;
             Name = name;
+            Username = username;
             Email = email;
             Password = password;
         }
@@ -30,7 +32,8 @@ namespace ElectroDepotClassLibrary.Models
                 ID: user.ID,
                 Username: user.Name,
                 Email: user.Email,
-                Password: user.Password);
+                Password: user.Password,
+                Name: user.Name);
         }
 
         internal static UpdateUserDTO ToUpdateDTO(this User user)
@@ -38,7 +41,8 @@ namespace ElectroDepotClassLibrary.Models
             return new UpdateUserDTO(
                 Username: user.Name,
                 Email: user.Email,
-                Password: user.Password);
+                Password: user.Password,
+                Name: user.Name);
         }
 
         internal static CreateUserDTO ToCreateDTO(this User user)
@@ -46,16 +50,18 @@ namespace ElectroDepotClassLibrary.Models
             return new CreateUserDTO(
                 Username: user.Name,
                 Email: user.Email,
-                Password: user.Password);
+                Password: user.Password,
+                Name: user.Name);
         }
 
         internal static User ToModel(this UserDTO userDTO)
         {
             return new User(
                 id: userDTO.ID,
+                name: userDTO.Name,
                 email: userDTO.Email,
-                name: userDTO.Username,
-                password: userDTO.Password);
+                password: userDTO.Password,
+                username: userDTO.Username);
         }
     }
 }

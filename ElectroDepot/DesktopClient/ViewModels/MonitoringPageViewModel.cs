@@ -3,14 +3,14 @@ using ElectroDepotClassLibrary.Stores;
 
 namespace DesktopClient.ViewModels
 {
-    public class MonitoringPageViewModel : ViewModelBase
+    public class MonitoringPageViewModel : RootNavigatorViewModel
     {
-        public MonitoringPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
+        public MonitoringPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore) : base(defaultRootPageViewModel, databaseStore)
         {
         }
 
-        public override void Dispose()
-        {
-        }
+        //public override void Dispose()
+        //{
+        //}
     }
 }

@@ -6,11 +6,10 @@
         xmlns:controls="clr-namespace:DesktopClient.Templates"
         mc:Ignorable="d" 
         d:DesignHeight="720"
-        MinHeight="720"
-        Height="720"
         d:DesignWidth="1440" 
-        MinWidth="1440"
-        Width="1440"
+        MinHeight="720"
+        MinWidth="1555"
+        MaxWidth="1555"
         x:Class="DesktopClient.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -21,17 +20,17 @@
         >
 
   <Panel>
-    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+    <!--<ExperimentalAcrylicBorder IsHitTestVisible="False">
       <ExperimentalAcrylicBorder.Material>
         <ExperimentalAcrylicMaterial
             BackgroundSource="Digger"
-            TintColor="Black"
-            TintOpacity="1"
-            MaterialOpacity="0.01" />
+            TintColor="White"
+            TintOpacity="0.7"
+            MaterialOpacity="0.7" />
       </ExperimentalAcrylicBorder.Material>
-    </ExperimentalAcrylicBorder>
+    </ExperimentalAcrylicBorder>-->
 
-    <ContentControl Content="{Binding CurrentView, Mode=TwoWay}"/>
+    <ContentControl Content="{Binding WindowViewModel, Mode=TwoWay}"/>
     
   </Panel>
 </Window>

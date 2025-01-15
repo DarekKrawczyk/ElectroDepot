@@ -23,7 +23,7 @@ namespace ElectroDepotClassLibrary.Services
             _usersStore = usersStore;
             _passwordHasher = new PasswordHasher<User>();
         }
-        public async Task<RegistrationStatus> Register(string username, string password, string confirmPassword, string email)
+        public async Task<RegistrationStatus> Register(string username, string password, string confirmPassword, string email, string name)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace ElectroDepotClassLibrary.Services
                     return RegistrationStatus.FailureEmailTaken;
                 }
 
-                User newUser = new User(0, username, email, password);
+                User newUser = new User(0, username, email, password, name);
                 string hashedPassword = _passwordHasher.HashPassword(newUser, password);
                 newUser.Password = hashedPassword;
 

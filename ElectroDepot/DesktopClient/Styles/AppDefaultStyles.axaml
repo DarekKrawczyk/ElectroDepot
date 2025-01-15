@@ -1,0 +1,331 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+    <StackPanel Background="White">
+      <Button Classes="default">
+        <StackPanel Orientation="Horizontal" Width="200">
+          <Label Classes="icon" Content="&#xE2C2;"></Label>
+          <Label Classes="icontext" Content="Home"></Label>
+        </StackPanel>
+      </Button>
+      <Button Classes="default">
+        <StackPanel Orientation="Horizontal" Width="200">
+          <Label Classes="icon" Content="&#xE610;"></Label>
+          <Label Classes="icontext" Content="Components"></Label>
+        </StackPanel>
+      </Button>
+      <Button Classes="trash">
+        <StackPanel Orientation="Horizontal">
+          <Label Classes="icon" Content="&#xE4A6;"></Label>
+        </StackPanel>
+      </Button>
+      <Button Classes="approve">
+        <StackPanel>
+          <Label Classes="icon" Content="&#xE182;"></Label>
+        </StackPanel>
+      </Button>
+      <Button>
+        <Button.Flyout>
+          <Flyout FlyoutPresenterClasses="marginBugfix">
+            <StackPanel>
+              <Label Background="Red">XD</Label>
+            </StackPanel>
+          </Flyout>
+        </Button.Flyout>
+      </Button>
+
+      <!-- Project node button -->
+      <Button Classes="ProjectNodeButton">
+        <StackPanel>
+          <Label Classes="CreateNewProjectIcon" Content="&#xE34E;"></Label>
+          <StackPanel>
+            <Label Classes="ProjectIconTextBig" Content="Project name"></Label>
+            <StackPanel>
+              <Label Classes="ProjectIconText" Content="4 Items"></Label>
+              <Label Classes="ProjectIcon" Content="&#xECE0;"></Label>
+              <Label Classes="ProjectIconText" Content="15.01.2025"></Label>
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+      </Button>
+
+      <Button Classes="CreateNewProjectNodeButton">
+        <StackPanel>
+          <Label Classes="CreateNewProjectIcon" Content="&#xE69C;"></Label>
+          <StackPanel>
+            <Label Classes="CreateNewProjectIconText" Content="Create new project"></Label>
+          </StackPanel>
+        </StackPanel>
+      </Button>
+
+      <!-- Purchase button -->
+      <Button Classes="PurchaseNodeButton">
+        <StackPanel>
+          <Image Source="avares://DesktopClient/Assets/DefaultComponentImage.png" 
+                 Width="64"></Image>
+          <StackPanel>
+            <StackPanel Orientation="Horizontal">
+              <Label Classes="ProjectIconTextBig" Content="Botland"></Label>
+              <Label Classes="ProjectIcon" Content="&#xECE0;"></Label>
+              <Label Classes="ProjectIconTextBig" Content="15.01.2025"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+              <Label Classes="ProjectIconText" Content="4"></Label>
+              <Label Classes="ProjectIconText" Content="Items"></Label>
+              <Label Classes="ProjectIcon" Content="&#xECE0;"></Label>
+              <Label Classes="ProjectIconText" Content="102,99 pln"></Label>
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+      </Button>
+
+      <!-- Tool button -->
+      <Button Classes="ToolButton">
+        <Grid ColumnDefinitions="auto *">
+          <Image Source="avares://DesktopClient/Assets/Icons/Tools/eestack.png"
+                 Width="64" Grid.Column="0"></Image>
+          <Label Classes="ProjectIconTextBig" Content="EEVBlog" Grid.Column="1"></Label>
+        </Grid>
+      </Button>
+    </StackPanel>
+  </Design.PreviewWith>
+  
+  <!-- Project Node Button -->
+  <Style Selector="Button.ProjectNodeButton">
+    <Setter Property="Padding" Value="1"></Setter>
+    <Setter Property="Width" Value="300"/>
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+    <Setter Property="Background" Value="{DynamicResource PltWhiteMilk}"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PltGray}"/>
+    <Style Selector="^ StackPanel">
+      <Setter Property="Orientation" Value="Horizontal"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="HorizontalAlignment" Value="Left"/>
+      <Style Selector="^ StackPanel">
+        <Setter Property="Orientation" Value="Vertical"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Style Selector="^ StackPanel">
+          <Setter Property="Orientation" Value="Horizontal"></Setter>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+      </Style>
+    </Style>
+  </Style>
+  <Style Selector="Button.ProjectNodeButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource PltGray}"/>
+    <Setter Property="Foreground" Value="Black"/>
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+  </Style>
+  <!-- Tool Button -->
+  <Style Selector="Button.ToolButton">
+    <Setter Property="Width" Value="180"/>
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+    <Setter Property="Background" Value="{DynamicResource PltWhiteMilk}"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PltGray}"/>
+  </Style>
+  <Style Selector="Button.ToolButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource PltGray}"/>
+    <Setter Property="Foreground" Value="Black"/>
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+  </Style>
+  <!-- Purchase Node Button -->
+  <Style Selector="Button.PurchaseNodeButton">
+    <Setter Property="Padding" Value="1"></Setter>
+    <Setter Property="Width" Value="300"/>
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+    <Setter Property="Background" Value="{DynamicResource PltWhiteMilk}"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PltGray}"/>
+    <Style Selector="^ StackPanel">
+      <Setter Property="Orientation" Value="Horizontal"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="HorizontalAlignment" Value="Left"/>
+      <Style Selector="^ StackPanel">
+        <Setter Property="Orientation" Value="Vertical"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Style Selector="^ StackPanel">
+          <Setter Property="Orientation" Value="Horizontal"></Setter>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+      </Style>
+    </Style>
+  </Style>
+
+  <Style Selector="Button.PurchaseNodeButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource PltGray}"/>
+    <Setter Property="Foreground" Value="Black"/>
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+  </Style>
+
+  <Style Selector="Label.ProjectIconTextBig">
+    <Setter Property="FontSize" Value="20"></Setter>
+    <Setter Property="Foreground" Value="Black"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+  </Style>
+
+  <Style Selector="Label.ProjectIconText">
+    <Setter Property="FontSize" Value="12"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PltGrayDark}"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+  </Style>
+
+  <Style Selector="Label.ProjectIcon">
+    <Setter Property="FontFamily" Value="{DynamicResource Phosphor}"></Setter>
+    <Setter Property="FontSize" Value="8"></Setter>
+    <Setter Property="Foreground" Value="Black"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+  </Style>
+
+  <!-- Create New Project Node Button -->
+  <Style Selector="Label.CreateNewProjectIconText">
+    <Setter Property="FontSize" Value="20"></Setter>
+    <Setter Property="Foreground" Value="Black"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+  </Style>
+
+  <Style Selector="Label.CreateNewProjectIcon">
+    <Setter Property="FontFamily" Value="{DynamicResource Phosphor}"></Setter>
+    <Setter Property="FontSize" Value="62"></Setter>
+    <Setter Property="Foreground" Value="Black"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+  </Style>
+
+  
+  <Style Selector="Button.CreateProjectNodeButton">
+    <Setter Property="Padding" Value="1"></Setter>
+    <Setter Property="Width" Value="210"/>
+    <Setter Property="Background" Value="{DynamicResource PltWhiteMilk}"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PltGrayDarkDarkDark}"/>
+  </Style>
+
+  <Style Selector="Button.CreateProjectNodeButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource PltGray}"/>
+    <Setter Property="Foreground" Value="Black"/>
+  </Style>
+  
+  <!-- CreateNewProjectNodeButton -->
+  <Style Selector="Button.CreateNewProjectNodeButton">
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+    <Setter Property="Padding" Value="1"></Setter>
+    <Setter Property="Width" Value="300"/>
+    <Setter Property="Background" Value="{DynamicResource PltWhiteMilk}"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PltGrayDarkDarkDark}"/>
+    <Style Selector="^ StackPanel">
+      <Setter Property="Orientation" Value="Horizontal"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="HorizontalAlignment" Value="Left"/>
+      <Style Selector="^ StackPanel">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+      </Style>
+    </Style>
+  </Style>
+
+  <Style Selector="Button.CreateNewProjectNodeButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource PltGray}"/>
+    <Setter Property="Foreground" Value="Black"/>
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+  </Style>
+
+  <Style Selector="FlyoutPresenter.marginBugfix">
+    <Setter Property="Margin" Value="-3 -13 -13 -13"></Setter>
+    <Setter Property="Background" Value="Transparent"></Setter>
+  </Style>
+
+  <Style Selector="Label.icon">
+    <Setter Property="FontFamily" Value="{DynamicResource Phosphor}"></Setter>
+    <Setter Property="FontSize" Value="32"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+  </Style>
+
+  <Style Selector="Label.icontext">
+    <Setter Property="FontSize" Value="22"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+  </Style>
+
+  <Style Selector="Button.default">
+    <Setter Property="Background" Value="{DynamicResource PltWhiteMilk}"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PltGrayDarkDarkDark}"/>
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+  </Style>
+
+
+  <Style Selector="Button/template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.1"></BrushTransition>
+        <BrushTransition Property="Foreground" Duration="0:0:0.1"></BrushTransition>
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="Button.default:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource PltGray}"/>
+    <Setter Property="Foreground" Value="Black"/>
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+  </Style>
+
+  <!-- Trash button styles -->
+  <Style Selector="Button.trash Label">
+    <Setter Property="RenderTransform" Value="scale(1)"/>
+    <Setter Property="Transitions">
+      <Transitions>
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.12"></TransformOperationsTransition>
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="Button.trash:pointerover Label">
+    <Setter Property="RenderTransform" Value="scale(1.1)"/>
+  </Style>
+
+  <Style Selector="Button.trash">
+    <Setter Property="Background" Value="{DynamicResource PltRed}"/>
+  </Style>
+
+  <Style Selector="Button.trash:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource PltRed}"></Setter>
+  </Style>
+
+  <!-- Approve button styles -->
+  <Style Selector="Button.approve Label">
+    <Setter Property="RenderTransform" Value="scale(1)"/>
+    <Setter Property="Transitions">
+      <Transitions>
+        <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.12"></TransformOperationsTransition>
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="Button.approve:pointerover Label">
+    <Setter Property="RenderTransform" Value="scale(1.1)"/>
+  </Style>
+
+  <Style Selector="Button.approve">
+    <Setter Property="Background" Value="Green"/>
+  </Style>
+
+  <Style Selector="Button.approve:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="Green"></Setter>
+  </Style>
+</Styles>

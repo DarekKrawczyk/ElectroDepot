@@ -13,6 +13,7 @@
   <Application.Styles>
     <FluentTheme />
     <themes:RangeSliderTheme />
+    <StyleInclude Source="avares://DesktopClient/Styles/AppDefaultStyles.axaml"/>
     <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
   </Application.Styles>
 
@@ -31,6 +32,7 @@
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
     <FontFamily x:Key="Roboto">avares://DesktopClient/Assets#Roboto</FontFamily>
+    <FontFamily x:Key="Phosphor">avares://DesktopClient/Assets/Fonts/Phosphor-Light.ttf#Phosphor-Light</FontFamily>
 
     <!-- Primary Purple -->
     <SolidColorBrush x:Key="UIDeepPurple" Color="#6A4C9C" />
@@ -49,6 +51,48 @@
 
     <!-- Off White -->
     <SolidColorBrush x:Key="UIOffWhite" Color="#F4F4F4" />
+    
+    <!-- New pallete -->
+    <!--<SolidColorBrush x:Key="PltWhite" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="PltGreenBlue" Color="#3C6E71" />
+    <SolidColorBrush x:Key="PltGreen" Color="#41805F" />
+    <SolidColorBrush x:Key="PltDeepGreen" Color="#3E8440" />
+    <SolidColorBrush x:Key="PltBlue" Color="#284B63" />
+    <SolidColorBrush x:Key="PltRed" Color="#DB324D" />
+    <SolidColorBrush x:Key="PltDeepRed" Color="#D71333" />-->
+
+    <SolidColorBrush x:Key="PltBlack" Color="#353535" />
+    <SolidColorBrush x:Key="PltGray" Color="#D9D9D9" />
+    <SolidColorBrush x:Key="PltSilver" Color="#CCCCCC" />
+    <SolidColorBrush x:Key="PltGrayDark" Color="#9C9C9C" />
+    <SolidColorBrush x:Key="PltGrayDarkDark" Color="#4C4C4C" />
+    <SolidColorBrush x:Key="PltGrayDarkDarkDark" Color="#3D3D3D" />
+    <SolidColorBrush x:Key="PltWhite" Color="#F1FAEE" />
+    <!--<SolidColorBrush x:Key="PltWhiteMilk" Color="#EDEAD8" />-->
+    <SolidColorBrush x:Key="PltWhiteMilk" Color="#F7F5E7" />
+    <SolidColorBrush x:Key="PltRed" Color="#E63946" />
+    <SolidColorBrush x:Key="PltLightBlue" Color="#99D0EA" />
+    <SolidColorBrush x:Key="PltBlue" Color="#457B9D" />
+    <SolidColorBrush x:Key="PltDarkBlue" Color="#1D3557" />
+    <SolidColorBrush x:Key="PltDarkBlueS2" Color="#192F4D" />
+
+    <Color x:Key="PltBlueColorS1">#457B9D</Color>
+    <Color x:Key="PltDarkBlueColorS1">#1D3557</Color>
+    <Color x:Key="PltDarkBlueColorS2">#192F4D</Color>
+    <!--<Color x:Key="PltLightBlueColorS1">#99D0EA</Color>
+    <Color x:Key="PltLightBlueColorS2">#78C1E3</Color>
+    <Color x:Key="PltLightBlueColorS3">#56B2DC</Color>-->
+    <Color x:Key="PltLightBlueColorS1">#2A70A2</Color>
+    <Color x:Key="PltLightBlueColorS2">#206297</Color>
+    <Color x:Key="PltLightBlueColorS3">#154165</Color>
+    <Color x:Key="PltBlueColor">#457B9D</Color>
+
+    <LinearGradientBrush x:Key="SectionGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Color="{DynamicResource PltLightBlueColorS1}" Offset="0.1"/>
+      <GradientStop Color="{DynamicResource PltLightBlueColorS2}" Offset="0.5"/>
+      <GradientStop Color="{DynamicResource PltLightBlueColorS3}" Offset="1.0"/>
+    </LinearGradientBrush>
+
   </Application.Resources>
 
 </Application>

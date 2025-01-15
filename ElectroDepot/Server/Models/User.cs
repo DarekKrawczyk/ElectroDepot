@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Server.Models
@@ -19,7 +21,11 @@ namespace Server.Models
         [Required]
         [Column(TypeName = "nvarchar(100)")]
         public string Username { get; set; }
-        
+
+        [Required]
+        [Column(TypeName = "nvarchar(100)")]
+        public string Name { get; set; }
+
         [Required]
         [Column(TypeName = "nvarchar(255)")]
         public string Password { get; set; }

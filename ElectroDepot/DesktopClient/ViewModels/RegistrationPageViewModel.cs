@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.ViewModels
 {
-    public partial class RegistrationPageViewModel : ViewModelBase
+    public partial class RegistrationPageViewModel : WindowNavigatorViewModel
     {
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -109,13 +109,13 @@ namespace DesktopClient.ViewModels
         {
             CanRegister = false;
 
-            RegistrationStatus status = await DatabaseStore.UsersStore.UserRegister(Username, Password, ConfirmedPassword, Email);
+            RegistrationStatus status = await DatabaseStore.UsersStore.UserRegister(Username, Password, ConfirmedPassword, Email, Name);
 
             if (status == RegistrationStatus.Success)
             {
                 var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "User registered successfully", ButtonEnum.Ok);
                 ButtonResult buttonResult = await box.ShowAsync();
-                _navigator.NavigateTo(Page.Login);
+                //_navigator.NavigateTo(Page.Login);
             }
             else
             {
@@ -124,13 +124,9 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        public RegistrationPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
+        public RegistrationPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore) : base(windowViewModel, databaseStore)
         {
         }
 
-        public override void Dispose()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

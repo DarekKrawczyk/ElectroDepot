@@ -16,6 +16,7 @@ namespace ElectroDepotClassLibrary.Containers
         public int ID { get { return _purchase.ID; } }
         public DateTime PurchaseDate { get { return _purchase.PurchaseDate; } }
         public string PurchaseDateAsDate { get { return PurchaseDate.ToString("D"); } }
+        public string PurchaseDateAsDateShort { get { return PurchaseDate.ToString("d"); } }
         public double TotalPrice { get { return _purchase.TotalPrice; } }
         public string TotalPriceAsCurrency { get { return _purchase.TotalPrice.ToString("C", new CultureInfo("pl-PL")); } }
         public int ComponentsQuantity { get { return _purchasedItems.Count(); } }

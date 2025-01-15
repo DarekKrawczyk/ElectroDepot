@@ -9,24 +9,50 @@ using System.Threading;
 
 namespace DesktopClient.ViewModels
 {
-    public partial class MainWindowViewModel : ViewModelBase
+    public partial class MainWindowViewModel : BaseViewModel, INavagatable
     {
         [ObservableProperty]
-        private ViewModelBase _currentView;
+        protected BaseViewModel _windowViewModel;
 
-        public MainWindowViewModel(DatabaseStore databaseStore, ViewModelBase baseModel, Navigator navigator) : base(databaseStore, navigator)
+        public BaseViewModel View
         {
-            _currentView = baseModel;
+            get
+            {
+                return WindowViewModel;
+            }
+            set
+            {
+                WindowViewModel = value;
+            }
         }
 
-        public void Navigate(ViewModelBase viewModel)
+        public MainWindowViewModel(WindowNavigatorViewModel entryViewModel, DatabaseStore databaseStore) : base(databaseStore)
         {
-            CurrentView = viewModel;
+            _windowViewModel = entryViewModel;
         }
 
-        public override void Dispose()
+        [RelayCommand]
+        public void Navigate(string destination)
         {
-            throw new NotImplementedException();
+            WindowNavigatorViewModel destinationViewModel;
+            if (destination == "Login")
+            {
+                destinationViewModel = new LoginPageViewModel(this, DatabaseStore);
+            }
+            else if (destination == "Root")
+            {
+                destinationViewModel = new RootPageViewModel(this, DatabaseStore);
+            }
+            else if (destination == "Register")
+            {
+                destinationViewModel = new RegistrationPageViewModel(this, DatabaseStore);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            WindowViewModel = destinationViewModel;
         }
     }
 }

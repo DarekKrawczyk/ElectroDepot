@@ -27,7 +27,7 @@ using DesktopClient.Navigation;
 
 namespace DesktopClient.ViewModels
 {
-    public partial class ComponentsPageViewModel : ViewModelBase
+    public partial class ComponentsPageViewModel : RootNavigatorViewModel, INavParamInterpreter
     {
         #region Data source
         public List<DetailedComponentContainer> ComponentsSource { get; set; }
@@ -613,7 +613,7 @@ namespace DesktopClient.ViewModels
         }
         #endregion
         #region Constructor
-        public ComponentsPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
+        public ComponentsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore) : base(defaultRootPageViewModel, databaseStore)
         {
             PredefinedImages = new ObservableCollection<ImageContainer>();
 
@@ -786,11 +786,25 @@ namespace DesktopClient.ViewModels
             PurchasesForSelected.Refresh();
         }
 
-        public override void Dispose()
+        public void InterpreteNavigationParameter(NavParam navigationParameter)
         {
-            DatabaseStore.CategorieStore.CategoriesLoaded -= HandleCategoriesLoaded;
-            DatabaseStore.ComponentStore.ComponentsLoaded -= HandleComponentsLoaded;
-            DatabaseStore.SupplierStore.SuppliersLoaded -= SuppliersLoadedHandler;
+            switch (navigationParameter.Operation)
+            {
+                case NavOperation.Add:
+                    SelectedTab = 1;
+                    break;
+                case NavOperation.Preview:
+                    break;
+                default:
+                    break;
+            }
         }
+
+        //public override void Dispose()
+        //{
+        //    DatabaseStore.CategorieStore.CategoriesLoaded -= HandleCategoriesLoaded;
+        //    DatabaseStore.ComponentStore.ComponentsLoaded -= HandleComponentsLoaded;
+        //    DatabaseStore.SupplierStore.SuppliersLoaded -= SuppliersLoadedHandler;
+        //}
     }
 }

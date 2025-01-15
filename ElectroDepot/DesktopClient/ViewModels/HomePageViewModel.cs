@@ -11,60 +11,84 @@ using ElectroDepotClassLibrary.Stores;
 using ElectroDepotClassLibrary.Models;
 using Avalonia.Controls;
 using DesktopClient.Navigation;
+using ElectroDepotClassLibrary.Containers;
+using CommunityToolkit.Mvvm.Input;
+using LiveChartsCore.SkiaSharpView.Extensions;
+using System.Collections.Generic;
+using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Drawing;
+using System.IO;
+using ElectroDepotClassLibrary.Containers.NodeContainers;
+using DesktopClient.Containers.ButtonsContainers;
+using System.Globalization;
 
 namespace DesktopClient.ViewModels
 {
-    public partial class HomePageViewModel : ViewModelBase
+    public partial class HomePageViewModel : RootNavigatorViewModel
     {
+        [ObservableProperty]
+        private string _currentDate = DateTime.Now.ToString("D", new CultureInfo("en-US"));
+
+        private string UsersName
+        {
+            get
+            {
+                return DatabaseStore.UsersStore.LoggedInUser.Name;
+            }
+        }
+
+        [ObservableProperty]
+        private string _userName;
+
+        [RelayCommand]
+        public void AddSupplier()
+        {
+            // TODO: Implement!
+        }
+
+        [RelayCommand]
+        public void NavigateProjectsAdd()
+        {
+            NavigatePage("Projects", NavParam.Create(NavOperation.Add, null));
+        }
+
+        [RelayCommand]
+        public void NavigatePurchasesAdd()
+        {
+            NavigatePage("Purchases", NavParam.Create(NavOperation.Add, null));
+        }
+
+        public ObservableCollection<ToolAppButtonContainer> Tools { get; set; } = new ObservableCollection<ToolAppButtonContainer>()
+        {
+            //new ToolAppContainer("KiCad", null, "D:\\KiCAD\\bin\\kicad.exe"), TODO: 
+            new ToolAppButtonContainer(new ToolAppContainer("EEVBlog",  ImageHelper.LoadFromResource(new Uri($"avares://DesktopClient/Assets/Icons/Tools/eevblog.png")), "https://www.eevblog.com/")),
+            new ToolAppButtonContainer(new ToolAppContainer("EEStack",  ImageHelper.LoadFromResource(new Uri($"avares://DesktopClient/Assets/Icons/Tools/eestack.png")), "https://electronics.stackexchange.com/")),
+            new ToolAppButtonContainer(new ToolAppContainer("GitHub",  ImageHelper.LoadFromResource(new Uri($"avares://DesktopClient/Assets/Icons/Tools/github.png")), "https://github.com/")),
+        };
         public ObservableCollection<SupplierContainer> Suppliers { get; set; }
         public ObservableCollection<ComponentContainer> Components { get; set; }
-        public ObservableCollection<ProjectContainer> Projects { get; set; }
+        public ObservableCollection<ProjectNodeButtonContainer> Projects { get; set; }
+        public ObservableCollection<PurchaseNodeButtonContainer> Purchases {  get; set; }
 
-        public ISeries[] Series { get; set; } = [
-            new ColumnSeries<DateTimePoint>
-            {
-                Values = [
-                    new() { DateTime = new(2024, 1, 1), Value = 3 },
-                    new() { DateTime = new(2024, 2, 1), Value = 6 },
-                    new() { DateTime = new(2024, 3, 1), Value = 5 },
-                    new() { DateTime = new(2024, 4, 1), Value = 3 },
-                    new() { DateTime = new(2024, 5, 1), Value = 5 },
-                    new() { DateTime = new(2024, 6, 1), Value = 8 },
-                    new() { DateTime = new(2024, 7, 1), Value = 6 },
-                    new() { DateTime = new(2024, 8, 1), Value = 6 },
-                    new() { DateTime = new(2024, 9, 1), Value = 6 },
-                    new() { DateTime = new(2024, 10, 1), Value = 6 },
-                    new() { DateTime = new(2024, 11, 1), Value = 6 },
-                    new() { DateTime = new(2024, 12, 1), Value = 6 }
-                ],
-               Stroke = new SolidColorPaint(SKColors.WhiteSmoke) { StrokeThickness = 30 },
-        MaxBarWidth = double.MaxValue,
-        Padding = 0
-            }
-        ];
+        private static int _index = 0;
+        private static string[] _names = ["Maria", "Susan", "Charles", "Fiona", "George"];
 
-        // You can use the DateTimeAxis class to define a date time based axis 
-
-        // The first parameter is the time between each point, in this case 1 day 
-        // you can also use 1 year, 1 month, 1 hour, 1 minute, 1 second, 1 millisecond, etc 
-
-        // The second parameter is a function that receives a date and returns the label as string 
-        public ICartesianAxis[] XAxes { get; set; } = [
-            new DateTimeAxis(TimeSpan.FromDays(1), date => date.ToString("MMM"))
-        ];
+        public ObservableCollection<ISeries> Series { get; set; } = new();
 
         [Obsolete("DO NOT USE THIS! THIS IS JUST FOR AVALONIA DESIGNER!")]
-        public HomePageViewModel(Navigator navigator) : base(null, navigator)
+        public HomePageViewModel(RootPageViewModel defaultRootPageViewModel) : base(defaultRootPageViewModel, null)
         {
             if (Design.IsDesignMode)
             {
                 Suppliers = new ObservableCollection<SupplierContainer>();
                 Components = new ObservableCollection<ComponentContainer>();
-                Projects = new ObservableCollection<ProjectContainer>();
+                Projects = new ObservableCollection<ProjectNodeButtonContainer>();
+                Purchases = new ObservableCollection<PurchaseNodeButtonContainer>();
             }
         }
 
-        public HomePageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
+        public HomePageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore) : base(defaultRootPageViewModel, databaseStore)
         {
             Suppliers = new ObservableCollection<SupplierContainer>();
             DatabaseStore.SupplierStore.SuppliersLoaded += SuppliersLoadedHandler;
@@ -74,9 +98,71 @@ namespace DesktopClient.ViewModels
             DatabaseStore.ComponentStore.ComponentsLoaded += ComponentsLoadedHandler;
             DatabaseStore.ComponentStore.Load();
 
-            Projects = new ObservableCollection<ProjectContainer>();
+            Projects = new ObservableCollection<ProjectNodeButtonContainer>();
             DatabaseStore.ProjectStore.ProjectsLoaded += ProjectsLoadedHandler;
             DatabaseStore.ProjectStore.Load();
+
+            Purchases = new ObservableCollection<PurchaseNodeButtonContainer>();
+            DatabaseStore.PurchaseStore.DetailedPurchaseContainersLoaded += PurchaseStore_DetailedPurchaseContainersLoadedHandler;
+            DatabaseStore.PurchaseStore.DetailedPurchaseContainersLoaded += PurchaseStore_DetailedPurchaseContainersLoadedHandler_SupplierChart;
+            DatabaseStore.PurchaseStore.LoadDetailedPurchaseContainers();
+
+            UserName = $"Welcome, {UsersName}!";
+        }
+
+        private void PurchaseStore_DetailedPurchaseContainersLoadedHandler_SupplierChart()
+        {
+            AdjustSeries();
+        }
+
+        private void AdjustSeries()
+        {
+            var groupedBySupplier = Purchases.GroupBy(x => x.Node.Supplier);
+            var result = groupedBySupplier.Select(x => new
+            {
+                Supplier = x.Key,
+                TotalSpendings = x.Sum(y => y.Node.TotalPrice),
+            }).ToList();
+
+            double sumTotalSpendings = result.Sum(x => x.TotalSpendings);
+
+            // Clear and populate the series reactively
+            Series.Clear();
+
+            foreach (var value in result)
+            {
+                Series.Add(new PieSeries<double>
+                {
+                    Values = new[] { value.TotalSpendings },
+                    Name = value.Supplier.Name,
+                    DataLabelsPosition = LiveChartsCore.Measure.PolarLabelsPosition.Middle,
+                    DataLabelsSize = 15,
+                    DataLabelsPaint = new SolidColorPaint(SKColors.Black)
+                    {
+                        SKTypeface = SKTypeface.FromFamilyName("Arial"),
+                    },
+                    DataLabelsFormatter =
+                        point =>
+                        {
+                            var pv = point.Coordinate.PrimaryValue;
+                            var sv = point.StackedValue!;
+
+                            var a = $"{sv.Share:P2}";
+                            return $"{value.Supplier.Name}";
+                        },
+                    ToolTipLabelFormatter = point => $"{point.StackedValue.Share:P2}{Environment.NewLine}{value.TotalSpendings} pln"
+                });
+            }
+        }
+
+
+        private void PurchaseStore_DetailedPurchaseContainersLoadedHandler()
+        {
+            Purchases.Clear();
+            foreach(DetailedPurchaseContainer purchase in DatabaseStore.PurchaseStore.DetailedPurchaseContainers)
+            {
+                Purchases.Add(new PurchaseNodeButtonContainer(this, purchase));
+            }
         }
 
         private void ProjectsLoadedHandler()
@@ -84,7 +170,7 @@ namespace DesktopClient.ViewModels
             Projects.Clear();
             foreach(Project project in DatabaseStore.ProjectStore.Projects)
             {
-                Projects.Add(new ProjectContainer(project));
+                Projects.Add(new ProjectNodeButtonContainer(this, project));
             }
         }
 
@@ -111,9 +197,5 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        public override void Dispose()
-        {
-            DatabaseStore.SupplierStore.SuppliersLoaded -= SuppliersLoadedHandler;
-        }
     }
 }

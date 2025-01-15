@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
 using ElectroDepotClassLibrary.DTOs;
 using ElectroDepotClassLibrary.Utility;
+using System;
 
 namespace ElectroDepotClassLibrary.Models
 {
@@ -33,6 +34,20 @@ namespace ElectroDepotClassLibrary.Models
         public override string ToString()
         {
             return $"ID: '{ID}', Name: '{Name}', Website: '{Website}'";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Supplier other)
+            {
+                return ID == other.ID;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ID);
         }
     }
 

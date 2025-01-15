@@ -9,6 +9,14 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Navigation
 {
+    public enum View
+    {
+        Home,
+        Components,
+        Projects,
+        Purchases,
+        Tracking
+    }
     public enum Page
     {
         Login,
@@ -16,36 +24,36 @@ namespace DesktopClient.Navigation
         Root
     }
 
-    public class Navigator
-    {
-        public MainWindowViewModel Window { get; set; }
-        private readonly DatabaseStore databaseStore;
-        public Navigator(DatabaseStore store)
-        {
-            databaseStore = store;
-        }
+    //public class Navigator
+    //{
+    //    public MainWindowViewModel Window { get; set; }
+    //    private readonly DatabaseStore databaseStore;
+    //    public Navigator(DatabaseStore store)
+    //    {
+    //        databaseStore = store;
+    //    }
 
-        public void NavigateTo(Page page)
-        {
-            ViewModelBase destination;
-            if(page == Page.Login)
-            {
-                destination = new LoginPageViewModel(databaseStore, this);
-            }
-            else if (page == Page.Root)
-            {
-                destination = new RootPageViewModel(databaseStore, this);
-            }
-            else if(page == Page.Register)
-            {
-                destination = new RegistrationPageViewModel(databaseStore, this);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+    //    public void NavigateTo(Page page)
+    //    {
+    //        ViewModelBase destination;
+    //        if(page == Page.Login)
+    //        {
+    //            destination = new LoginPageViewModel(databaseStore, this);
+    //        }
+    //        else if (page == Page.Root)
+    //        {
+    //            destination = new RootPageViewModel(databaseStore, this);
+    //        }
+    //        else if(page == Page.Register)
+    //        {
+    //            destination = new RegistrationPageViewModel(databaseStore, this);
+    //        }
+    //        else
+    //        {
+    //            throw new NotImplementedException();
+    //        }
 
-            Window.Navigate(destination);
-        }
-    }
+    //        Window.Navigate(destination);
+    //    }
+    //}
 }
