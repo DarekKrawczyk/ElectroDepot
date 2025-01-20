@@ -21,8 +21,9 @@ namespace ElectroDepotClassLibraryTests.UserTests.Registration
             string password = "password";
             string confirmPassword = "password";
             string email = "valid.email@gmail.com";
+            string name = "test";
 
-            RegistrationStatus actual = await _registerService.Register(username, password, confirmPassword, email);
+            RegistrationStatus actual = await _registerService.Register(username, password, confirmPassword, email, name);
 
             Assert.Equal(actual, expected);
         }
@@ -35,8 +36,9 @@ namespace ElectroDepotClassLibraryTests.UserTests.Registration
             string password = "password";
             string confirmPassword = "password";
             string email = "valid.email@gmail.com";
+            string name = "test";
 
-            RegistrationStatus actual = await _registerService.Register(username, password, confirmPassword, email);
+            RegistrationStatus actual = await _registerService.Register(username, password, confirmPassword, email, name);
 
             Assert.Equal(actual, expected);
         }
@@ -49,8 +51,9 @@ namespace ElectroDepotClassLibraryTests.UserTests.Registration
             string password = "password";
             string confirmPassword = "password";
             string email = "test@gmail.com";
+            string name = "name";
 
-            RegistrationStatus actual = await _registerService.Register(username, password, confirmPassword, email);
+            RegistrationStatus actual = await _registerService.Register(username, password, confirmPassword, email, name);
 
             Assert.Equal(actual, expected);
         }
@@ -63,8 +66,9 @@ namespace ElectroDepotClassLibraryTests.UserTests.Registration
             string password = "password1";
             string confirmPassword = "password1123123";
             string email = "tesdsst@gmail.com";
+            string name = "name";
 
-            RegistrationStatus actual = await _registerService.Register(username, password, confirmPassword, email);
+            RegistrationStatus actual = await _registerService.Register(username, password, confirmPassword, email, name);
 
             Assert.Equal(actual, expected);
         }

@@ -3,77 +3,128 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="using:DesktopClient.ViewModels"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:navigation="using:DesktopClient.Navigation"
              xmlns:controls="clr-namespace:DesktopClient.Templates"
              mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="720"
              x:Class="DesktopClient.Views.RootPageView"
              x:DataType="vm:RootPageViewModel">
-  
-  <!-- Whole window -->
-  <SplitView IsPaneOpen="{Binding IsPanelOpen}"
-             OpenPaneLength="250"
-             CompactPaneLength="115"
-             DisplayMode="CompactInline"
-             PaneBackground="Transparent"
-               >
-    <!-- Just panel -->
-    <SplitView.Pane>
-      <StackPanel Spacing="0"
-                  Margin="5"
-                  Background="Transparent">
 
-        <Button Command="{Binding TriggerPaneCommand}"
-                Margin="0 0 0 0"
-                BorderBrush="{DynamicResource UIDarkGray}"
-                BorderThickness="1" >
-          <Image Source="avares://DesktopClient/Assets/Resize_icon.png"
-                 Width="230"
-                 Height="12"
-                 Margin="0 0 0 0"/>
-          <Button.Styles>
-            <Style Selector="Button">
-              <Setter Property="Background"
-                      Value="{DynamicResource UIDeepPurple}"/>
-            </Style>
-          </Button.Styles>
-        </Button>
+  <Grid RowDefinitions="32 *">
 
+    <!-- Upper strip-->
+    <Grid Grid.Row="0" IsHitTestVisible="False"
+      Background="{DynamicResource PltDarkBlueS2}">
+    </Grid>
 
-        <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedListItem}">
-          <ListBox.ItemTemplate>
-            <DataTemplate DataType="{x:Type vm:ListItemTemplate}">
-              <Border Padding="0,5,0,0">
-                <controls:MenuButton Name="{Binding Label}"
-                                     Icon="{Binding Icon}">
+    <!-- Two panels, left and right -->
+    <Grid Grid.Row="1">
+      <Grid.Background>
+        <LinearGradientBrush StartPoint="30%,0%" EndPoint="50%,100%">
+          <GradientStop Color="{DynamicResource PltDarkBlueColorS2}" Offset="0.0"/>
+          <GradientStop Color="{DynamicResource PltDarkBlueColorS1}" Offset="0.5"/>
+          <GradientStop Color="{DynamicResource PltBlueColorS1}" Offset="1.0"/>
+        </LinearGradientBrush>
+      </Grid.Background>
+      <Grid ColumnDefinitions="auto 80*">
 
-                </controls:MenuButton>
-              </Border>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
-      </StackPanel>
-    </SplitView.Pane>
+        <Grid RowDefinitions="auto * auto" Grid.Column="0" Margin="10 0 5 10">
+          <!-- Profile -->
+          <Button Classes="default" Margin="0 0 0 5">
+            <StackPanel Orientation="Horizontal" Width="200">
+              <Label Classes="icon" Content="&#xE4C2;"></Label>
+              <Label Classes="icontext" Content="Username"></Label>
+              <Label Classes="icon" Content="&#xE13A;"></Label>
+            </StackPanel>
+            <Button.Flyout>
+              <Flyout Placement="RightEdgeAlignedTop" FlyoutPresenterClasses="marginBugfix">
+                <StackPanel Spacing="5">
+                  <Button Classes="default">
+                    <StackPanel Orientation="Horizontal" Width="200">
+                      <Label Classes="icon" Content="&#xE4CC;"></Label>
+                      <Label Classes="icontext" Content="User settings"></Label>
+                    </StackPanel>
+                  </Button>
+                  <Button Classes="default" Command="{Binding NavigateCommand}" CommandParameter="Login">
+                    <StackPanel Orientation="Horizontal" Width="200">
+                      <Label Classes="icon" Content="&#xE42A;"></Label>
+                      <Label Classes="icontext" Content="Sign out"></Label>
+                    </StackPanel>
+                  </Button>
+                </StackPanel>
+              </Flyout>
+            </Button.Flyout>
+          </Button>
 
-    <!-- Page content -->
-    <SplitView.Content>
-      <Border CornerRadius="12 0 0 0">
-        <Grid>
+          <!-- Navigtaion buttons -->
+          <StackPanel Spacing="5"
+                Grid.Row="1"
+                VerticalAlignment="Top">
 
-          <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
-            <RowDefinition Height="*" />
-          </Grid.RowDefinitions>
+            <Button Classes="default" Command="{Binding NavigatePageCommand}" CommandParameter="Home">
+              <StackPanel Orientation="Horizontal" Width="200">
+                <Label Classes="icon" Content="&#xE2C2;"></Label>
+                <Label Classes="icontext" Content="Home"></Label>
+              </StackPanel>
+            </Button>
 
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-          </Grid.ColumnDefinitions>
+            <Button Classes="default" Command="{Binding NavigatePageCommand}" CommandParameter="Components">
+              <StackPanel Orientation="Horizontal" Width="200">
+                <Label Classes="icon" Content="&#xE610;"></Label>
+                <Label Classes="icontext" Content="Components"></Label>
+              </StackPanel>
+            </Button>
 
-          <Grid Grid.Row="1" Grid.Column="1"></Grid>
+            <Button Classes="default" Command="{Binding NavigatePageCommand}" CommandParameter="Projects">
+              <StackPanel Orientation="Horizontal" Width="200">
+                <Label Classes="icon" Content="&#xEDA0;"></Label>
+                <Label Classes="icontext" Content="Projects"></Label>
+              </StackPanel>
+            </Button>
 
-          <Grid Grid.Row="2" Grid.Column="1">
-            <TransitioningContentControl Content="{Binding CurrentPage}"/>
-          </Grid>
+            <Button Classes="default" Command="{Binding NavigatePageCommand}" CommandParameter="Purchases">
+              <StackPanel Orientation="Horizontal" Width="200">
+                <Label Classes="icon" Content="&#xE41E;"></Label>
+                <Label Classes="icontext" Content="Purchases"></Label>
+              </StackPanel>
+            </Button>
+
+            <Button Classes="default" Command="{Binding NavigatePageCommand}" CommandParameter="Tracking">
+              <StackPanel Orientation="Horizontal" Width="200">
+                <Label Classes="icon" Content="&#xECA4;"></Label>
+                <Label Classes="icontext" Content="Tracking"></Label>
+              </StackPanel>
+            </Button>
+          </StackPanel>
+
+          <!-- Profile -->
+          <StackPanel Orientation="Horizontal" Grid.Row="2" Spacing="5">
+            <Button Classes="default">
+              <StackPanel Orientation="Horizontal">
+                <Label Classes="icon" Content="&#xE3DA;"></Label>
+              </StackPanel>
+            </Button>
+            <Button Classes="default">
+              <StackPanel Orientation="Horizontal">
+                <Label Classes="icon" Content="&#xE270;"></Label>
+              </StackPanel>
+            </Button>
+          </StackPanel>
         </Grid>
-      </Border>
-    </SplitView.Content>
-  </SplitView>
+
+        <!-- Right panel-->
+        <Grid Grid.Column="1" Margin="5 0 10 10">
+          <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}">
+            <Grid>
+              <Grid.Background>
+                <ImageBrush AlignmentY="Top"
+                            AlignmentX="Right" 
+                            Source="avares://DesktopClient/Assets/Background_FHD.png"></ImageBrush>
+              </Grid.Background>
+              <ContentControl Padding="10" Content="{Binding PageViewModel}"/>
+            </Grid>
+          </Border>
+        </Grid>
+      </Grid>
+    </Grid>
+  </Grid>
 </UserControl>

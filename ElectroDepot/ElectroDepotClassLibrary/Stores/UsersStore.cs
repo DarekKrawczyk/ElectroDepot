@@ -12,7 +12,8 @@ namespace ElectroDepotClassLibrary.Stores
         private readonly UserDataProvider _userDataProvider;
         private User _loggedInUser;
 
-        public User LoggedInUser { get { return _loggedInUser; } }
+        //public User LoggedInUser { get { return _loggedInUser; } }
+        public User LoggedInUser { get { return new User(1011, "username", "password", "email", "Darius"); } }
         public UserDataProvider UsersDP { get { return _userDataProvider; } }
 
         public event Action UserLoggedIn;
@@ -47,9 +48,9 @@ namespace ElectroDepotClassLibrary.Stores
             return status;
         }
 
-        public async Task<RegistrationStatus> UserRegister(string username, string password, string confirmpassword, string email)
+        public async Task<RegistrationStatus> UserRegister(string username, string password, string confirmpassword, string email, string name)
         {
-            RegistrationStatus status = await _registerService.Register(username, password, confirmpassword, email);
+            RegistrationStatus status = await _registerService.Register(username, password, confirmpassword, email, name);
             return status;
         }
     }

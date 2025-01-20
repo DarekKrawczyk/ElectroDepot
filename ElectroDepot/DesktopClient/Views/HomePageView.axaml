@@ -12,250 +12,287 @@
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              x:DataType="vm:HomePageViewModel">
 
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="auto"></RowDefinition>
-      <RowDefinition Height="auto"></RowDefinition>
-      <RowDefinition Height="auto"></RowDefinition>
-    </Grid.RowDefinitions>
+  <Grid RowDefinitions="auto 10 *" Background="Transparent">
 
-    <!-- First row -->
-    <Grid Grid.Row="0">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="auto"></ColumnDefinition>
-        <ColumnDefinition Width="auto"></ColumnDefinition>
-        <ColumnDefinition Width="auto"></ColumnDefinition>
-        <ColumnDefinition Width="auto"></ColumnDefinition>
-        <ColumnDefinition Width="auto"></ColumnDefinition>
-      </Grid.ColumnDefinitions>
-
-      <!-- Latest projects -->
-      <Grid Grid.Column="0">
-        <StackPanel Orientation="Vertical"
-                    Margin="10">
-          <Label FontFamily="{DynamicResource Roboto}"
-                 FontSize="28"
-                 FontWeight="Bold"
-                 VerticalAlignment="Center"
-                 HorizontalAlignment="Center"
-                 Margin="0 0 0 10">
-            Latest projects
-          </Label>
-          <ScrollViewer Height="270">
-            <ItemsControl ItemsSource="{Binding Projects}" HorizontalAlignment="Left" VerticalAlignment="Top">
-              <!-- Define the panel as UniformGrid -->
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <UniformGrid Columns="2" />
-                </ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-
-              <!-- Template for displaying each item -->
-              <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                  <CustomControls:ProjectNodeButton ProjectName ="{Binding Project.Name}"
-                                                    ProjectDescription="{Binding Project.Description}"
-                                                    ProjectImage="{Binding Project.Image}"
-                                                    Command="{Binding ItemClickedCommand}"
-                                                    Margin="10"/>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-          </ScrollViewer>
-        </StackPanel>
-      </Grid>
-
-      <!-- Separator-->
-      <Grid Grid.Column="1">
-        <Border Width="4"
-                Background="{DynamicResource UIMediumGray}"
-                Margin="0,20"
-                HorizontalAlignment="Stretch"/>
-      </Grid>
-
-      <!-- Suppliers -->
-      <Grid Grid.Column="2">
-        <StackPanel Orientation="Vertical"
-                    Margin="10">
-          <Label FontFamily="{DynamicResource Roboto}"
-                 FontSize="28"
-                 FontWeight="Bold"
-                 VerticalAlignment="Center"
-                 HorizontalAlignment="Center"
-                 Margin="0 0 0 10">
-            Suppliers
-          </Label>
-          <ScrollViewer Height="270">
-            <ItemsControl ItemsSource="{Binding Suppliers}" HorizontalAlignment="Left" VerticalAlignment="Top">
-              <!-- Define the panel as UniformGrid -->
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <UniformGrid Columns="3" />
-                </ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-
-              <!-- Template for displaying each item -->
-              <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                  <CustomControls:SupplierNodeButton Image="{Binding Supplier.Image}"
-                                                     Command="{Binding ItemClickedCommand}"
-                                                     Margin="10"/>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-          </ScrollViewer>
-        </StackPanel>
-      </Grid>
-
-      <!-- Separator -->
-      <Grid Grid.Column="3">
-        <Border Width="4"
-                Background="{DynamicResource UIMediumGray}"
-                Margin="0, 20"
-                HorizontalAlignment="Stretch"/>
-      </Grid>
-
-      <!-- Just bought -->
-      <Grid Grid.Column="4" MinWidth="400">
-        <StackPanel Orientation="Vertical"
-                    Margin="10">
-          <Label FontFamily="{DynamicResource Roboto}"
-                 FontSize="28"
-                 FontWeight="Bold"
-                 VerticalAlignment="Center"
-                 HorizontalAlignment="Center"
-                 Margin="0 0 0 10">
-            Just bought
-          </Label>
-          <ScrollViewer Height="270">
-            <ItemsControl ItemsSource="{Binding Components}" HorizontalAlignment="Left" VerticalAlignment="Top">
-              <!-- Define the panel as UniformGrid -->
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <UniformGrid Columns="1" />
-                </ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-
-              <!-- Template for displaying each item -->
-              <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                  <CustomControls:ComponentNodeButton Image="{Binding Component.Category.Image}"
-                                                      ComponentName="{Binding Component.Name}"
-                                                      Command="{Binding ItemClickedCommand}"
-                                                      Margin="10"/>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-          </ScrollViewer>
-        </StackPanel>
-      </Grid>
+    <!-- First row - "Hellow text etc.." -->
+    <Grid Grid.Row="0" ColumnDefinitions="30* 10 70*">
+      <StackPanel Grid.Column="0" Spacing="10" Margin="30">
+        <Label Foreground="Black" FontSize="22" Content="{Binding CurrentDate}"></Label>
+        <Label Foreground="Black" FontSize="42" Content="{Binding UserName}"></Label>
+      </StackPanel>
 
     </Grid>
 
-    <!-- Separator -->
-    <Grid Grid.Row="1">
-      <Border Height="4"
-              Background="{DynamicResource UIMediumGray}"
-              Margin="20,0"
-              HorizontalAlignment="Stretch"/>
-    </Grid>
+    <!-- Second row - items -->
+    <Grid Grid.Row="2" ColumnDefinitions="50* 10 50*">
 
-    <!-- Second row -->
-    <Grid Grid.Row="2">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="auto"></ColumnDefinition>
-        <ColumnDefinition Width="auto"></ColumnDefinition>
-        <ColumnDefinition Width="auto"></ColumnDefinition>
-      </Grid.ColumnDefinitions>
-
-      <!-- Last 12 months spendings-->
-      <Grid Grid.Column="0"
-            Margin="10">
-        <StackPanel Orientation="Vertical">
-          <Label FontFamily="{DynamicResource Roboto}"
-                 FontSize="28"
-                 FontWeight="Bold"
-                 VerticalAlignment="Center"
-                 HorizontalAlignment="Center"
-                 Margin="0 0 0 10">
-            Last 12 months spendings
-          </Label>
-          <lvc:CartesianChart
-            Series="{Binding Series}"
-            XAxes="{Binding XAxes}"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"
-            Height="300"
-            Width="800"
-            >
-          </lvc:CartesianChart>
-        </StackPanel>
-      </Grid>
-
-      <!-- Separator -->
-      <Grid Grid.Column="1">
-        <Border Width="4"
-                Background="{DynamicResource UIMediumGray}"
-                Margin="0,20"
-                HorizontalAlignment="Stretch"/>
-      </Grid>
-
-      <!-- Shortcuts -->
-      <Grid Grid.Column="2">
-        <StackPanel Orientation="Vertical"
-                    Margin="10">
-          <Label FontFamily="{DynamicResource Roboto}"
-                 FontSize="28"
-                 FontWeight="Bold"
-                 VerticalAlignment="Center"
-                 HorizontalAlignment="Center"
-                 Margin="0 0 0 10">
-            Shortcuts
-          </Label>
-          <Grid>
-            <Grid.RowDefinitions>
-              <RowDefinition Height="auto"></RowDefinition>
-              <RowDefinition Height="auto"></RowDefinition>
-              <RowDefinition Height="auto"></RowDefinition>
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40*"></ColumnDefinition>
-                <ColumnDefinition Width="60*"></ColumnDefinition>
-              </Grid.ColumnDefinitions>
-
-              <Grid Grid.Column="0">
-                <controls:General_Use_Menu_Button Name="Project"
-                                                  Margin="10"/>
+      <!-- Left section -->
+      <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+        <Grid RowDefinitions="auto 10 auto">
+          <!-- Projects -->
+          <Border Grid.Row="0" BorderBrush="Black" Background="{DynamicResource SectionGradient}" BorderThickness="1" HorizontalAlignment="Stretch" CornerRadius="5">
+            <Grid RowDefinitions="auto auto *">
+              <Grid Grid.Row="0" ColumnDefinitions="* *" Margin="15 15 15 10">
+                <StackPanel Grid.Column="0" Spacing="20" Orientation="Horizontal" >
+                  <StackPanel Orientation="Horizontal">
+                    <Label Classes="icon" Foreground="{DynamicResource PltWhiteMilk}" Content="&#xEDA0;"></Label>
+                    <Label Classes="icontext" FontSize="28" Foreground="{DynamicResource PltWhiteMilk}" Content="Projects"></Label>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal">
+                    <Label Classes="icontext" FontSize="18" Foreground="{DynamicResource PltSilver}" Content="Recent"></Label>
+                    <Label Classes="icon" FontSize="22" Foreground="{DynamicResource PltSilver}" Content="&#xE03E;"></Label>
+                  </StackPanel>
+                </StackPanel>
+                <Button Grid.Column="1" Classes="CreateNewProjectNodeButton" HorizontalAlignment="Right" Command="{Binding NavigateProjectsAddCommand}" CommandParameter="Projects">
+                  <StackPanel>
+                    <Label Classes="CreateNewProjectIcon" Content="&#xED4A;"></Label>
+                    <StackPanel>
+                      <Label Classes="CreateNewProjectIconText" Content="Create new project"></Label>
+                    </StackPanel>
+                  </StackPanel>
+                </Button>
               </Grid>
 
-              <Grid Grid.Column="1">
-                <controls:General_Use_Menu_Button Name="Supplier"  Margin="10"/>
+              <!-- Separator -->
+              <Grid Grid.Row="1">
+                <Border Height="1"
+                        Background="{DynamicResource PltWhiteMilk}"
+                        Margin="10 5 15 5"
+                        HorizontalAlignment="Stretch"/>
               </Grid>
+
+              <ItemsControl Grid.Row="2" ItemsSource="{Binding Projects}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <UniformGrid Columns="2" Rows="3"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Button Classes="ProjectNodeButton" Margin="10" Command="{Binding ExecuteCommand}">
+                      <StackPanel>
+                        <Label Classes="CreateNewProjectIcon" Content="&#xE34E;"></Label>
+                        <StackPanel>
+                          <Label Classes="ProjectIconTextBig" Content="{Binding Project.Name}"></Label>
+                          <StackPanel>
+                            <Label Classes="ProjectIconText" Content="4 Items"></Label>
+                            <Label Classes="ProjectIcon" Content="&#xECE0;"></Label>
+                            <Label Classes="ProjectIconText" Content="15.01.2025"></Label>
+                          </StackPanel>
+                        </StackPanel>
+                      </StackPanel>
+                    </Button>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
             </Grid>
-
-            <Grid Grid.Row="1">
-              <controls:General_Use_Menu_Button Name="Manufacturer" Margin="10"/>
-            </Grid>
-
-            <Grid Grid.Row="2">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60*"></ColumnDefinition>
-                <ColumnDefinition Width="40*"></ColumnDefinition>
-              </Grid.ColumnDefinitions>
-
-              <Grid Grid.Column="0">
-                <controls:General_Use_Menu_Button Name="Component" Margin="10"/>
+          </Border>
+          <!-- Charts section -->
+          <Border Grid.Row="2" BorderBrush="Black" Background="{DynamicResource SectionGradient}" BorderThickness="1" CornerRadius="5">
+            <Grid RowDefinitions="auto auto *">
+              <Grid Grid.Row="0" ColumnDefinitions="* *" Margin="15 15 15 10">
+                <StackPanel Grid.Column="0" Spacing="20" Orientation="Horizontal" >
+                  <StackPanel Orientation="Horizontal">
+                    <Label Classes="icon" Foreground="{DynamicResource PltWhiteMilk}" Content="&#xE154;"></Label>
+                    <Label Classes="icontext" FontSize="28" Foreground="{DynamicResource PltWhiteMilk}" Content="Charts"></Label>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal">
+                    <Label Classes="icontext" FontSize="18" Foreground="{DynamicResource PltSilver}" Content="Purchase percentage per supplier"></Label>
+                    <Label Classes="icon" FontSize="22" Foreground="{DynamicResource PltSilver}" Content="&#xE03E;"></Label>
+                  </StackPanel>
+                </StackPanel>
               </Grid>
 
-              <Grid Grid.Column="1">
-                <controls:General_Use_Menu_Button Name="Purchase" Margin="10"/>
+              <!-- Separator -->
+              <Grid Grid.Row="1">
+                <Border Height="1"
+                        Background="{DynamicResource PltWhiteMilk}"
+                        Margin="10 5 15 5"
+                        HorizontalAlignment="Stretch"/>
               </Grid>
+              
+              <StackPanel Grid.Row="2" Orientation="Vertical">
+                <lvc:PieChart Series="{Binding Series, Mode=TwoWay}"
+                              IsClockwise="False"
+                              Width="600"
+                              Height="600"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Margin="0"
+                              Padding="0"
+                              InitialRotation="-90">
+                </lvc:PieChart>
+              </StackPanel>
             </Grid>
-          </Grid>
-        </StackPanel>
-      </Grid>
+          </Border>
+        </Grid>
+      </ScrollViewer>
+
+      <!-- Right section -->
+      <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+        <Grid RowDefinitions="auto 10 auto 10 auto">
+          <!-- Suppliers-->
+          <Border Grid.Row="0" BorderBrush="Black" Background="{DynamicResource SectionGradient}" BorderThickness="1" HorizontalAlignment="Stretch" CornerRadius="5">
+            <Grid RowDefinitions="auto auto *">
+              <Grid Grid.Row="0" ColumnDefinitions="* *" Margin="15 15 15 5">
+                <StackPanel Spacing="20" Grid.Column="0" Orientation="Horizontal" >
+                  <StackPanel Orientation="Horizontal">
+                    <Label Classes="icon" Content="&#xE390;" Foreground="{DynamicResource PltWhiteMilk}"></Label>
+                    <Label Classes="icontext" FontSize="28" Content="Suppliers" Foreground="{DynamicResource PltWhiteMilk}"></Label>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal">
+                    <Label Classes="icontext" FontSize="18" Foreground="{DynamicResource PltSilver}" Content="All"></Label>
+                    <Label Classes="icon" FontSize="22" Foreground="{DynamicResource PltSilver}" Content="&#xE03E;"></Label>
+                  </StackPanel>
+                </StackPanel>
+                <Button Grid.Column="1" Classes="CreateNewProjectNodeButton" HorizontalAlignment="Right" Command="{Binding AddSupplierCommand}">
+                  <StackPanel>
+                    <Label Classes="CreateNewProjectIcon" Content="&#xE69C;"></Label>
+                    <StackPanel>
+                      <Label Classes="CreateNewProjectIconText" Content="Add supplier"></Label>
+                    </StackPanel>
+                  </StackPanel>
+                </Button>
+              </Grid>
+
+              <!-- Separator -->
+              <Grid Grid.Row="1">
+                <Border Height="1"
+                        Background="{DynamicResource PltWhiteMilk}"
+                        Margin="10 5 15 5"
+                        HorizontalAlignment="Stretch"/>
+              </Grid>
+
+              <ScrollViewer Grid.Row="2" Margin="5">
+                <ItemsControl x:Name="SuppliersItemsControl"  ItemsSource="{Binding Suppliers}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <UniformGrid  x:Name="SuppliersUniformGrid" Columns="5"/>
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <CustomControls:SupplierNodeButton Image="{Binding Supplier.Image}"
+                                       Command="{Binding ItemClickedCommand}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Margin="10"/>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </Grid>
+          </Border>
+          <!-- Purchases -->
+          <Border Grid.Row="2" BorderBrush="Black" Background="{DynamicResource SectionGradient}" BorderThickness="1" HorizontalAlignment="Stretch" CornerRadius="5">
+            <Grid RowDefinitions="auto auto *">
+              <Grid Grid.Row="0" ColumnDefinitions="* *" Margin="15 15 15 10">
+                <StackPanel Grid.Column="0" Spacing="20" Orientation="Horizontal" >
+                  <StackPanel Orientation="Horizontal">
+                    <Label Classes="icon" Foreground="{DynamicResource PltWhiteMilk}" Content="&#xE41E;"></Label>
+                    <Label Classes="icontext" FontSize="28" Foreground="{DynamicResource PltWhiteMilk}" Content="Purchases"></Label>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal">
+                    <Label Classes="icontext" FontSize="18" Foreground="{DynamicResource PltSilver}" Content="Recent"></Label>
+                    <Label Classes="icon" FontSize="22" Foreground="{DynamicResource PltSilver}" Content="&#xE03E;"></Label>
+                  </StackPanel>
+                </StackPanel>
+                <Button Grid.Column="1" Classes="CreateNewProjectNodeButton" HorizontalAlignment="Right" Command="{Binding NavigateProjectsAddCommand}">
+                  <StackPanel>
+                    <Label Classes="CreateNewProjectIcon" Content="&#xEDF6;"></Label>
+                    <StackPanel>
+                      <Label Classes="CreateNewProjectIconText" Content="Add purchase"></Label>
+                    </StackPanel>
+                  </StackPanel>
+                </Button>
+              </Grid>
+
+              <!-- Separator -->
+              <Grid Grid.Row="1">
+                <Border Height="1"
+                        Background="{DynamicResource PltWhiteMilk}"
+                        Margin="10 5 15 5"
+                        HorizontalAlignment="Stretch"/>
+              </Grid>
+
+              <ItemsControl Grid.Row="2" ItemsSource="{Binding Purchases}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <UniformGrid Columns="2" Rows="3"/>
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Button Classes="PurchaseNodeButton" Margin="10" Command="{Binding ExecuteCommand}">
+                      <StackPanel>
+                        <Image Source="{Binding Node.Supplier.Image}"
+                               Width="64"></Image>
+                        <StackPanel>
+                          <StackPanel Orientation="Horizontal">
+                            <Label Classes="ProjectIconTextBig" Content="{Binding Node.SupplierName}"></Label>
+                            <Label Classes="ProjectIcon" Content="&#xECE0;"></Label>
+                            <Label Classes="ProjectIconTextBig" Content="{Binding Node.PurchaseDateAsDateShort}"></Label>
+                          </StackPanel>
+                          <StackPanel Orientation="Horizontal">
+                            <Label Classes="ProjectIconText" Content="{Binding Node.ComponentsQuantity}"></Label>
+                            <Label Classes="ProjectIconText" Content="Items"></Label>
+                            <Label Classes="ProjectIcon" Content="&#xECE0;"></Label>
+                            <Label Classes="ProjectIconText" Content="{Binding Node.TotalPriceAsCurrency}"></Label>
+                          </StackPanel>
+                        </StackPanel>
+                      </StackPanel>
+                    </Button>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </Grid>
+          </Border>
+          <!-- Tools -->
+          <Border  Grid.Row="4" BorderBrush="Black" Background="{DynamicResource SectionGradient}" BorderThickness="1" CornerRadius="5" x:Name="SuppliersBorder">
+            <Grid RowDefinitions="auto auto *">
+              <Grid Grid.Row="0" ColumnDefinitions="* *" Margin="15 15 15 10">
+                <StackPanel Grid.Column="0" Spacing="20" Orientation="Horizontal" >
+                  <StackPanel Orientation="Horizontal">
+                    <Label Classes="icon" Foreground="{DynamicResource PltWhiteMilk}" Content="&#xECA0;"></Label>
+                    <Label Classes="icontext" FontSize="28" Foreground="{DynamicResource PltWhiteMilk}" Content="Toolkit"></Label>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal">
+                    <Label Classes="icontext" FontSize="18" Foreground="{DynamicResource PltSilver}" Content="All"></Label>
+                    <Label Classes="icon" FontSize="22" Foreground="{DynamicResource PltSilver}" Content="&#xE03E;"></Label>
+                  </StackPanel>
+                </StackPanel>
+              </Grid>
+
+              <!-- Separator -->
+              <Grid Grid.Row="1">
+                <Border Height="1"
+                        Background="{DynamicResource PltWhiteMilk}"
+                        Margin="10 5 15 5"
+                        HorizontalAlignment="Stretch"/>
+              </Grid>
+
+              <ScrollViewer Grid.Row="2" Margin="5">
+                <ItemsControl ItemsSource="{Binding Tools}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <UniformGrid Columns="3"/>
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Button Classes="ToolButton" Command="{Binding ExecuteCommand}" Margin="5">
+                        <Grid ColumnDefinitions="auto *">
+                          <Image Source="{Binding Node.Image}"
+                                 Width="64" Grid.Column="0"></Image>
+                          <Label Classes="ProjectIconTextBig" Content="{Binding Node.Name}" Grid.Column="1"></Label>
+                        </Grid>
+                      </Button>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </Grid>
+          </Border>
+        </Grid>
+      </ScrollViewer>
     </Grid>
   </Grid>
 </UserControl>

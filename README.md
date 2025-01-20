@@ -1,6 +1,6 @@
 # ⚡ ElectroDepot  
 
-**ElectroDepot** is a comprehensive **inventory management application** for electronic components. It helps electronics enthusiasts and professionals keep track of their **integrated circuits (ICs)** and other parts, solving the common problem of losing track of components or making unnecessary purchases.  
+**ElectroDepot** is a **inventory management application** for electronic components. It helps electronics enthusiasts and professionals keep track of their **integrated circuits (ICs)** and other parts, solving the common problem of losing track of components or making unnecessary purchases.  
 
 The application leverages a **client-server architecture** to maintain a digital inventory and integrates with popular electronic component sellers like **DigiKey** and **Mouser**. Users can automatically **update their inventory** when new parts are ordered or delivered.  
 
@@ -18,44 +18,41 @@ ElectroDepot aims to be the **go-to application** for every electronics enthusia
 
 ElectroDepot was created to solve the widespread problem of **disorganized component storage**.  
 
-As an embedded systems enthusiast, I often struggled to:  
-- Track which components I used in certain **projects**.  
-- Determine whether I already had parts in storage before purchasing duplicates.  
-
-Many users face similar challenges:  
-- Components get forgotten in boxes or drawers.  
-- Projects become difficult to plan due to uncertainty about component availability.  
+As an embedded systems enthusiast, I often struggled to keep track which components I used in certain projects or determine whether I already had parts in storage before purchasing duplicates. Many users face similar challenges. Ofter components get forgotten in boxes or drawers and projects become difficult to plan due to uncertainty about component availability.  
 
 ElectroDepot addresses these issues by:  
 - Keeping a clear **digital record** of components.  
 - Tracking their usage across **projects**.  
 - Automating updates when new parts are ordered or delivered.  
 
-With ElectroDepot, users can **save time, reduce costs**, and improve project planning.  
+With ElectroDepot, users can **save time**, and improve project planning.  
 
 ---
 
 ## 🚀 Key Features  
 
-ElectroDepot offers a tailored solution for electronics enthusiasts and professionals by providing:  
+ElectroDepot offers a solution for electronics enthusiasts and professionals by providing:  
 
-- 📋 **Digital Inventory Management**: Always know what components are on hand.  
-- 🗂️ **Project Organization**: Link parts to specific projects for better tracking.  
-- 🔗 **Integration with Popular Sellers**: Connect with DigiKey, Mouser, and other suppliers to update inventory seamlessly when ordering new parts.  
-- 🔍 **Searchable Interface**: Quickly find components and check their availability.  
-- ⚙️ **Automated Updates**: Ensure inventory stays up-to-date with new purchases or deliveries.  
+- **Digital Inventory Management**: Always know what components are on hand.  
+- **Project Organization**: Link parts to specific projects for better tracking.  
+- **Integration with Popular Sellers**: Connect with DigiKey, Mouser, and other suppliers to update inventory seamlessly when ordering new parts.  
+- **Searchable Interface**: Quickly find components and check their availability.  
+- **Automated Updates**: Ensure inventory stays up-to-date with new purchases or deliveries.  
 
-ElectroDepot is designed to be the ultimate tool for organizing components, streamlining workflows, and ensuring electronics enthusiasts and professionals always have a clear overview of their **inventory** and **projects**.  
+ElectroDepot is designed to be the tool for organizing components, and ensuring electronics enthusiasts and professionals always have a clear overview of their **inventory** and **projects**.  
 
+---
 
 ## 📊 Current State of Development  
 
-### 🖥️ Desktop Client Application  
-Once basic functionalities are be implemented, application will recieve UI upgrade.
+### Desktop Client Application  
+For now top priority is to write usable desktop application. Next steps will involve porting this app to other platforms.
 
-#### ✅ Raw implementation  
+#### Functionalities implemented
 - **Home**  
-![Home tab](Assets/Panel_Home.gif)  
+![Home tab](Assets/Home_Panel_Refactored.gif)  
+
+#### Refactoring needed
 - **Components**  
 ![Components tab](Assets/Panel_Components.gif)  
 - **Purchases**  
@@ -64,12 +61,6 @@ Once basic functionalities are be implemented, application will recieve UI upgra
 ![Projects tab](Assets/Panel_Projects.gif)
 - **User Login and Registration**  
 ![Projects tab](Assets/Panel_Login.gif)
-
-#### 🛠️ To Be Implemented  
-- **Tracking**
-- **User Profile**  
-
-
 
 ---
 

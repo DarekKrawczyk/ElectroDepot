@@ -12,72 +12,76 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.ViewModels
 {
-    public partial class RootPageViewModel : ViewModelBase
+    public partial class RootPageViewModel : WindowNavigatorViewModel
     {
         [ObservableProperty]
-        private bool _isPanelOpen = false;
+        private BaseViewModel _pageViewModel;
 
-        [RelayCommand]
-        private void TriggerPane()
+        public BaseViewModel PageView
         {
-            IsPanelOpen = !IsPanelOpen;
+            get
+            {
+                return PageViewModel;
+            }
+            set
+            {
+                PageViewModel = value;  
+            }
         }
 
-        public RootPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
+
+        public RootPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore) : base(windowViewModel, databaseStore)
         {
             DatabaseStore.PredefinedImagesStore.Load();
-            OnSelectedListItemChanged(Items[0]);
-            //CurrentPage = new ComponentsPageViewModel();
-            //_currentPage = new HomePageViewModel();
         }
 
-        public ObservableCollection<ListItemTemplate> Items { get; set; } = new()
+        private RootNavigatorViewModel GetViewModel(string destination)
         {
-            new ListItemTemplate(typeof(HomePageViewModel)),
-            new ListItemTemplate(typeof(ComponentsPageViewModel)),
-            new ListItemTemplate(typeof(ProjectsPageViewModel)),
-            new ListItemTemplate(typeof(PurchasesPageViewModel)),
-            new ListItemTemplate(typeof(MonitoringPageViewModel)),
-            new ListItemTemplate(typeof(ProfilePageViewModel)),
-            new ListItemTemplate(typeof(LogoutPageViewModel)),
-        };
-
-        [ObservableProperty]
-        private ViewModelBase _currentPage;
-
-        partial void OnSelectedListItemChanged(ListItemTemplate value)
-        {
-            if (value is null)
+            RootNavigatorViewModel destinationViewModel;
+            if (destination == "Home")
             {
-                return;
+                destinationViewModel = new HomePageViewModel(this, DatabaseStore);
             }
-            var instance = Activator.CreateInstance(value.ModelType, args: new object[] { DatabaseStore, _navigator});
-            if (instance is null)
+            else if (destination == "Components")
             {
-                return;
+                destinationViewModel = new ComponentsPageViewModel(this, DatabaseStore);
             }
-            CurrentPage?.Dispose();
-            CurrentPage = (ViewModelBase)instance;
+            else if (destination == "Projects")
+            {
+                destinationViewModel = new ProjectsPageViewModel(this, DatabaseStore);
+            }
+            else if (destination == "Purchases")
+            {
+                destinationViewModel = new PurchasesPageViewModel(this, DatabaseStore);
+            }
+            else if (destination == "Tracking")
+            {
+                destinationViewModel = new MonitoringPageViewModel(this, DatabaseStore);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            return destinationViewModel;
         }
 
-        public override void Dispose()
+        [RelayCommand]
+        public void NavigatePage(string destination)
         {
+            RootNavigatorViewModel destinationViewModel = GetViewModel(destination);
+            PageViewModel = destinationViewModel;
         }
 
-        [ObservableProperty]
-        private ListItemTemplate _selectedListItem;
-    }
-
-    public class ListItemTemplate
-    {
-        public Bitmap Icon { get; }
-        public string Label { get; }
-        public Type ModelType { get; }
-        public ListItemTemplate(Type modelType)
+        public void NavigatePage(string destination, NavParam navParam = null)
         {
-            Label = modelType.Name.Replace("PageViewModel", "");
-            Icon = ImageHelper.LoadFromResource(new Uri($"avares://DesktopClient/Assets/{Label}_icon.png"));
-            ModelType = modelType;
+            RootNavigatorViewModel destinationViewModel = GetViewModel(destination);
+
+            if(destinationViewModel is INavParamInterpreter interpreter && navParam != null)
+            {
+                interpreter.InterpreteNavigationParameter(navParam);
+            }
+
+            PageViewModel = destinationViewModel;
         }
     }
 }

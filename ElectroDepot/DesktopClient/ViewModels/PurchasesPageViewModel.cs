@@ -19,7 +19,7 @@ using DesktopClient.Navigation;
 
 namespace DesktopClient.ViewModels
 {
-    public partial class PurchasesPageViewModel : ViewModelBase
+    public partial class PurchasesPageViewModel : RootNavigatorViewModel, INavParamInterpreter
     {
         [RelayCommand]
         public void Collection_Refresh()
@@ -279,7 +279,7 @@ namespace DesktopClient.ViewModels
         public ObservableCollection<string> SupplierSource { get; set; }
         public List<DetailedPurchaseContainerHolder> PurchasesSource { get; set; }
         public DataGridCollectionView Purchases { get; set; }
-        public PurchasesPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
+        public PurchasesPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore) : base(defaultRootPageViewModel, databaseStore)
         {
             PurchasesSource = new List<DetailedPurchaseContainerHolder>();
             ProjectItems = new List<PurchaseItemContainer>();
@@ -493,9 +493,23 @@ namespace DesktopClient.ViewModels
             Purchases.Refresh();
         }
 
-        public override void Dispose()
+        public void InterpreteNavigationParameter(NavParam navigationParameter)
         {
-            DatabaseStore.PurchaseStore.DetailedPurchaseContainersLoaded -= PurchaseStore_PurchasesLoadedHandler;
+            switch (navigationParameter.Operation)
+            {
+                case NavOperation.Add:
+                    SelectedTab = 1;
+                    break;
+                case NavOperation.Preview:
+                    break;
+                default:
+                    break;
+            }
         }
+
+        //public override void Dispose()
+        //{
+        //    DatabaseStore.PurchaseStore.DetailedPurchaseContainersLoaded -= PurchaseStore_PurchasesLoadedHandler;
+        //}
     }
 }

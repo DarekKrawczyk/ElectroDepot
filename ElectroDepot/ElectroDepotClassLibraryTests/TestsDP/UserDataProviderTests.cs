@@ -15,7 +15,7 @@ namespace ElectroDepotClassLibraryTests.Tests
         {
             try
             {
-                User user = new User(id: 0, name: "Darek", email: "Darek@gmail.com", password: "Pieczarka");
+                User user = new User(id: 0, username:"darekk", email: "Darek@gmail.com", password: "Pieczarka", name: "Darek");
 
                 User wasCreated = await UserDP.CreateUser(user);
                 Assert.True(wasCreated != null);

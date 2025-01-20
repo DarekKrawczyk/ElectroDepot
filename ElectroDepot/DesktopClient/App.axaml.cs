@@ -52,17 +52,27 @@ namespace DesktopClient
                 // Without this line you will get duplicate validations from both Avalonia and CT
                 BindingPlugins.DataValidators.RemoveAt(0);
 
-                //_databaseStore.UsersStore.UserLogin("username", "password"); // While using  async on this method, windows doesn't show up!
+                _databaseStore.UsersStore.UserLogin("username", "password"); // While using  async on this method, windows doesn't show up!
 
-                Navigator navigator = new Navigator(_databaseStore);
-                MainWindowViewModel window = new MainWindowViewModel(_databaseStore, new LoginPageViewModel(_databaseStore, navigator), navigator);
-                navigator.Window = window;
+                //Navigator navigator = new Navigator(_databaseStore);
+                MainWindowViewModel windowViewModel = new MainWindowViewModel(null, _databaseStore);
+
+                HomePageViewModel home = new HomePageViewModel(null, _databaseStore);
+                RootPageViewModel root = new RootPageViewModel(windowViewModel, _databaseStore);
+                home.Root = root;
+
+                root.PageView = home;
+
+                windowViewModel.View = root;
+
+                //MainWindowViewModel window = new MainWindowViewModel(_databaseStore, root);
+                //navigator.Window = window;
 
                 desktop.MainWindow = new MainWindow
                 {
                     //DataContext = new LoginPageViewModel(),
 
-                    DataContext = window,
+                    DataContext = windowViewModel,
                 };
             }
 

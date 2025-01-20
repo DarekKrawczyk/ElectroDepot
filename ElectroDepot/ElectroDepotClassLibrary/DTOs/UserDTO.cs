@@ -4,19 +4,22 @@
         int ID,
         string Username,
         string Password,
-        string Email
+        string Email,
+        string Name
     );
 
     public record CreateUserDTO(
         string Username,
         string Email,
-        string Password
+        string Password,
+        string Name
     );
 
     public record UpdateUserDTO(
         string Username,
         string Email,
-        string Password
+        string Password,
+        string Name
     );
 
     public static class UsersDTOsExtensions

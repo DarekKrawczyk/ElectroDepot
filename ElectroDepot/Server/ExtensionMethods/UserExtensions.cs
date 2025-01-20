@@ -11,7 +11,8 @@ namespace Server.ExtensionMethods
                 user.UserID,
                 user.Username,
                 user.Password,
-                user.Email
+                user.Email,
+                user.Name
             );
         }
 
@@ -21,7 +22,8 @@ namespace Server.ExtensionMethods
             {
                 UserID = userDTO.ID,
                 Username = userDTO.Username,
-                Email = userDTO.Email
+                Email = userDTO.Email,
+                Name = userDTO.Name,
             };
         }
 
@@ -31,7 +33,8 @@ namespace Server.ExtensionMethods
             {
                 Username = userDTO.Username,
                 Email = userDTO.Email,
-                Password = userDTO.Password
+                Password = userDTO.Password,
+                Name = userDTO.Name,
             };
         }
 
@@ -41,7 +44,8 @@ namespace Server.ExtensionMethods
             {
                 Username = userDTO.Username,
                 Email = userDTO.Email,
-                Password = userDTO.Password
+                Password = userDTO.Password,
+                Name = userDTO.Name
             };
         }
     }

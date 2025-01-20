@@ -36,6 +36,10 @@ namespace ElectroDepotClassLibrary.Stores
             _purchases.Clear();
 
             IEnumerable<Purchase> purchasesFromDB = await _purchaseDataProvider.GetAllPurchasesFromUser(MainStore.UsersStore.LoggedInUser);
+            foreach(Purchase purchase in purchasesFromDB)
+            {
+                purchase.Supplier = await MainStore.SupplierStore.SupplierDP.GetSupplierByID(purchase.SupplierID);
+            }
             _purchases.AddRange(purchasesFromDB);
 
             PurchasesLoaded?.Invoke();

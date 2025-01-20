@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.ViewModels
 {
-    public partial class LoginPageViewModel : ViewModelBase
+    public partial class LoginPageViewModel : WindowNavigatorViewModel
     {
         [ObservableProperty]
         private string _usernameText;
@@ -63,7 +63,7 @@ namespace DesktopClient.ViewModels
             {
                 var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Login successfull", ButtonEnum.Ok);
                 ButtonResult buttonResult = await box.ShowAsync();
-                _navigator.NavigateTo(Page.Root);
+                //_navigator.NavigateTo(Page.Root);
             }
             else
             {
@@ -74,19 +74,15 @@ namespace DesktopClient.ViewModels
 
         }
 
-        public LoginPageViewModel(DatabaseStore databaseStore, Navigator navigator) : base(databaseStore, navigator)
+        public LoginPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore) : base(windowViewModel, databaseStore)
         {
         }
 
-        public override void Dispose()
-        {
-            throw new NotImplementedException();
-        }
 
         [RelayCommand]
         public void CreateAccount()
         {
-            _navigator.NavigateTo(Page.Register);
+            //_navigator.NavigateTo(Page.Register);
         }
     }
 }
