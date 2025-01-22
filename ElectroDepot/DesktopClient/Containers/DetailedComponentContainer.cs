@@ -1,9 +1,13 @@
 ﻿using Avalonia.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
 using ElectroDepotClassLibrary.Models;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DesktopClient.Containers
 {
-    public class DetailedComponentContainer
+    public partial class DetailedComponentContainer : ObservableObject
     {
         private readonly Component _component;
         private readonly OwnsComponent _ownedComponent;
@@ -21,12 +25,14 @@ namespace DesktopClient.Containers
         public int OwnedAmount { get { return _ownedComponent.Quantity; } }
         public int AvailableAmount { get { return _unusedComponent.Quantity; } }
         public int UsedInProjects { get {  return _ownedComponent.Quantity - _unusedComponent.Quantity; } }
+        public ObservableCollection<SupplierContainer> Suppliers { get; set; }
 
-        public DetailedComponentContainer(Component component, OwnsComponent ownedComponent, OwnsComponent unusedComponent)
+        public DetailedComponentContainer(Component component, OwnsComponent ownedComponent, OwnsComponent unusedComponent, ObservableCollection<SupplierContainer> suppliers)
         {
             _component = component;
             _ownedComponent = ownedComponent;
             _unusedComponent = unusedComponent;
+            Suppliers = suppliers;
         }
     }
 }

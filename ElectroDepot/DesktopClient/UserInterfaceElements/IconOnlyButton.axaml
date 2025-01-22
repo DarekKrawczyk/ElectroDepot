@@ -1,0 +1,28 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:DesktopClient.UserInterfaceElements">
+
+  <Design.PreviewWith>
+    <StackPanel Width="400" Spacing="10">
+      <StackPanel Background="{DynamicResource SystemRegionBrush}">
+        <controls:IconOnlyButton Classes="default"/>
+        <controls:IconOnlyButton />
+      </StackPanel>
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type controls:IconOnlyButton}" TargetType="controls:IconOnlyButton">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Button Command="{TemplateBinding Command}">
+          <Button.Content>
+            <StackPanel Orientation="Horizontal">
+              <Label Classes="icon" Content="&#xE610;"></Label>
+            </StackPanel>
+          </Button.Content>
+        </Button>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+</ResourceDictionary>

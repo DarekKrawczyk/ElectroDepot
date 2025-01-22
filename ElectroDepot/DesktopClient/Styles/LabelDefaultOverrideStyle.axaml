@@ -1,13 +1,29 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Design.PreviewWith>
-    <Label>Label</Label>
+    <StackPanel>
+      <Label Classes="DefaultLabelCenter">Label</Label>
+      <Label Classes="DefaultLabelLeft">Label</Label>
+    </StackPanel>
   </Design.PreviewWith>
 
-  <Style Selector="Label">
-    <Setter Property="FontSize" Value="18"/>
+  <Style Selector="Label.DefaultLabelCenter">
+    <Setter Property="FontSize" Value="20"/>
+    <Setter Property="Foreground" Value="Black"/>
+    <Setter Property="Padding" Value="4 0 4 0"/>
     <Setter Property="VerticalContentAlignment" Value="Center"/>
     <Setter Property="HorizontalContentAlignment" Value="Center"/>
-    <Setter Property="MinWidth" Value="50"/>
+    <Setter Property="MinWidth" Value="200"/>
+    <Setter Property="MaxWidth" Value="200"/>
+  </Style>
+
+  <Style Selector="Label.DefaultLabelLeft">
+    <Setter Property="FontSize" Value="20"/>
+    <Setter Property="Foreground" Value="Black"/>
+    <Setter Property="Padding" Value="4 0 4 0"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="MinWidth" Value="200"/>
+    <Setter Property="MaxWidth" Value="200"/>
   </Style>
 </Styles>

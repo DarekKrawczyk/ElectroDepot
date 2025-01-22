@@ -1,13 +1,13 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Design.PreviewWith>
-    <TextBox>Text</TextBox>
+    <TextBox Classes="DefaultTextBox">Text</TextBox>
   </Design.PreviewWith>
 
-  <Style Selector="TextBox">
-    <Setter Property="FontSize" Value="18"/>
+  <Style Selector="TextBox.DefaultTextBox">
     <Setter Property="VerticalContentAlignment" Value="Center"/>
-    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-    <Setter Property="MinWidth" Value="270"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="MinWidth" Value="200"/>
+    <Setter Property="FontSize" Value="20"/>
   </Style>
 </Styles>

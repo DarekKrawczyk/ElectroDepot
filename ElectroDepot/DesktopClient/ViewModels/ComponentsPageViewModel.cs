@@ -24,15 +24,111 @@ using Avalonia.Input;
 using Avalonia;
 using DesktopClient.Utils;
 using DesktopClient.Navigation;
+using DynamicData;
+using System.Reactive.Subjects;
+using DesktopClient.Services;
+using DynamicData.Binding;
+using System.Drawing.Printing;
+using System.Reactive.Linq;
+using DynamicData.Operators;
+using System.Reactive.Concurrency;
+using Avalonia.Controls.Primitives;
 
 namespace DesktopClient.ViewModels
 {
     public partial class ComponentsPageViewModel : RootNavigatorViewModel, INavParamInterpreter
     {
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(FirstPageCommand))]
+        [NotifyCanExecuteChangedFor(nameof(LastPageCommand))]
+        [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
+        private int _selectedPageSizeIndex = 0;
+
+        public int FirstPageIndex = 1;
+        public int SelectedPageSize = 10;
+
+        partial void OnSelectedPageSizeIndexChanged(int value)
+        {
+            switch (value)
+            {
+                case 0:
+                    SelectedPageSize = 10;
+                    break;
+                case 1:
+                    SelectedPageSize = 25;
+                    break;
+                case 2:
+                    SelectedPageSize = 50;
+                    break;
+                case 3:
+                    SelectedPageSize = 100;
+                    break;
+                default:
+                    SelectedPageSize = 10;
+                    break;  
+            }
+            _pager.OnNext(new PageRequest(FirstPageIndex, SelectedPageSize));
+        }
+
         #region Data source
-        public List<DetailedComponentContainer> ComponentsSource { get; set; }
+        //public List<DetailedComponentContainer> ComponentsSource { get; set; }
         public List<DetailedItemPurchaseContainer> SelectedComponentsPurchasesSource { get; set; }
         public List<DetailedItemProjectContainer> SelectedComponentsProjectSource { get; set; }
+        private readonly ComponentHolderService _componentsService;
+        private readonly ISubject<PageRequest> _pager;
+        private readonly ReadOnlyObservableCollection<DetailedComponentContainer> _components;
+        public ReadOnlyObservableCollection<DetailedComponentContainer> ComponentsCollection => _components;
+        #endregion
+
+        #region Previous page commands
+        [RelayCommand(CanExecute = nameof(CanGoToPreviousPage))]
+        public void PreviousPage()
+        {
+            _pager.OnNext(new PageRequest(_currentPage - 1, SelectedPageSize));
+        }
+
+        private bool CanGoToPreviousPage()
+        {
+            return CurrentPage > FirstPageIndex;
+        }
+        #endregion
+        #region Next page commands
+        [RelayCommand(CanExecute = nameof(CanGoToNextPage))]
+        public void NextPage()
+        {
+            _pager.OnNext(new PageRequest(_currentPage + 1, SelectedPageSize));
+            
+        }
+
+        private bool CanGoToNextPage()
+        {
+            return CurrentPage < TotalPages;
+        }
+        #endregion
+        #region First page commands
+        [RelayCommand(CanExecute = nameof(CanGoToFirstPage))]
+        public void FirstPage()
+        {
+            _pager.OnNext(new PageRequest(FirstPageIndex, SelectedPageSize));
+        }
+
+        private bool CanGoToFirstPage()
+        {
+            return CurrentPage > FirstPageIndex;
+        }
+        #endregion
+        #region Last page commands
+        [RelayCommand(CanExecute = nameof(CanGoToLastPage))]
+        public void LastPage()
+        {
+            _pager.OnNext(new PageRequest(_totalPages, SelectedPageSize));
+        }
+
+        private bool CanGoToLastPage()
+        {
+            return CurrentPage < TotalPages;
+        }
         #endregion
 
         [ObservableProperty]
@@ -117,10 +213,10 @@ namespace DesktopClient.ViewModels
         #region Observable for data source
         public ObservableCollection<string> Manufacturers { get; set; }
         public ObservableCollection<string> Categories { get; set; }
-        public ObservableCollection<SupplierContainer> Suppliers { get; set; }
+        public ObservableCollection<SupplierContainer> Suppliers { get; set; } = new ObservableCollection<SupplierContainer>() { new SupplierContainer(new Supplier(0, "XD", "XD", null)) };
         public ObservableCollection<ImageContainer> PredefinedImages { get; set; }
 
-        public DataGridCollectionView Components { get; set; }
+        //public DataGridCollectionView Components { get; set; }
         public DataGridCollectionView PurchasesForSelected { get; set; }
         public DataGridCollectionView ProjectsForSelected{ get; set; }
         #endregion
@@ -567,6 +663,25 @@ namespace DesktopClient.ViewModels
             }
         }
 
+        [RelayCommand]
+        public void ClearSelectedManufacturer()
+        {
+            SelectedManufacturer = null;
+        }
+
+        [RelayCommand]
+        public void ClearSelectedCategory()
+        {
+            SelectedCategory = null;
+        }
+
+        [RelayCommand]
+        public void ClearSearchBar()
+        {
+            SearchByNameOrDesc = null;
+        }
+
+
         private void Modify_ClearDataToDefault()
         {
             Modify_ComponentName = SelectedComponent.Name;
@@ -579,25 +694,25 @@ namespace DesktopClient.ViewModels
         partial void OnSearchByNameOrDescChanged(string value)
         {
             Console.WriteLine(value);
-            Components.Refresh();
+            //Components.Refresh();
         }
 
         partial void OnOnlyAvailableFlagChanged(bool value)
         {
-            Components.Refresh();
+            //Components.Refresh();
             Console.WriteLine(value);
         }
 
         partial void OnSelectedManufacturerChanged(string value)
         {
-            Components.Refresh();
+            //Components.Refresh();
             Console.WriteLine($"{value}");
             var user = DatabaseStore.UsersStore.LoggedInUser;
         }
 
         partial void OnSelectedCategoryChanged(string value)
         {
-            Components.Refresh();
+            //Components.Refresh();
             Console.WriteLine($"{value}");
         }
 
@@ -608,66 +723,143 @@ namespace DesktopClient.ViewModels
             SelectedManufacturer = null;
             OnlyAvailableFlag = false;
             SearchByNameOrDesc = string.Empty;
-            Components.Refresh();
+            //Components.Refresh();
             Console.WriteLine();
         }
+
+        [ObservableProperty]
+        private int _totalItems;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(FirstPageCommand))]
+        [NotifyCanExecuteChangedFor(nameof(LastPageCommand))]
+        [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
+        private int _currentPage;
+
+        [ObservableProperty]
+        private int _totalPages;
+
+        private void PagingUpdate(IPageResponse response)
+        {
+            TotalItems = response.TotalSize;
+            CurrentPage = response.Page;
+            TotalPages = response.Pages;
+        }
+
         #endregion
+        private static Func<DetailedComponentContainer, bool> BuildFilter(string searchText)
+        {
+            if (string.IsNullOrEmpty(searchText)) return trade => true;
+            return t => t.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                        t.ShortDescription.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                        t.LongDescription.Contains(searchText, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private static Func<DetailedComponentContainer, bool> AvailableFilterPredicate(bool available)
+        {
+            if (available == false) return x => true;
+            return x => x.AvailableAmount > 0;
+        }
+
+        private static Func<DetailedComponentContainer, bool> ManufacturerFilterPredicate(string manufacturer)
+        {
+            if (string.IsNullOrEmpty(manufacturer)) return trade => true;
+            return t => t.Manufacturer.Contains(manufacturer, StringComparison.InvariantCultureIgnoreCase);
+        }
+        private static Func<DetailedComponentContainer, bool> CategoryFilterPredicate(string category)
+        {
+            if (string.IsNullOrEmpty(category)) return trade => true;
+            return t => t.Category.Name.Contains(category, StringComparison.InvariantCultureIgnoreCase);
+        }
+
         #region Constructor
         public ComponentsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore) : base(defaultRootPageViewModel, databaseStore)
         {
+            _componentsService = new ComponentHolderService(DatabaseStore.ComponentStore);
+
+            _pager = new BehaviorSubject<PageRequest>(new PageRequest(FirstPageIndex, SelectedPageSize));
+
+            var nameFilter = this.WhenValueChanged(t => t.SearchByNameOrDesc)
+                //.Throttle(TimeSpan.FromMilliseconds(250))
+                .Select(BuildFilter);
+
+            var availableFilter = this.WhenValueChanged(t => t.OnlyAvailableFlag)
+                .Select(AvailableFilterPredicate);
+
+            var manufacturerFilter = this.WhenValueChanged(t => t.SelectedManufacturer)
+                .Select(ManufacturerFilterPredicate);
+
+            var categoryFilter = this.WhenValueChanged(t => t.SelectedCategory)
+                .Select(CategoryFilterPredicate);
+
+            _componentsService.EmployeesConnection()
+                .Filter(nameFilter)
+                .Filter(availableFilter)
+                .Filter(manufacturerFilter)
+                .Filter(categoryFilter)
+                .Sort(SortExpressionComparer<DetailedComponentContainer>.Ascending(e => e.ID))
+                .Page(_pager)
+                .Do(change => PagingUpdate(change.Response))
+                .ObserveOn(Scheduler.CurrentThread) // Marshals to the current thread (often used for UI updates)
+                .Bind(out _components)
+                .Subscribe();
+
+            _componentsService.LoadData();
+
             PredefinedImages = new ObservableCollection<ImageContainer>();
 
-            ComponentsSource = new List<DetailedComponentContainer>();
+            //ComponentsSource = new List<DetailedComponentContainer>();
             
-            Components = new DataGridCollectionView(ComponentsSource);
-            Components.CurrentChanged += CurrentChangedHandler;
-            Components.Filter = (object component) =>
-            {
-                if(component is DetailedComponentContainer detailedComponent)
-                {
-                    bool isManufacturer = true;
-                    bool isCategory = true;
-                    bool isNameOrDesc = false;
-                    bool onlyAvailable = true;
+            //Components = new DataGridCollectionView(ComponentsSource);
+            //Components.CurrentChanged += CurrentChangedHandler;
+            //Components.Filter = (object component) =>
+            //{
+            //    if(component is DetailedComponentContainer detailedComponent)
+            //    {
+            //        bool isManufacturer = true;
+            //        bool isCategory = true;
+            //        bool isNameOrDesc = false;
+            //        bool onlyAvailable = true;
                     
-                    if(OnlyAvailableFlag == true)
-                    {
-                        if (detailedComponent.AvailableAmount <= 0)
-                        {
-                            onlyAvailable = false;
-                        }
-                    }
+            //        if(OnlyAvailableFlag == true)
+            //        {
+            //            if (detailedComponent.AvailableAmount <= 0)
+            //            {
+            //                onlyAvailable = false;
+            //            }
+            //        }
 
-                    if(SelectedManufacturer != null)
-                    {
-                        if (!detailedComponent.Manufacturer.Contains(SelectedManufacturer, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            isManufacturer = false;
-                        }
-                    }
+            //        if(SelectedManufacturer != null)
+            //        {
+            //            if (!detailedComponent.Manufacturer.Contains(SelectedManufacturer, StringComparison.InvariantCultureIgnoreCase))
+            //            {
+            //                isManufacturer = false;
+            //            }
+            //        }
 
-                    if (SelectedCategory!= null)
-                    {
-                        if (!detailedComponent.Category.Name.Contains(SelectedCategory, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            isCategory = false;
-                        }
-                    }
+            //        if (SelectedCategory!= null)
+            //        {
+            //            if (!detailedComponent.Category.Name.Contains(SelectedCategory, StringComparison.InvariantCultureIgnoreCase))
+            //            {
+            //                isCategory = false;
+            //            }
+            //        }
 
-                    if (detailedComponent.Name.Contains(_searchByNameOrDesc, StringComparison.InvariantCultureIgnoreCase) ||
-                       detailedComponent.ShortDescription.Contains(_searchByNameOrDesc, StringComparison.InvariantCultureIgnoreCase) ||
-                       detailedComponent.LongDescription.Contains(_searchByNameOrDesc, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        isNameOrDesc = true;
-                    }
+            //        if (detailedComponent.Name.Contains(_searchByNameOrDesc, StringComparison.InvariantCultureIgnoreCase) ||
+            //           detailedComponent.ShortDescription.Contains(_searchByNameOrDesc, StringComparison.InvariantCultureIgnoreCase) ||
+            //           detailedComponent.LongDescription.Contains(_searchByNameOrDesc, StringComparison.InvariantCultureIgnoreCase))
+            //        {
+            //            isNameOrDesc = true;
+            //        }
 
-                    if(isNameOrDesc == true && isManufacturer == true && isCategory == true && onlyAvailable == true)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            };
+            //        if(isNameOrDesc == true && isManufacturer == true && isCategory == true && onlyAvailable == true)
+            //        {
+            //            return true;
+            //        }
+            //    }
+            //    return false;
+            //};
 
             SelectedComponentsPurchasesSource = new List<DetailedItemPurchaseContainer>();
             SelectedComponentsProjectSource = new List<DetailedItemProjectContainer>();
@@ -678,7 +870,6 @@ namespace DesktopClient.ViewModels
 
             Manufacturers = new ObservableCollection<string>() { };
             DatabaseStore.ComponentStore.Load();
-            DatabaseStore.ComponentStore.ComponentsLoaded += HandleComponentsLoaded;
 
             Categories = new ObservableCollection<string>() { };
             DatabaseStore.CategorieStore.Load();
@@ -697,18 +888,18 @@ namespace DesktopClient.ViewModels
         }
         #endregion
 
-        private void CurrentChangedHandler(object? sender, EventArgs e)
-        {
-            if(Components.CurrentItem is null)
-            {
-                // Unselected
-                SelectedComponent = null;
-            }
-            else
-            {
-                SelectedComponent = Components.CurrentItem as DetailedComponentContainer;
-            }
-        }
+        //private void CurrentChangedHandler(object? sender, EventArgs e)
+        //{
+        //    if(Components.CurrentItem is null)
+        //    {
+        //        // Unselected
+        //        SelectedComponent = null;
+        //    }
+        //    else
+        //    {
+        //        SelectedComponent = Components.CurrentItem as DetailedComponentContainer;
+        //    }
+        //}
 
         private void SuppliersLoadedHandler()
         {
@@ -717,32 +908,6 @@ namespace DesktopClient.ViewModels
             {
                 Suppliers.Add(new SupplierContainer(supplier));
             }
-        }
-
-        private void HandleComponentsLoaded()
-        {
-            Manufacturers.Clear();
-            ComponentsSource.Clear();
-
-            IEnumerable<OwnsComponent> ownedComponents = DatabaseStore.ComponentStore.OwnedComponents;
-            IEnumerable<OwnsComponent> unusedComponents = DatabaseStore.ComponentStore.UnusedComponents;
-            IEnumerable<Component> components = DatabaseStore.ComponentStore.Components;
-
-            for(int i = 0; i < components.Count(); i++)
-            {
-                Component component = components.ElementAt(i);
-                OwnsComponent ownedComponent = ownedComponents.ElementAt(i);
-                OwnsComponent unusedComponent = unusedComponents.ElementAt(i);
-                string manufacturer = component.Manufacturer;
-
-                ComponentsSource.Add(new DetailedComponentContainer(component, ownedComponent, unusedComponent));
-                if (!Manufacturers.Contains(manufacturer))
-                {
-                    Manufacturers.Add(manufacturer);
-                }
-            }
-
-            Components.Refresh();
         }
 
         private void HandleCategoriesLoaded()

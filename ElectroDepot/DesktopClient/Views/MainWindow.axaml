@@ -6,6 +6,7 @@
         xmlns:controls="clr-namespace:DesktopClient.Templates"
         mc:Ignorable="d" 
         d:DesignHeight="720"
+        RequestedThemeVariant="Light"
         d:DesignWidth="1440" 
         MinHeight="720"
         MinWidth="1555"

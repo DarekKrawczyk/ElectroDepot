@@ -4,6 +4,7 @@
              xmlns:vm="using:DesktopClient.ViewModels"
              xmlns:cont="using:DesktopClient.Containers"
              xmlns:CustomControls="using:DesktopClient.CustomControls"
+             xmlns:UIElements="using:DesktopClient.UserInterfaceElements"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="720"
              x:Class="DesktopClient.Views.ComponentsPageView"
@@ -33,88 +34,161 @@
   <Grid ColumnDefinitions="0, *, 0" x:Name="MainGrid">
     <DockPanel Grid.Column="1">
       <TabControl TabStripPlacement="Top"
-                  SelectedIndex="{Binding SelectedTab}">
-        <TabItem Header="Collection">
+                  SelectedIndex="{Binding SelectedTab}" >
+        <TabItem Header="Components">
+          <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="-12 0 -12 0" Background="{DynamicResource SectionGradient}">
+            
           <Grid RowDefinitions="auto, *, auto">
             <!-- Header with filters, selectors, and search -->
-            <StackPanel Grid.Row="0"
-                        Spacing="10"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center"
-                        Margin="0 10 0 10">
+            <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0 5 0 5" ColumnDefinitions="auto auto auto auto auto">
+              
               <!-- Manufacturer -->
-              <Label HorizontalAlignment="Right">Manufacturer</Label>
-              <ComboBox ItemsSource="{Binding Manufacturers}" SelectedItem="{Binding SelectedManufacturer, Mode=TwoWay}" PlaceholderText="">
-              </ComboBox>
-
-              <!-- Separator -->
-              <Border Width="4"
-                      Margin="0, 0"
-                      VerticalAlignment="Stretch"/>
+              <Border Grid.Column="0" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                <Grid RowDefinitions="auto auto" Margin="5">
+                  <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
+                    <Label Grid.Column="0" Classes="DefaultLabelLeft">Manufacturer</Label>
+                    <UIElements:DeleteButton Grid.Column="1" Command="{Binding ClearSelectedManufacturerCommand}"/>
+                  </Grid>
+                  <TextBox Grid.Row="1" Watermark="Manufacturer name" Classes="DefaultTextBox" Text="{Binding SelectedManufacturer}" ></TextBox>
+                </Grid>
+              </Border>
 
               <!-- Category -->
-              <Label HorizontalAlignment="Right">Category</Label>
-              <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" PlaceholderText="">
-              </ComboBox>
+              <Border Grid.Column="1" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                <Grid RowDefinitions="auto auto" Margin="5">
+                  <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
+                    <Label Grid.Column="0" Classes="DefaultLabelLeft">Category</Label>
+                    <UIElements:DeleteButton Grid.Column="1" Command="{Binding ClearSelectedCategoryCommand}"/>
+                  </Grid>
+                  <ComboBox Grid.Row="1" Classes="DefaultComboBox" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" ></ComboBox>
+                </Grid>
+              </Border>
 
-              <!-- Separator -->
-              <Border Width="4"
-                      Margin="0, 0"
-                      VerticalAlignment="Stretch"/>
+              <!-- Keyword -->
+              <Border Grid.Column="2" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                <Grid RowDefinitions="auto auto" Margin="5">
+                  <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
+                    <Label Grid.Column="0" Classes="DefaultLabelLeft">Search</Label>
+                    <UIElements:DeleteButton Grid.Column="1" Command="{Binding ClearSearchBarCommand}"/>
+                  </Grid>
+                  <TextBox Classes="DefaultTextBox" Grid.Row="1" Watermark="Name or description" Text="{Binding SearchByNameOrDesc}" />
+                </Grid>
+              </Border>
 
-              <!-- Only available -->
-              <ToggleButton IsChecked="{Binding OnlyAvailableFlag, Mode=TwoWay}">Only available</ToggleButton>
+              <!-- Clear / Only avaiable -->
+              <Border Grid.Column="3" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                <Grid RowDefinitions="auto auto" Margin="5">
+                  <CheckBox IsChecked="{Binding OnlyAvailableFlag, Mode=TwoWay}" Grid.Row="0" Content="Only available" Margin="5" FontSize="20"/>
+                  <UIElements:ClearButton Grid.Row="1" Command="{Binding ClearAllFiltersAndSorting}"/>
+                </Grid>
+              </Border>
+            </Grid>
 
-              <!-- Separator -->
-              <Border Width="4"
-                      Margin="0, 0"
-                      VerticalAlignment="Stretch"/>
+            <!-- Components -->
+              <DataGrid ItemsSource="{Binding ComponentsCollection}"
+                        AutoGenerateColumns="False"
+                        IsReadOnly="True"
+                        x:Name="Comps"
+                        Background="White"
+                        Grid.Row="1"
+                        GridLinesVisibility="All"
+                        BorderThickness="1"
+                        Margin="5 0 5 5"
+                        CornerRadius="5"
+                        BorderBrush="Black"
+                        HorizontalAlignment="Stretch"
+                        DoubleTapped="DataGrid_DoubleTapped"
+                        VerticalAlignment="Stretch">
+                <DataGrid.Columns>
+                  <DataGridTemplateColumn Header="Image">
+                    <DataGridTemplateColumn.CellTemplate>
+                      <DataTemplate>
+                        <Image x:DataType="cont:DetailedComponentContainer" Source="{Binding Image}" Width="106" Height="106" Stretch="UniformToFill" Margin="0"/>
+                      </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                  </DataGridTemplateColumn>
+                  <DataGridTextColumn Foreground="Black" Header="Name" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Name}" Width="*"/>
+                  <DataGridTextColumn Foreground="Black" Header="Manufacturer" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Manufacturer}" Width="*"/>
+                  <DataGridTextColumn Foreground="Black" Header="Available" x:DataType="cont:DetailedComponentContainer" Binding="{Binding AvailableAmount}" Width="auto"/>
+                  <DataGridTextColumn Foreground="Black" Header="Category" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Category.Name}" Width="*"/>
+                  <DataGridTextColumn Foreground="Black" Header="Description" x:DataType="cont:DetailedComponentContainer" Binding="{Binding ShortDescription}" Width="*"/>
+                </DataGrid.Columns>
+                <DataGrid.Styles>
+                  <Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
+                    <Setter Property="IsVisible" Value="false" />
+                  </Style>
+                  <Style Selector="DataGridRow">
+                    <Setter Property="ContextMenu">
+                      <ContextMenu>
+                        <MenuItem Header="Preview">
+                          <MenuItem.Icon>
+                            <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE32E;"></Label>
+                          </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Edit">
+                          <MenuItem.Icon>
+                            <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE3AE;"></Label>
+                          </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Datasheet">
+                          <MenuItem.Icon>
+                            <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE702;"></Label>
+                          </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator></Separator>
+                        <MenuItem Header="Browse for component" ItemsSource="{Binding Suppliers}" x:DataType="cont:DetailedComponentContainer">
+                          <MenuItem.Icon>
+                            <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE30C;"></Label>
+                          </MenuItem.Icon>
+                            <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                  <Grid ColumnDefinitions="auto 150">
+                                    <Image Grid.Column="0" Source="{Binding Supplier.Image}" Width="32" Height="32"></Image>
+                                    <Label Grid.Column="1" Content="{Binding Supplier.Name}" HorizontalAlignment="Left" VerticalAlignment="Center"></Label>
+                                  </Grid>
+                                </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                        </MenuItem>
+                      </ContextMenu>
+                    </Setter>
+                      <Setter Property="ToolTip.Tip" Value="Help" />
+                  </Style>
+                </DataGrid.Styles>
+              </DataGrid>
 
-              <!-- Search bar -->
-              <TextBox Watermark="Search by Name or Description"
-                       Text="{Binding SearchByNameOrDesc}" />
+            <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5 0 5 5" Background="{DynamicResource PltWhiteMilk}">
+              <Grid ColumnDefinitions="auto *">
+                <!-- Show from -->
+                <Grid Grid.Column="0">
+                  <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
+                    <Label Foreground="Black" FontSize="20" VerticalAlignment="Center">Showing</Label>
+                    <ComboBox SelectedIndex="{Binding SelectedPageSizeIndex}" VerticalAlignment="Center" Width="80">
+                      <ComboBoxItem>10</ComboBoxItem>
+                      <ComboBoxItem>25</ComboBoxItem>
+                      <ComboBoxItem>50</ComboBoxItem>
+                      <ComboBoxItem>100</ComboBoxItem>
+                    </ComboBox>
+                    <Label Foreground="Black" FontSize="20" VerticalAlignment="Center">of</Label>
+                    <Label Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Content="{Binding TotalItems}">1500</Label>
+                  </StackPanel>
+                </Grid>
 
-              <!-- Separator -->
-              <Border Width="4"
-                      Margin="0, 0"
-                      VerticalAlignment="Stretch"/>
-
-              <!-- Clear settings -->
-              <Button Command="{Binding ClearAllFiltersAndSorting}">Clear settings</Button>
-            </StackPanel>
-
-            <!-- Components grid -->
-            <DataGrid ItemsSource="{Binding Components}"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      x:Name="Comps"
-                      GridLinesVisibility="All"
-                      Grid.Row="1"
-                      BorderThickness="1"
-                      BorderBrush="Gray"
-                      HorizontalAlignment="Stretch"
-                      DoubleTapped="DataGrid_DoubleTapped"
-                      VerticalAlignment="Stretch">
-              <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Name}" Width="200"/>
-                <DataGridTextColumn Header="Manufacturer" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Manufacturer}" Width="200"/>
-                <DataGridTextColumn Header="Category" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Category.Name}" Width="200"/>
-                <DataGridTextColumn Header="Available" x:DataType="cont:DetailedComponentContainer" Binding="{Binding AvailableAmount}" Width="200"/>
-                <DataGridTextColumn Header="Description" x:DataType="cont:DetailedComponentContainer" Binding="{Binding ShortDescription}" Width="*"/>
-              </DataGrid.Columns>
-            </DataGrid>
-
-            <!-- Footer with buttons -->
-            <StackPanel Grid.Row="2"
-                        Orientation="Horizontal"
-                        Spacing="10"
-                        HorizontalAlignment="Right"
-                        Margin="0 10 0 10">
-              <Button IsEnabled="{Binding PreviewEnabled}" Command="{Binding GoToPreviewCommand}">Preview</Button>
-              <!--<Button IsEnabled="{Binding PreviewEnabled}">Modify</Button>-->
-              <Button Command="{Binding GoToAddNewCommand}">Add new</Button>
-            </StackPanel>
+                <!-- Paging -->
+                <Grid Grid.Column="1" HorizontalAlignment="Right">
+                  <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
+                    <UIElements:FirstPageButton Command="{Binding FirstPageCommand}"></UIElements:FirstPageButton>
+                    <UIElements:PreviousPageButton Command="{Binding PreviousPageCommand}"></UIElements:PreviousPageButton>
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5">
+                      <TextBlock Width="80" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Center" Text="{Binding CurrentPage}">1</TextBlock>
+                    </Border>
+                    <UIElements:NextPageButton Command="{Binding NextPageCommand}"></UIElements:NextPageButton>
+                    <UIElements:LastPageButton Command="{Binding LastPageCommand}"></UIElements:LastPageButton>
+                  </StackPanel>
+                </Grid>
+              </Grid>
+            </Border>
           </Grid>
+          </Border>
         </TabItem>
         <TabItem Header="Add" >
           <Grid RowDefinitions="*" ColumnDefinitions="60*, auto, auto">

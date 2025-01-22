@@ -1,0 +1,33 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:DesktopClient.UserInterfaceElements">
+
+  <Design.PreviewWith>
+    <controls:EditButton />
+  </Design.PreviewWith>
+ 
+  <ControlTheme x:Key="{x:Type controls:EditButton}" TargetType="controls:EditButton">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Button x:Name="EditButton" Command="{TemplateBinding Command}">
+            <Label Classes="ButtonIcon" Content="&#xE3AE;"></Label>
+          <Button.Styles>
+            <Style Selector="Button#EditButton">
+              <Setter Property="BorderBrush" Value="Black"></Setter>
+              <Setter Property="BorderThickness" Value="1"></Setter>
+              <Setter Property="Background" Value="#E58027"/>
+              <Setter Property="Foreground" Value="Black"/>
+            </Style>
+
+            <Style Selector="Button#EditButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+              <Setter Property="BorderBrush" Value="Black"></Setter>
+              <Setter Property="BorderThickness" Value="1"></Setter>
+              <Setter Property="Background" Value="#EC9E5B"></Setter>
+              <Setter Property="Foreground" Value="Black"/>
+            </Style>
+          </Button.Styles>
+        </Button>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

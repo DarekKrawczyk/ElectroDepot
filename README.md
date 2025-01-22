@@ -49,8 +49,16 @@ ElectroDepot is designed to be the tool for organizing components, and ensuring 
 For now top priority is to write usable desktop application. Next steps will involve porting this app to other platforms.
 
 #### Functionalities implemented
-- **Home**  
-![Home tab](Assets/Home_Panel_Refactored.gif)  
+- **Home page**  
+![Home](Assets/Home_Panel_Refactored.gif)  
+
+- **Components page**
+  - **Components tab**  
+      ![Components/Components](Assets/Components_Panel_Components_Tab_Refactored.gif) 
+  - **Add tab**  
+      ![Components/Components](Assets/In_Progress_Image.png)  
+  - **Preview tab**  
+      ![Components/Components](Assets/In_Progress_Image.png)  
 
 #### Refactoring needed
 - **Components**  
