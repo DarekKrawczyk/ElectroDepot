@@ -22,6 +22,7 @@ using System.IO;
 using ElectroDepotClassLibrary.Containers.NodeContainers;
 using DesktopClient.Containers.ButtonsContainers;
 using System.Globalization;
+using DesktopClient.Services;
 
 namespace DesktopClient.ViewModels
 {
@@ -77,7 +78,7 @@ namespace DesktopClient.ViewModels
         public ObservableCollection<ISeries> Series { get; set; } = new();
 
         [Obsolete("DO NOT USE THIS! THIS IS JUST FOR AVALONIA DESIGNER!")]
-        public HomePageViewModel(RootPageViewModel defaultRootPageViewModel) : base(defaultRootPageViewModel, null)
+        public HomePageViewModel(RootPageViewModel defaultRootPageViewModel, MessageBoxService msgBoxService) : base(defaultRootPageViewModel, null, null)
         {
             if (Design.IsDesignMode)
             {
@@ -88,7 +89,7 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        public HomePageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore) : base(defaultRootPageViewModel, databaseStore)
+        public HomePageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(defaultRootPageViewModel, databaseStore, messageBoxService)
         {
             Suppliers = new ObservableCollection<SupplierContainer>();
             DatabaseStore.SupplierStore.SuppliersLoaded += SuppliersLoadedHandler;

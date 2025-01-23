@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="using:DesktopClient.Containers"
         xmlns:controls="using:DesktopClient.CustomControls"
+        xmlns:UIElements="using:DesktopClient.UserInterfaceElements"
         x:DataType="controls:ImageSelector">
 
   <Design.PreviewWith>
@@ -11,36 +12,43 @@
   <ControlTheme x:Key="{x:Type controls:ImageSelector}" TargetType="controls:ImageSelector">
     <Setter Property="Template">
       <ControlTemplate>
-        <Border Background="Transparent" Height="500" MaxWidth="300" BorderBrush="Black" BorderThickness="1">
+        <Border Background="{DynamicResource SectionGradient}" Height="600" MaxWidth="400" BorderBrush="Black" BorderThickness="1" CornerRadius="5">
           <Grid RowDefinitions="Auto, *, Auto">
             <!-- TextBox at the top -->
-            <TextBox Grid.Row="0" x:Name="TextBoxInput"></TextBox>
+            <Border Grid.Row="0" Background="{DynamicResource PltWhiteMilk}" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5">
+              <TextBox x:Name="TextBoxInput" Watermark="Enter name"></TextBox>
+            </Border>
+            
             <!-- Scrollable content -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-              <ListBox ItemsSource="{TemplateBinding FilteredImages}" 
-                       SelectedItem="{TemplateBinding SelectedImage}"
-                       x:Name="ImagesListBox">
-                <ListBox.ItemTemplate>
-                  <DataTemplate DataType="{x:Type local:ImageContainer}">
-                    <Border Padding="0,5,0,0">
-                      <StackPanel>
-                        <Label Content="{Binding Name}" HorizontalAlignment="Center"
-                               VerticalAlignment="Center"></Label>
-                        <Image Source="{Binding Image}" Width="128"
-                               VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
-                      </StackPanel>
-                    </Border>
-                  </DataTemplate>
-                </ListBox.ItemTemplate>
-              </ListBox>
-            </ScrollViewer>
+            <Border Grid.Row="1" Background="{DynamicResource PltWhiteMilk}" BorderBrush="Black" BorderThickness="1"  Margin="5 0 5 0">
+              <ScrollViewer CornerRadius="5" VerticalScrollBarVisibility="Auto">
+                <ListBox ItemsSource="{TemplateBinding FilteredImages}" 
+                         SelectedItem="{TemplateBinding SelectedImage}"
+                         x:Name="ImagesListBox">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:ImageContainer}">
+                      <Border Padding="0,5,0,0">
+                        <StackPanel>
+                          <Label Content="{Binding Name}" HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"></Label>
+                          <Image Source="{Binding Image}" Width="128"
+                                 VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
+                        </StackPanel>
+                      </Border>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+              </ScrollViewer>
+            </Border>
 
             <!-- Buttons at the bottom -->
-            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="5" VerticalAlignment="Center" HorizontalAlignment="Center">
-              <Button x:Name="SelectButton" Command="{TemplateBinding SelectCommand}">Select</Button>
-              <Button Command="{TemplateBinding CancelCommand}">Cancel</Button>
-            </StackPanel>
-          </Grid>
+            <Border Grid.Row="2" Background="{DynamicResource PltWhiteMilk}" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5 5 5 5">
+              <Grid Margin="5" HorizontalAlignment="Right" ColumnDefinitions="auto auto">
+                <UIElements:SelectButton Grid.Column="0" x:Name="SelectButton" Command="{TemplateBinding SelectCommand}" Margin="0 0 5 0"></UIElements:SelectButton>
+                <UIElements:CancelButton Grid.Column="1" x:Name="CancelButton" Command="{TemplateBinding CancelCommand}"></UIElements:CancelButton>
+              </Grid>
+            </Border>
+          </Grid> 
         </Border>
 
       </ControlTemplate>

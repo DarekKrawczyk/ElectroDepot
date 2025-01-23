@@ -15,14 +15,14 @@
             <Style Selector="Button#EditButton">
               <Setter Property="BorderBrush" Value="Black"></Setter>
               <Setter Property="BorderThickness" Value="1"></Setter>
-              <Setter Property="Background" Value="#E58027"/>
+              <Setter Property="Background" Value="{DynamicResource PltOrangeS2}"/>
               <Setter Property="Foreground" Value="Black"/>
             </Style>
 
             <Style Selector="Button#EditButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
               <Setter Property="BorderBrush" Value="Black"></Setter>
               <Setter Property="BorderThickness" Value="1"></Setter>
-              <Setter Property="Background" Value="#EC9E5B"></Setter>
+              <Setter Property="Background" Value="{DynamicResource PltOrangeS1}"></Setter>
               <Setter Property="Foreground" Value="Black"/>
             </Style>
           </Button.Styles>

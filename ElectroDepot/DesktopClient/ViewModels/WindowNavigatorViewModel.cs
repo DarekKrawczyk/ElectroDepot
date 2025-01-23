@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopClient.Navigation;
+using DesktopClient.Services;
 using ElectroDepotClassLibrary.Stores;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,11 @@ namespace DesktopClient.ViewModels
     {
         private readonly MainWindowViewModel _mainWindow;
 
-        public WindowNavigatorViewModel(DatabaseStore databaseStore) : base(databaseStore)
+        public WindowNavigatorViewModel(DatabaseStore databaseStore, MessageBoxService msgBoxService) : base(databaseStore, msgBoxService)
         {
         }
 
-        public WindowNavigatorViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore) : base(databaseStore)
+        public WindowNavigatorViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService) : base(databaseStore, msgBoxService)
         {
             _mainWindow = windowViewModel;
         }

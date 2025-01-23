@@ -17,4 +17,5 @@
 	- [ ] Add:
 	- [ ] Preview:
 - [ ] Dodać przycisk do zmiany z tryby nocnego/dziennego.
+- [ ] Trzeba poświecić troche czasu jeżeli chodzi o 'MessageBox' bo nie jest to takie proste jak sie wydaje. Póki co zostawiam tak jak jest.
 - [ ] 

@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using DesktopClient.Navigation;
+using DesktopClient.Services;
 using DesktopClient.ViewModels;
 using DesktopClient.Views;
 using ElectroDepotClassLibrary.DataProviders;
@@ -52,13 +53,15 @@ namespace DesktopClient
                 // Without this line you will get duplicate validations from both Avalonia and CT
                 BindingPlugins.DataValidators.RemoveAt(0);
 
+                MessageBoxService _msgService = new MessageBoxService();
+
                 _databaseStore.UsersStore.UserLogin("username", "password"); // While using  async on this method, windows doesn't show up!
 
                 //Navigator navigator = new Navigator(_databaseStore);
-                MainWindowViewModel windowViewModel = new MainWindowViewModel(null, _databaseStore);
+                MainWindowViewModel windowViewModel = new MainWindowViewModel(null, _databaseStore, _msgService);
 
-                HomePageViewModel home = new HomePageViewModel(null, _databaseStore);
-                RootPageViewModel root = new RootPageViewModel(windowViewModel, _databaseStore);
+                HomePageViewModel home = new HomePageViewModel(null, _databaseStore, _msgService);
+                RootPageViewModel root = new RootPageViewModel(windowViewModel, _databaseStore, _msgService);
                 home.Root = root;
 
                 root.PageView = home;
@@ -74,6 +77,7 @@ namespace DesktopClient
 
                     DataContext = windowViewModel,
                 };
+                _msgService.SetWindow(desktop.MainWindow);
             }
 
             base.OnFrameworkInitializationCompleted();

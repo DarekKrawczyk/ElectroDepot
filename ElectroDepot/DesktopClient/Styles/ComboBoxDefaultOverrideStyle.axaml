@@ -9,6 +9,12 @@
         <ComboBoxItem>Inline Item 3asdasdasdasdasdasdasd</ComboBoxItem>
         <ComboBoxItem>Inline Item 4</ComboBoxItem>
       </ComboBox>
+      <ComboBox Classes="DefaultComboBoxStretch" PlaceholderText="Category">
+        <ComboBoxItem>Inline Items</ComboBoxItem>
+        <ComboBoxItem>Inline Itemasdasdasdasdasdasd 2</ComboBoxItem>
+        <ComboBoxItem>Inline Item 3asdasdasdasdasdasdasd</ComboBoxItem>
+        <ComboBoxItem>Inline Item 4</ComboBoxItem>
+      </ComboBox>
     </StackPanel>
   </Design.PreviewWith>
 
@@ -28,5 +34,19 @@
     <Style Selector="^ ComboBoxItem">
       <Setter Property="Width" Value="250"/>
     </Style>
+  </Style>
+
+  <Style Selector="ComboBox.DefaultComboBoxStretch">
+    <Setter Property="MinWidth" Value="250"/>
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="FontSize" Value="20"/>
+    <Setter Property="Height" Value="40"/>
+    <Setter Property="BorderBrush" Value="Black"/>
+    <Setter Property="CornerRadius" Value="5"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="Black"/>
+    <Setter Property="Padding" Value="4 0 4 0"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
   </Style>
 </Styles>

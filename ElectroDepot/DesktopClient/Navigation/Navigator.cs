@@ -9,6 +9,13 @@ using System.Threading.Tasks;
 
 namespace DesktopClient.Navigation
 {
+    public enum ComponentTab
+    {
+        Components,
+        Add,
+        Preview,
+        Edit
+    }
     public enum View
     {
         Home,

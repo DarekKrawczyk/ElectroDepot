@@ -19,10 +19,22 @@
   </UserControl.Styles>
 
   <UserControl.Resources>
-    <MenuFlyout x:Key="SharedMenuFlyout">
-      <MenuItem Header="From device" Command="{Binding LoadImageFromDeviceCommand}"/>
-      <MenuItem Header="Find in internet" IsEnabled="False"/>
-      <MenuItem Header="From default images" Command="{Binding OpenPredefinedImagesCommand}"/>
+    <MenuFlyout x:Key="SharedMenuFlyout" Placement="BottomEdgeAlignedRight">
+      <MenuItem Header="From device" Command="{Binding LoadImageFromDeviceCommand}">
+        <MenuItem.Icon>
+          <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE196;"></Label>
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem Header="Find in web" IsEnabled="False">
+        <MenuItem.Icon>
+          <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE1AC;"></Label>
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem Header="Default images" Command="{Binding OpenPredefinedImagesCommand}">
+        <MenuItem.Icon>
+          <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE834;"></Label>
+        </MenuItem.Icon>
+      </MenuItem>
     </MenuFlyout>
     <Flyout Placement="Bottom" x:Key="BasicFlyout">
       <Panel Width="100" Height="100">
@@ -33,58 +45,58 @@
 
   <Grid ColumnDefinitions="0, *, 0" x:Name="MainGrid">
     <DockPanel Grid.Column="1">
-      <TabControl TabStripPlacement="Top"
-                  SelectedIndex="{Binding SelectedTab}" >
-        <TabItem Header="Components">
+      <TabControl TabStripPlacement="Top"        
+                  SelectedIndex="{Binding SelectedTab}">
+        <!--SelectedIndex="1" >-->
+        <TabItem Header="Components" IsEnabled="{Binding Add_IsComponentsTabEnabled}">
           <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="-12 0 -12 0" Background="{DynamicResource SectionGradient}">
-            
-          <Grid RowDefinitions="auto, *, auto">
-            <!-- Header with filters, selectors, and search -->
-            <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0 5 0 5" ColumnDefinitions="auto auto auto auto auto">
-              
-              <!-- Manufacturer -->
-              <Border Grid.Column="0" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
-                <Grid RowDefinitions="auto auto" Margin="5">
-                  <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
-                    <Label Grid.Column="0" Classes="DefaultLabelLeft">Manufacturer</Label>
-                    <UIElements:DeleteButton Grid.Column="1" Command="{Binding ClearSelectedManufacturerCommand}"/>
+            <Grid RowDefinitions="auto, *, auto">
+              <!-- Header with filters, selectors, and search -->
+              <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0 5 0 5" ColumnDefinitions="auto auto auto auto auto">
+
+                <!-- Manufacturer -->
+                <Border Grid.Column="0" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                  <Grid RowDefinitions="auto auto" Margin="5">
+                    <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
+                      <Label Grid.Column="0" Classes="DefaultLabelLeft">Manufacturer</Label>
+                      <UIElements:DeleteButton Grid.Column="1" Command="{Binding ClearSelectedManufacturerCommand}"/>
+                    </Grid>
+                    <TextBox Grid.Row="1" Watermark="Manufacturer name" Classes="DefaultTextBox" Text="{Binding SelectedManufacturer}" ></TextBox>
                   </Grid>
-                  <TextBox Grid.Row="1" Watermark="Manufacturer name" Classes="DefaultTextBox" Text="{Binding SelectedManufacturer}" ></TextBox>
-                </Grid>
-              </Border>
+                </Border>
 
-              <!-- Category -->
-              <Border Grid.Column="1" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
-                <Grid RowDefinitions="auto auto" Margin="5">
-                  <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
-                    <Label Grid.Column="0" Classes="DefaultLabelLeft">Category</Label>
-                    <UIElements:DeleteButton Grid.Column="1" Command="{Binding ClearSelectedCategoryCommand}"/>
+                <!-- Category -->
+                <Border Grid.Column="1" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                  <Grid RowDefinitions="auto auto" Margin="5">
+                    <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
+                      <Label Grid.Column="0" Classes="DefaultLabelLeft">Category</Label>
+                      <UIElements:DeleteButton Grid.Column="1" Command="{Binding ClearSelectedCategoryCommand}"/>
+                    </Grid>
+                    <ComboBox Grid.Row="1" Classes="DefaultComboBox" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" ></ComboBox>
                   </Grid>
-                  <ComboBox Grid.Row="1" Classes="DefaultComboBox" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory, Mode=TwoWay}" ></ComboBox>
-                </Grid>
-              </Border>
+                </Border>
 
-              <!-- Keyword -->
-              <Border Grid.Column="2" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
-                <Grid RowDefinitions="auto auto" Margin="5">
-                  <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
-                    <Label Grid.Column="0" Classes="DefaultLabelLeft">Search</Label>
-                    <UIElements:DeleteButton Grid.Column="1" Command="{Binding ClearSearchBarCommand}"/>
+                <!-- Keyword -->
+                <Border Grid.Column="2" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                  <Grid RowDefinitions="auto auto" Margin="5">
+                    <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
+                      <Label Grid.Column="0" Classes="DefaultLabelLeft">Search</Label>
+                      <UIElements:DeleteButton Grid.Column="1" Command="{Binding ClearSearchBarCommand}"/>
+                    </Grid>
+                    <TextBox Classes="DefaultTextBox" Grid.Row="1" Watermark="Name or description" Text="{Binding SearchByNameOrDesc}" />
                   </Grid>
-                  <TextBox Classes="DefaultTextBox" Grid.Row="1" Watermark="Name or description" Text="{Binding SearchByNameOrDesc}" />
-                </Grid>
-              </Border>
+                </Border>
 
-              <!-- Clear / Only avaiable -->
-              <Border Grid.Column="3" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
-                <Grid RowDefinitions="auto auto" Margin="5">
-                  <CheckBox IsChecked="{Binding OnlyAvailableFlag, Mode=TwoWay}" Grid.Row="0" Content="Only available" Margin="5" FontSize="20"/>
-                  <UIElements:ClearButton Grid.Row="1" Command="{Binding ClearAllFiltersAndSorting}"/>
-                </Grid>
-              </Border>
-            </Grid>
+                <!-- Clear / Only avaiable -->
+                <Border Grid.Column="3" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                  <Grid RowDefinitions="auto auto" Margin="5">
+                    <CheckBox IsChecked="{Binding OnlyAvailableFlag, Mode=TwoWay}" Grid.Row="0" Content="Only available" Margin="5" FontSize="20"/>
+                    <UIElements:ClearButton Grid.Row="1" Command="{Binding ClearAllFiltersAndSorting}"/>
+                  </Grid>
+                </Border>
+              </Grid>
 
-            <!-- Components -->
+              <!-- Components -->
               <DataGrid ItemsSource="{Binding ComponentsCollection}"
                         AutoGenerateColumns="False"
                         IsReadOnly="True"
@@ -140,207 +152,183 @@
                           <MenuItem.Icon>
                             <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE30C;"></Label>
                           </MenuItem.Icon>
-                            <MenuItem.ItemTemplate>
-                                <DataTemplate>
-                                  <Grid ColumnDefinitions="auto 150">
-                                    <Image Grid.Column="0" Source="{Binding Supplier.Image}" Width="32" Height="32"></Image>
-                                    <Label Grid.Column="1" Content="{Binding Supplier.Name}" HorizontalAlignment="Left" VerticalAlignment="Center"></Label>
-                                  </Grid>
-                                </DataTemplate>
-                            </MenuItem.ItemTemplate>
+                          <MenuItem.ItemTemplate>
+                            <DataTemplate>
+                              <Grid ColumnDefinitions="auto 150">
+                                <Image Grid.Column="0" Source="{Binding Supplier.Image}" Width="32" Height="32"></Image>
+                                <Label Grid.Column="1" Content="{Binding Supplier.Name}" HorizontalAlignment="Left" VerticalAlignment="Center"></Label>
+                              </Grid>
+                            </DataTemplate>
+                          </MenuItem.ItemTemplate>
                         </MenuItem>
                       </ContextMenu>
                     </Setter>
-                      <Setter Property="ToolTip.Tip" Value="Help" />
+                    <Setter Property="ToolTip.Tip" Value="Help" />
                   </Style>
                 </DataGrid.Styles>
               </DataGrid>
 
-            <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5 0 5 5" Background="{DynamicResource PltWhiteMilk}">
-              <Grid ColumnDefinitions="auto *">
-                <!-- Show from -->
-                <Grid Grid.Column="0">
-                  <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
-                    <Label Foreground="Black" FontSize="20" VerticalAlignment="Center">Showing</Label>
-                    <ComboBox SelectedIndex="{Binding SelectedPageSizeIndex}" VerticalAlignment="Center" Width="80">
-                      <ComboBoxItem>10</ComboBoxItem>
-                      <ComboBoxItem>25</ComboBoxItem>
-                      <ComboBoxItem>50</ComboBoxItem>
-                      <ComboBoxItem>100</ComboBoxItem>
-                    </ComboBox>
-                    <Label Foreground="Black" FontSize="20" VerticalAlignment="Center">of</Label>
-                    <Label Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Content="{Binding TotalItems}">1500</Label>
-                  </StackPanel>
-                </Grid>
+              <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5 0 5 5" Background="{DynamicResource PltWhiteMilk}">
+                <Grid ColumnDefinitions="auto *">
+                  <!-- Show from -->
+                  <Grid Grid.Column="0">
+                    <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
+                      <Label Foreground="Black" FontSize="20" VerticalAlignment="Center">Showing</Label>
+                      <ComboBox SelectedIndex="{Binding SelectedPageSizeIndex}" VerticalAlignment="Center" Width="80">
+                        <ComboBoxItem>10</ComboBoxItem>
+                        <ComboBoxItem>25</ComboBoxItem>
+                        <ComboBoxItem>50</ComboBoxItem>
+                        <ComboBoxItem>100</ComboBoxItem>
+                      </ComboBox>
+                      <Label Foreground="Black" FontSize="20" VerticalAlignment="Center">of</Label>
+                      <Label Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Content="{Binding TotalItems}">1500</Label>
+                    </StackPanel>
+                  </Grid>
 
-                <!-- Paging -->
-                <Grid Grid.Column="1" HorizontalAlignment="Right">
-                  <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
-                    <UIElements:FirstPageButton Command="{Binding FirstPageCommand}"></UIElements:FirstPageButton>
-                    <UIElements:PreviousPageButton Command="{Binding PreviousPageCommand}"></UIElements:PreviousPageButton>
-                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5">
-                      <TextBlock Width="80" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Center" Text="{Binding CurrentPage}">1</TextBlock>
-                    </Border>
-                    <UIElements:NextPageButton Command="{Binding NextPageCommand}"></UIElements:NextPageButton>
-                    <UIElements:LastPageButton Command="{Binding LastPageCommand}"></UIElements:LastPageButton>
-                  </StackPanel>
+                  <!-- Paging -->
+                  <Grid Grid.Column="1" HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
+                      <UIElements:FirstPageButton Command="{Binding FirstPageCommand}"></UIElements:FirstPageButton>
+                      <UIElements:PreviousPageButton Command="{Binding PreviousPageCommand}"></UIElements:PreviousPageButton>
+                      <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5">
+                        <TextBlock Width="80" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Center" Text="{Binding CurrentPage}">1</TextBlock>
+                      </Border>
+                      <UIElements:NextPageButton Command="{Binding NextPageCommand}"></UIElements:NextPageButton>
+                      <UIElements:LastPageButton Command="{Binding LastPageCommand}"></UIElements:LastPageButton>
+                    </StackPanel>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Border>
-          </Grid>
+              </Border>
+            </Grid>
           </Border>
         </TabItem>
-        <TabItem Header="Add" >
-          <Grid RowDefinitions="*" ColumnDefinitions="60*, auto, auto">
-            <!-- Left section -->
-            <Grid Grid.Column="0" RowDefinitions="auto, *, auto">
-              <!-- Component basic data -->
-              <Grid Grid.Row="0" ColumnDefinitions="auto, auto, 60*">
-                <!-- Image + Find/Upload buttons-->
-                <Grid Grid.Column="0">
-                  <StackPanel Spacing="10">
-                    <Border BorderBrush="Black" BorderThickness="1">
-                      <Image Source="{Binding CurrentAddPredefinedImage}"
-                             Height="142"
-                             Margin="0"></Image>
+        <TabItem Header="Add" IsEnabled="{Binding Add_IsAddTabEnabled}">
+          <Border BorderBrush="Black" Padding="0" Margin="-12 0 -12 0" Background="Transparent">
+            <Grid ColumnDefinitions="65* 35*">
+              <Border BorderBrush="Black" CornerRadius="5" BorderThickness="1" Background="{DynamicResource SectionGradient}">
+                <Grid RowDefinitions="auto auto * auto">
+                  
+                  <!-- Main fields section -->
+                  <Grid Grid.Row="0" ColumnDefinitions="auto *">
+
+                    <!-- Image section-->
+                    <Grid Grid.Column="0" Margin="5">
+                      <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}">
+                        <Grid Width="256" Height="256">
+                          <Grid.Background>
+                            <ImageBrush AlignmentY="Center" 
+                                        AlignmentX="Center"
+                                        Stretch="UniformToFill"
+                                        Source="{Binding CurrentAddPredefinedImage}"></ImageBrush>
+                          </Grid.Background>
+                          <Border Height="256" Width="256">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5" Spacing="5">
+                              <UIElements:UploadContentButton Flyout="{StaticResource SharedMenuFlyout}"></UIElements:UploadContentButton>
+                              <UIElements:DeleteButton Command="{Binding Add_ClearImageCommand}"></UIElements:DeleteButton>
+                            </StackPanel>
+                          </Border>
+                        </Grid>
+                      </Border>
+                    </Grid>
+
+                    <!-- Fields section-->
+                    <Grid Grid.Column="1" Margin="0 5 5 5">
+                      <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}">
+                        <Grid RowDefinitions="auto auto auto auto" ColumnDefinitions="auto * auto">
+                          <Label Classes="DefaultLabelRightNoMin" Grid.Row="0" Grid.Column="0">Name</Label>
+                          <Label Classes="DefaultLabelRightNoMin" Grid.Row="1" Grid.Column="0">Manufacturer</Label>
+                          <Label Classes="DefaultLabelRightNoMin" Grid.Row="2" Grid.Column="0">Category</Label>
+                          <Label Classes="DefaultLabelRightNoMin" Grid.Row="3" Grid.Column="0">Datasheet</Label>
+
+                          <TextBox Classes="DefaultTextBox" Grid.Row="0" Grid.Column="1" Margin="5 5 0 0" Text="{Binding Add_ComponentName}">Arduino UNO</TextBox>
+                          <TextBox Classes="DefaultTextBox" Grid.Row="1" Grid.Column="1" Margin="5 5 0 0" Text="{Binding Add_Manufacturer}">Arduino</TextBox>
+                          <ComboBox Classes="DefaultComboBoxStretch" Grid.Row="2" Grid.Column="1" Margin="5 5 0 0" ItemsSource="{Binding Categories}" SelectedItem="{Binding Add_Category}"></ComboBox>
+                          <TextBox Classes="DefaultTextBox" Grid.Row="3" Grid.Column="1" Margin="5 5 0 0" Text="{Binding Add_DatasheetLink}"></TextBox>
+
+                          <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0">
+                            <UIElements:CopyToClipboardButton Command="{Binding AddTab_CopyNameClipboardCommand}"></UIElements:CopyToClipboardButton>
+                            <UIElements:DeleteButton Command="{Binding AddTab_ClearNameCommand}"></UIElements:DeleteButton>
+                          </StackPanel>
+                          <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0">
+                            <UIElements:CopyToClipboardButton Command="{Binding AddTab_CopyManufacturerClipboardCommand}"></UIElements:CopyToClipboardButton>
+                            <UIElements:DeleteButton Command="{Binding AddTab_ClearManufacturerCommand}"></UIElements:DeleteButton>
+                          </StackPanel>
+                          <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0">
+                            <UIElements:CopyToClipboardButton Command="{Binding AddTab_CopyCategoryClipboardCommand}"></UIElements:CopyToClipboardButton>
+                            <UIElements:DeleteButton Command="{Binding AddTab_ClearCategoryCommand}"></UIElements:DeleteButton>
+                          </StackPanel>
+                          <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0">
+                            <UIElements:PDFButton Command="{Binding AddTab_CopyDatasheetClipboardCommand}"></UIElements:PDFButton>
+                            <UIElements:DeleteButton Command="{Binding AddTab_DatasheetNameCommand}"></UIElements:DeleteButton>
+                          </StackPanel>
+                        </Grid>
+                      </Border>
+                    </Grid>
+                  </Grid>
+                  
+                  <!-- About section -->
+                  <Grid Grid.Row="1">
+                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="5 0 5 5">
+                      <Grid  RowDefinitions="auto auto">
+                        <!-- Label and buttons -->
+                        <Grid ColumnDefinitions="auto *" Margin="5">
+                          <Label Classes="DefaultLabelLeft" Grid.Column="0" >About</Label>
+                          <StackPanel HorizontalAlignment="Right" Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                            <UIElements:DownloadOnlineContentButton IsEnabled="False" Command="{Binding AddTab_DownloadAboutCommand}"></UIElements:DownloadOnlineContentButton>
+                            <UIElements:DeleteButton Command="{Binding AddTab_ClearAboutCommand}"></UIElements:DeleteButton>
+                          </StackPanel>
+                        </Grid>
+                      
+                        <!-- Text -->
+                        <TextBox Classes="DefaultTextBox"  Grid.Row="1" Margin="5 0 5 5" Text="{Binding Add_ShortDescription}" Watermark="Enter brief description" TextWrapping="Wrap" AcceptsReturn="True">
+                        </TextBox>
+                      </Grid>
                     </Border>
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                      <Button Content="Upload image" Flyout="{StaticResource SharedMenuFlyout}"/>
-                      <Button Command="{Binding Add_ClearImageCommand}">Clear</Button>
-                    </StackPanel>
-                  </StackPanel>
-                </Grid>
+                  </Grid>
 
-                <!-- Separator-->
-                <Grid Grid.Column="1">
-                  <Border Width ="1"
-                          Background="{DynamicResource UIMediumGray}"
-                          Margin="10,0"
-                          HorizontalAlignment="Stretch"/>
-                </Grid>
+                  <!-- Detailed description section -->
+                  <Grid Grid.Row="2">
+                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="5 0 5 5">
+                      <Grid RowDefinitions="auto *">
+                        <!-- Label and buttons -->
+                        <Grid ColumnDefinitions="auto *" Margin="5">
+                          <Label Classes="DefaultLabelLeft" Grid.Column="0" >Description</Label>
+                          <StackPanel HorizontalAlignment="Right" Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                            <UIElements:DownloadOnlineContentButton Command="{Binding AddTab_DownloadDescriptionCommand}" IsEnabled="False"></UIElements:DownloadOnlineContentButton>
+                            <UIElements:DeleteButton Command="{Binding AddTab_ClearDescriptionCommand}"></UIElements:DeleteButton>
+                          </StackPanel>
+                        </Grid>
+                        <TextBox Grid.Row="1" 
+                                 Classes="DefaultTextBox"
+                                 Margin="5 0 5 5" 
+                                 TextWrapping="Wrap"
+                                 VerticalContentAlignment="Top"
+                                 AcceptsReturn="True"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch" 
+                                 Watermark="Enter description"
+                                 Text="{Binding Add_FullDescription}">
+                        </TextBox>
+                      </Grid>
+                    </Border>
+                  </Grid>
 
-                <!-- Component Name/Manufacturer/Datasheet/Category labels -->
-                <Grid Grid.Column="2">
-                  <StackPanel>
-                    <!-- First row -->
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                      <!-- Name -->
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Name</Label>
-                        <TextBox HorizontalAlignment="Left" Text="{Binding Add_ComponentName}"></TextBox>
+                  <!-- Buttons section -->
+                  <Grid Grid.Row="3">
+                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="5 0 5 5">
+                      <StackPanel Orientation="Horizontal" Spacing="5" Margin="5">
+                        <UIElements:AddButton IsEnabled="{Binding Add_CanAdd}" Command="{Binding Add_AddComponentCommand}"></UIElements:AddButton>
+                        <UIElements:ClearButton Command="{Binding Add_ClearComponentCommand}"></UIElements:ClearButton>
+                        <UIElements:CancelButton Command="{Binding Add_CancelCommand}"></UIElements:CancelButton>
                       </StackPanel>
-
-                      <!-- Manufacturer -->
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Manufacturer</Label>
-                        <TextBox HorizontalAlignment="Left" Text="{Binding Add_Manufacturer}"></TextBox>
-                      </StackPanel>
-                    </StackPanel>
-
-                    <!-- Second row - Category -->
-                    <StackPanel Orientation="Vertical">
-                      <Label FontWeight="Bold" HorizontalAlignment="Left">Category</Label>
-                      <ComboBox ItemsSource="{Binding Categories}" HorizontalAlignment="Left" SelectedItem="{Binding Add_Category}"></ComboBox>
-                    </StackPanel>
-
-                    <!-- Third row -->
-                    <StackPanel Orientation="Vertical">
-                      <Label FontWeight="Bold" HorizontalAlignment="Left">Datasheet</Label>
-                      <StackPanel Orientation="Horizontal" Spacing="10">
-                        <TextBox HorizontalAlignment="Stretch" Text="{Binding Add_DatasheetLink}"></TextBox>
-                        <Button IsEnabled="False">Preview</Button>
-                      </StackPanel>
-                    </StackPanel>
-                  </StackPanel>
-
+                    </Border>
+                  </Grid>
                 </Grid>
-              </Grid>
-
-              <!-- Component description -->
-              <Grid Grid.Row="1">
-                <Grid.RowDefinitions>
-                  <!-- 30% for Short description -->
-                  <RowDefinition Height="3*" />
-                  <!-- 70% for Full description -->
-                  <RowDefinition Height="7*" />
-                </Grid.RowDefinitions>
-
-                <!-- Short Description Section -->
-                <Grid Grid.Row="0">
-                  <Grid.RowDefinitions>
-                    <!-- Short description Label -->
-                    <RowDefinition Height="Auto" />
-                    <!-- Short description TextBox -->
-                    <RowDefinition Height="*" />
-                  </Grid.RowDefinitions>
-
-                  <Label Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Left">Short description</Label>
-                  <TextBox Grid.Row="1"
-                           TextWrapping="Wrap"
-                           VerticalContentAlignment="Top"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Stretch"
-                           Text="{Binding Add_ShortDescription}"/>
-                </Grid>
-
-                <!-- Full Description Section -->
-                <Grid Grid.Row="1">
-                  <Grid.RowDefinitions>
-                    <!-- Full description Label -->
-                    <RowDefinition Height="Auto" />
-                    <!-- Full description TextBox -->
-                    <RowDefinition Height="*" />
-                  </Grid.RowDefinitions>
-
-                  <Label Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Left">Full description</Label>
-                  <TextBox Grid.Row="1"
-                           Text="{Binding Add_FullDescription}"
-                           TextWrapping="Wrap"
-                           VerticalContentAlignment="Top"
-                           AcceptsReturn="True"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Stretch" />
-                </Grid>
-              </Grid>
-
-              <!-- Component buttons -->
-              <Grid Grid.Row="2"
-                    Margin="0 10 0 10">
-                <StackPanel Orientation="Horizontal"
-                            Spacing="10">
-                  <Button IsEnabled="{Binding Add_CanAdd}" Command="{Binding Add_AddComponentCommand}">Add</Button>
-                  <Button Command="{Binding Add_ClearComponentCommand}">Clear</Button>
-                  <Button Command="{Binding NavigateToCollectionCommand}">Cancel</Button>
-                </StackPanel>
-              </Grid>
+              </Border>
             </Grid>
-
-            <!-- Separator-->
-            <Grid Grid.Column="1">
-              <Border Width="2"
-                      Background="{DynamicResource UIMediumGray}"
-                      Margin="10,5"
-                      HorizontalAlignment="Stretch"/>
-            </Grid>
-
-            <!-- Right section -->
-            <Grid Grid.Column="2" RowDefinitions="auto, 20*, auto, 80*">
-              <!-- Purchases -->
-              <StackPanel Spacing="10">
-                <Label Grid.Row="0" FontWeight="Bold">Purchased</Label>
-                <TextBox Grid.Row="1" Height="110">
-                  Insert files here
-                </TextBox>
-                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10">
-                  <Button IsEnabled="False">Import</Button>
-                  <Button IsEnabled="False">Clean</Button>
-                </StackPanel>
-              </StackPanel>
-            </Grid>
-
-          </Grid>
+          </Border>
         </TabItem>
-        <TabItem Header="Preview" IsEnabled="{Binding PreviewEnabled}">
+        <TabItem Header="Preview" IsEnabled="{Binding Add_IsPreviewTabEnabled}">
           <Grid RowDefinitions="*" ColumnDefinitions="auto, auto, *">
             <!-- Left section -->
             <Grid Grid.Column="0" RowDefinitions="auto, *, auto">
@@ -563,13 +551,13 @@
         </TabItem>
       </TabControl>
     </DockPanel>
-    <Popup Grid.Column="1"
+    <Popup Grid.Column="1" Margin="-12 0 -12 0"
            IsOpen="{Binding IsSelectingPredefinedImagePopupOpen}"
            IsLightDismissEnabled="True"
                PlacementMode="AnchorAndGravity"
                Width="{Binding Bounds.Width, ElementName=MainGrid}"
                Height="{Binding Bounds.Height, ElementName=MainGrid}">
-      <Border Background="#80D3D3D3" CornerRadius="5" BorderBrush="Black" BorderThickness="1">
+      <Border Background="{DynamicResource MiddleGradient}">
         <CustomControls:ImageSelector CancelCommand="{Binding ClosePredefinedImagesCommand}"
                                       SelectCommand="{Binding SelectPredefinedImagesCommand}"
                                       SelectedImage="{Binding SelectedPredefinedImage}"

@@ -16,6 +16,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Avalonia.Platform.Storage;
 using DesktopClient.Navigation;
+using DesktopClient.Services;
 
 namespace DesktopClient.ViewModels
 {
@@ -76,8 +77,7 @@ namespace DesktopClient.ViewModels
                 Supplier sup = DatabaseStore.SupplierStore.Suppliers.FirstOrDefault(x => x.Name == supplierName);
                 if(sup == null)
                 {
-                    var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "There is no such supplier in system!", ButtonEnum.Ok);
-                    ButtonResult buttonResult = await box.ShowAsync();
+                    string buttonResult = await MsBoxService.DisplayMessageBox("There is no such supplier in system!", Icon.Error);
                     return;
                 }
 
@@ -85,8 +85,7 @@ namespace DesktopClient.ViewModels
                 User loggedInUser = DatabaseStore.UsersStore.LoggedInUser;
                 if (loggedInUser == null)
                 {
-                    var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "User needs to be logged in to execute this operation", ButtonEnum.Ok);
-                    ButtonResult buttonResult = await box.ShowAsync();
+                    string buttonResult = await MsBoxService.DisplayMessageBox("User needs to be logged in to execute this operation", Icon.Error);
                     return;
                 }
 
@@ -99,15 +98,13 @@ namespace DesktopClient.ViewModels
 
                 if (result == true)
                 {
-                    var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Purchase added successfully", ButtonEnum.Ok);
-                    ButtonResult buttonResult = await box.ShowAsync();
+                    string buttonResult = await MsBoxService.DisplayMessageBox("Purchase added successfully", Icon.Success);
                     Add_Clear();
                     SelectedTab = 0;
                 }
                 else
                 {
-                    var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Purchase couldn't be added", ButtonEnum.Ok);
-                    ButtonResult buttonResult = await box.ShowAsync();
+                    string buttonResult = await MsBoxService.DisplayMessageBox("Purchase couldn't be added", Icon.Error);
                 }
             }
             catch (Exception exception)
@@ -279,7 +276,7 @@ namespace DesktopClient.ViewModels
         public ObservableCollection<string> SupplierSource { get; set; }
         public List<DetailedPurchaseContainerHolder> PurchasesSource { get; set; }
         public DataGridCollectionView Purchases { get; set; }
-        public PurchasesPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore) : base(defaultRootPageViewModel, databaseStore)
+        public PurchasesPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(defaultRootPageViewModel, databaseStore, messageBoxService)
         {
             PurchasesSource = new List<DetailedPurchaseContainerHolder>();
             ProjectItems = new List<PurchaseItemContainer>();

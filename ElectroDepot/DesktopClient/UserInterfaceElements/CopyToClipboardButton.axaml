@@ -3,31 +3,30 @@
         xmlns:controls="using:DesktopClient.UserInterfaceElements">
   
   <Design.PreviewWith>
-    <Grid ColumnDefinitions="* auto">
-      <Label Grid.Column="0">Manufacturer</Label>
-      <controls:DeleteButton Grid.Column="1"/>
-    </Grid>
+    <controls:CopyToClipboardButton />
   </Design.PreviewWith>
  
-  <ControlTheme x:Key="{x:Type controls:DeleteButton}" TargetType="controls:DeleteButton">
+  <ControlTheme x:Key="{x:Type controls:CopyToClipboardButton}" TargetType="controls:CopyToClipboardButton">
     <Setter Property="Template">
       <ControlTemplate>
-        <Button x:Name="TrashButton" Width="44" MaxWidth="44" MinWidth="44" Command="{TemplateBinding Command}">
+        <Button x:Name="CopyToClipboardButton" Width="44" MaxWidth="44" MinWidth="44" Command="{TemplateBinding Command}">
           <StackPanel Orientation="Horizontal">
-            <Label Classes="ButtonIcon" Content="&#xE4A6;"></Label>
+            <Label Classes="ButtonIcon" Content="&#xE196;"></Label>
           </StackPanel>
           <Button.Styles>
-            <Style Selector="Button#TrashButton">
+            <Style Selector="Button#CopyToClipboardButton">
               <Setter Property="BorderBrush" Value="Black"></Setter>
               <Setter Property="BorderThickness" Value="1"></Setter>
-              <Setter Property="Background" Value="#C81927"/>
+              <!--<Setter Property="Background" Value="{DynamicResource PltOrangeS2}"/>-->
+              <Setter Property="Background" Value="{DynamicResource PltWhiteMilk}"></Setter>
               <Setter Property="Foreground" Value="Black"/>
             </Style>
 
-            <Style Selector="Button#TrashButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Style Selector="Button#CopyToClipboardButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
               <Setter Property="BorderBrush" Value="Black"></Setter>
               <Setter Property="BorderThickness" Value="1"></Setter>
-              <Setter Property="Background" Value="#E42535"></Setter>
+              <!--<Setter Property="Background" Value="{DynamicResource PltOrangeS1}"></Setter>-->
+              <Setter Property="Background" Value="{DynamicResource PltGray}"></Setter>
               <Setter Property="Foreground" Value="Black"/>
             </Style>
           </Button.Styles>

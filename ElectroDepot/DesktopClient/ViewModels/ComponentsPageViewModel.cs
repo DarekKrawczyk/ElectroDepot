@@ -33,11 +33,308 @@ using System.Reactive.Linq;
 using DynamicData.Operators;
 using System.Reactive.Concurrency;
 using Avalonia.Controls.Primitives;
+using MsBox.Avalonia.Dto;
+using MsBox.Avalonia.Models;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DesktopClient.ViewModels
 {
     public partial class ComponentsPageViewModel : RootNavigatorViewModel, INavParamInterpreter
     {
+        #region Tab navigation
+        partial void OnSelectedTabChanged(int value)
+        {
+            Evaluate_AddTabVisibilty();
+        }
+
+        public void Evaluate_AddTabVisibilty()
+        {
+            Evaluate_Add_IsComponentsTabEnabled();
+            Evaluate_Add_IsAddTabEnabled();
+            Evaluate_Add_IsPreviewTabEnabled();
+        }
+
+        [ObservableProperty]
+        private bool _add_IsComponentsTabEnabled;
+
+        private void Evaluate_Add_IsComponentsTabEnabled()
+        {
+            bool isVisible = false;
+            if(SelectedTab == 0)
+            {
+                isVisible = true;
+            }
+            else if(SelectedTab == 1)
+            {
+                isVisible = !WasAddFormChanged();
+            }
+            else if(SelectedTab == 2)
+            {
+                isVisible = true; // TODO: implement function to check wheter previre.modify was changed.
+            }
+            else
+            {
+                isVisible = true;
+            }
+            Add_IsComponentsTabEnabled = isVisible;
+        }
+        
+        [ObservableProperty]
+        private bool _add_IsAddTabEnabled;
+
+        private void Evaluate_Add_IsAddTabEnabled()
+        {
+            bool isVisible = false;
+            if (SelectedTab == 0)
+            {
+                isVisible = true;
+            }
+            else if (SelectedTab == 1)
+            {
+                isVisible = true;
+            }
+            else if (SelectedTab == 2)
+            {
+                isVisible = true; // TODO: implement function to check wheter previre.modify was changed.
+            }
+            else
+            {
+                isVisible = true;
+            }
+            Add_IsAddTabEnabled = isVisible;
+        }
+
+        [ObservableProperty]
+        private bool _add_IsPreviewTabEnabled;
+
+        private void Evaluate_Add_IsPreviewTabEnabled()
+        {
+            bool isVisible = false;
+            if (SelectedTab == 0)
+            {
+                isVisible = false; // TODO: Only if selected component!
+            }
+            else if (SelectedTab == 1)
+            {
+                isVisible = false;  // Components was not added so why should it be visible?
+            }
+            else if (SelectedTab == 2)
+            {
+                isVisible = true;
+            }
+            else
+            {
+                isVisible = true;
+            }
+            Add_IsPreviewTabEnabled = isVisible;
+        }
+
+        public async Task NavigateTab(ComponentTab tab)
+        {
+            switch (tab)
+            {
+                case ComponentTab.Components:
+                    if (SelectedTab == 0) break;    // User is on this Tab so do not change anything.
+                    else
+                    {
+                        if(SelectedTab == 1)
+                        {
+                            bool wasChanged = WasAddFormChanged();
+
+                            if (wasChanged == true)
+                            {
+                                string result = await MsBoxService.DisplayMessageBox("It looks like you have unsaved changes. If you cancel this opertaion these changes will be lost. Do you want to proceed?", Icon.Warning);
+
+                                if (result == "Yes")
+                                {
+                                    // Clear changes and navigate to 'Components' tab.
+                                    Add_ClearComponent();
+                                    SelectedTab = 0;
+                                }
+                                else
+                                {
+                                    // Stay where you are.
+                                }
+                            }
+                            else
+                            {
+                                SelectedTab = 0;
+                            }
+                        }
+                        else if(SelectedTab == 2)
+                        {
+                            SelectedTab = 0;
+                        }
+                        else if (SelectedTab == 3)
+                        {
+                            SelectedTab = 0;
+                        }
+                    }
+                    break;
+                case ComponentTab.Add:
+                    SelectedTab = 1;
+                    break;
+                case ComponentTab.Preview:
+                    PrepareForPreview();
+                    SelectedTab = 2;
+                    break;
+                case ComponentTab.Edit:
+                    Modify_ClearDataToDefault();
+                    SelectedTab = 2;
+                    break;
+                default:
+                    SelectedTab = 0;
+                    break;
+            }
+
+        }
+        #endregion
+        #region Add tab
+        #region Main fields section
+        #region Name field
+        [RelayCommand]
+        public void AddTab_ClearName()
+        {
+            _hasUserInteractedWithName = false;
+            Add_ComponentName = null;
+        }
+
+        [RelayCommand(CanExecute = nameof(AddTab_CanCopyNameClipboard))]
+        public void AddTab_CopyNameClipboard()
+        {
+            ClipboardManager.SetText(Add_ComponentName);
+        }
+
+        public bool AddTab_CanCopyNameClipboard()
+        {
+            if (Add_ComponentName != null && Add_ComponentName.Length > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        #endregion
+        #region Manufacturer field
+        [RelayCommand]
+        public void AddTab_ClearManufacturer()
+        {
+            _hasUserInteractedWithManufacturer = false;
+            Add_Manufacturer = null;
+        }
+
+        [RelayCommand(CanExecute = nameof(AddTab_CanCopyManufacturerClipboard))]
+        public void AddTab_CopyManufacturerClipboard()
+        {
+            ClipboardManager.SetText(Add_Manufacturer);
+        }
+
+        public bool AddTab_CanCopyManufacturerClipboard()
+        {
+            if (Add_Manufacturer != null && Add_Manufacturer.Length > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        #endregion
+        #region Category field
+        [RelayCommand]
+        public void AddTab_ClearCategory()
+        {
+            _hasUserInteractedWithCategory = false;
+            Add_Category = null;
+        }
+
+        [RelayCommand(CanExecute = nameof(AddTab_CanCopyCategoryClipboard))]
+        public void AddTab_CopyCategoryClipboard()
+        {
+            ClipboardManager.SetText(Add_Category as string);
+        }
+
+        public bool AddTab_CanCopyCategoryClipboard()
+        {
+            if (Add_Category != null)
+            {
+                return true;
+            }
+            return false;
+        }
+        #endregion
+        #region Datasheet
+        [RelayCommand]
+        public void AddTab_DatasheetName()
+        {
+            Add_DatasheetLink = null;
+        }
+
+        [RelayCommand(CanExecute = nameof(AddTab_CanCopyDatasheetClipboard))]
+        public void AddTab_CopyDatasheetClipboard()
+        {
+            ClipboardManager.SetText(Add_DatasheetLink);
+        }
+
+        public bool AddTab_CanCopyDatasheetClipboard()
+        {
+            if (Add_DatasheetLink != null && Add_DatasheetLink.Length > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        #endregion
+        #endregion
+        #region Main buttons section
+        private bool WasAddFormChanged()
+        {
+            bool nameChanged = Add_ComponentName != null && Add_ComponentName != string.Empty;
+            bool manufacturerChanged = Add_Manufacturer != null && Add_Manufacturer != string.Empty;
+            bool categoryChanged = Add_Category != null;
+            bool datasheetChanged = Add_DatasheetLink != null && Add_DatasheetLink != string.Empty;
+            //bool imageChanged = CurrentAddPredefinedImage != ?; // TODO: Think about that.
+            bool aboutChanged = Add_ShortDescription != null && Add_ShortDescription != string.Empty;
+            bool descriptionChanged = Add_FullDescription != null && Add_FullDescription != string.Empty;
+
+            bool ifAny = (nameChanged || manufacturerChanged || categoryChanged || datasheetChanged || aboutChanged || descriptionChanged);
+            return ifAny;
+        }
+        [RelayCommand]
+        public async Task Add_Cancel()
+        {
+            /*  User can 'Cancel' the operation everytime and app should navigate him to 'Components' tab.
+             *  If User applied any changes to 'Add' tab 'Form' then he should be warned with 'MessageBox'
+             */
+            await NavigateTab(ComponentTab.Components);
+        }
+        #endregion
+        #region About section
+        [RelayCommand]
+        public void AddTab_DownloadAbout()
+        {
+            // TODO: Implement!
+        }
+
+        [RelayCommand]
+        public void AddTab_ClearAbout()
+        {
+            _hasUserInteractedWithDescription = false;
+            Add_ShortDescription = null;
+        }
+        #endregion
+        #region Description section
+        [RelayCommand]
+        public void AddTab_DownloadDescription()
+        {
+            // TODO: Implement!
+        }
+
+        [RelayCommand]
+        public void AddTab_ClearDescription()
+        {
+            Add_FullDescription = null;
+        }
+        #endregion
+        #endregion
+
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(FirstPageCommand))]
         [NotifyCanExecuteChangedFor(nameof(LastPageCommand))]
@@ -153,6 +450,7 @@ namespace DesktopClient.ViewModels
         private void SelectPredefinedImages()
         {
             // default avares://DesktopClient/Assets/DefaultComponentImage.png
+            
             if (SelectedPredefinedImage == null)
             {
                 // No item so do nothing
@@ -161,6 +459,7 @@ namespace DesktopClient.ViewModels
             {
                 CurrentAddPredefinedImage = SelectedPredefinedImage.Image;
                 IsSelectingPredefinedImagePopupOpen = false;
+                SelectedPredefinedImage = null;
             }
         }
 
@@ -205,6 +504,7 @@ namespace DesktopClient.ViewModels
         private void ClosePredefinedImages()
         {
             IsSelectingPredefinedImagePopupOpen = false;
+            SelectedPredefinedImage = null;
         }
 
         [ObservableProperty]
@@ -257,10 +557,11 @@ namespace DesktopClient.ViewModels
             if(e.PropertyName == "HasErrors" || e.PropertyName == nameof(Add_ShortDescription) || e.PropertyName == nameof(Add_Category) ||
                e.PropertyName == nameof(Add_ComponentName) || e.PropertyName == nameof(Add_Manufacturer))
             {
-                if (_hasUserInteractedWithCategory == false ||
-                    _hasUserInteractedWithDescription == false ||
-                    _hasUserInteractedWithManufacturer == false ||
-                    _hasUserInteractedWithName == false)
+                if (_hasUserInteractedWithCategory == false || Add_Category == null ||
+                    _hasUserInteractedWithDescription == false || Add_ShortDescription == null || Add_ShortDescription == string.Empty ||
+                    _hasUserInteractedWithManufacturer == false || Add_Manufacturer == null || Add_Manufacturer == string.Empty ||
+                    _hasUserInteractedWithName == false || Add_ComponentName == null || Add_ComponentName == string.Empty
+                    )
                 {
                     Add_CanAdd = false;
                 }
@@ -268,12 +569,14 @@ namespace DesktopClient.ViewModels
                 {
                     Add_CanAdd = !HasErrors;
                 }
+                Evaluate_AddTabVisibilty();
             }
         }
 
         [ObservableProperty]
         //[NotifyDataErrorInfo]
         [Required(ErrorMessage = "Name field cannot be empty")]
+        [NotifyCanExecuteChangedFor(nameof(AddTab_CopyNameClipboardCommand))]
         private string _add_ComponentName = string.Empty;
 
         partial void OnAdd_ComponentNameChanged(string? oldValue, string newValue)
@@ -287,6 +590,7 @@ namespace DesktopClient.ViewModels
 
         [ObservableProperty]
         //[NotifyDataErrorInfo]
+        [NotifyCanExecuteChangedFor(nameof(AddTab_CopyManufacturerClipboardCommand))]
         [Required(ErrorMessage = "Manufacturer fiend cannot be empty")]
         private string _add_Manufacturer;
 
@@ -315,6 +619,7 @@ namespace DesktopClient.ViewModels
 
         [ObservableProperty]
         //[NotifyDataErrorInfo]
+        [NotifyCanExecuteChangedFor(nameof(AddTab_CopyCategoryClipboardCommand))]
         [Required(ErrorMessage = "You have to select category")]
         private object _add_Category;
 
@@ -331,6 +636,7 @@ namespace DesktopClient.ViewModels
         private string _add_FullDescription;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(AddTab_CopyDatasheetClipboardCommand))]
         //[NotifyDataErrorInfo]
         [CustomValidation(typeof(ComponentsPageViewModel), nameof(ValidateDatasheetLink), ErrorMessage = "Link is invalid")]
         private string _add_DatasheetLink;
@@ -366,13 +672,13 @@ namespace DesktopClient.ViewModels
         [RelayCommand]
         private void GoToPreview()
         {
-            SelectedTab = 2;
+            NavigateTab(ComponentTab.Preview);
         }
 
         [RelayCommand]
         private void GoToAddNew()
         {
-            SelectedTab = 1;
+            NavigateTab(ComponentTab.Add);
         }
 
         public static ValidationResult ValidateDatasheetLink(string name, ValidationContext context)
@@ -431,8 +737,7 @@ namespace DesktopClient.ViewModels
         {
             if (DatabaseStore.ComponentStore.Components.FirstOrDefault(x => x.Name == Add_ComponentName) != null)
             {
-                var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Component with that name already exists!", ButtonEnum.YesNo);
-                ButtonResult buttonResult = await box.ShowAsync();
+                string buttonResult = await MsBoxService.DisplayMessageBox("Component with that name already exists!", Icon.Error);
                 return;
             }
             // TODO: implement
@@ -445,31 +750,32 @@ namespace DesktopClient.ViewModels
                 Category cat = DatabaseStore.CategorieStore.Categories.FirstOrDefault(x=>x.Name == categoryName);
 
                 string datasheet = Add_DatasheetLink == null ? string.Empty : Add_DatasheetLink;
+                string longDesc = Add_FullDescription == null ? string.Empty : Add_FullDescription;
 
                 Component newComponent = new Component(id: 0, cat.ID, category: cat, name: Add_ComponentName, manufacturer: Add_Manufacturer, shortDescription: Add_ShortDescription,
-                    longDescription: Add_FullDescription, datasheetLink: datasheet, byteImage: ImageConverterUtility.BitmapToBytes(CurrentAddPredefinedImage));
+                    longDescription: longDesc, datasheetLink: datasheet, byteImage: ImageConverterUtility.BitmapToBytes(CurrentAddPredefinedImage));
 
                 bool result = await DatabaseStore.ComponentStore.InsertNewComponent(newComponent);
 
                 if(result == true)
                 {
-                    var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Component added successfully", ButtonEnum.Ok);
-                    ButtonResult buttonResult = await box.ShowAsync();
+                    string dialogResult = await MsBoxService.DisplayMessageBox("Components added successfully! Do you want to add another component?", Icon.Question);
+
                     Add_ClearComponent();
-                    SelectedTab = 0;
+                    if (dialogResult == "No")
+                    {
+                        NavigateTab(ComponentTab.Components);
+                    }
                 }
                 else
                 {
-                    var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Component couldn't be added", ButtonEnum.Ok);
-                    ButtonResult buttonResult = await box.ShowAsync();
+                    string dialogResult = await MsBoxService.DisplayMessageBox("There was an error while adding component. Try again or contact administrator!", Icon.Error);
                 }
             }
             catch(Exception exception)
             {
 
             }
-
-            Add_CanAdd = true;
         }
 
         #endregion
@@ -567,7 +873,7 @@ namespace DesktopClient.ViewModels
         [RelayCommand]
         public void NavigateToCollection()
         {
-            SelectedTab = 0;
+            NavigateTab(ComponentTab.Components);
         }
 
         [RelayCommand]
@@ -591,34 +897,6 @@ namespace DesktopClient.ViewModels
         #endregion
         #endregion
         #region Observable properties methods
-        partial void OnSelectedTabChanged(int value)
-        {
-            /*
-             * 0 - Collection
-             * 1 - Add 
-             * 2 - Preview
-             * 3 - Modify
-             */
-            //string destinationTab = value.Header.ToString();
-            if (value == 0)
-            {
-
-            }
-            else if (value == 1)
-            {
-
-            }
-            else if (value == 2)
-            {
-                // We need to lead newest purchases and projects for selected component
-                PrepareForPreview();
-            }
-            else if (value == 3)
-            {
-                Modify_ClearDataToDefault();
-            }
-            Console.WriteLine(value.ToString()); 
-        }
 
         [RelayCommand]
         private void Preview_CopyToClipboard()
@@ -774,7 +1052,7 @@ namespace DesktopClient.ViewModels
         }
 
         #region Constructor
-        public ComponentsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore) : base(defaultRootPageViewModel, databaseStore)
+        public ComponentsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService) : base(defaultRootPageViewModel, databaseStore, msgBoxService)
         {
             _componentsService = new ComponentHolderService(DatabaseStore.ComponentStore);
 
@@ -885,6 +1163,8 @@ namespace DesktopClient.ViewModels
                 PredefinedImages.Add(new ImageContainer(image));
             }
             CurrentAddPredefinedImage = PredefinedImages[0].Image;
+
+            Evaluate_AddTabVisibilty();
         }
         #endregion
 
@@ -956,7 +1236,7 @@ namespace DesktopClient.ViewModels
             switch (navigationParameter.Operation)
             {
                 case NavOperation.Add:
-                    SelectedTab = 1;
+                    NavigateTab(ComponentTab.Add);
                     break;
                 case NavOperation.Preview:
                     break;

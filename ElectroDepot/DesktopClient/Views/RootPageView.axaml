@@ -4,6 +4,7 @@
              xmlns:vm="using:DesktopClient.ViewModels"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:navigation="using:DesktopClient.Navigation"
+             xmlns:UIElements="using:DesktopClient.UserInterfaceElements"
              xmlns:controls="clr-namespace:DesktopClient.Templates"
              mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="720"
              x:Class="DesktopClient.Views.RootPageView"
@@ -27,9 +28,73 @@
       </Grid.Background>
       <Grid ColumnDefinitions="auto 80*">
 
-        <Grid RowDefinitions="auto * auto" Grid.Column="0" Margin="10 0 5 10">
-          <!-- Profile -->
-          <Button Classes="default" Margin="0 0 0 5">
+        <Grid RowDefinitions="auto * * auto" Grid.Column="0" Margin="10 0 5 10">
+          <!-- Navigtaion buttons -->
+          <StackPanel Spacing="5"
+                Grid.Row="1"
+                VerticalAlignment="Top">
+
+            <Button Classes="default" HorizontalAlignment="Stretch" Command="{Binding NavigatePageCommand}" CommandParameter="Home">
+              <StackPanel Orientation="Horizontal">
+                <Label Classes="icon" Content="&#xE2C2;"></Label>
+                <Label Classes="icontext" Content="Home"></Label>
+              </StackPanel>
+            </Button>
+
+            <Button Classes="default" HorizontalAlignment="Stretch" Command="{Binding NavigatePageCommand}" CommandParameter="Components">
+              <StackPanel Orientation="Horizontal">
+                <Label Classes="icon" Content="&#xE610;"></Label>
+                <Label Classes="icontext" Content="Components"></Label>
+              </StackPanel>
+            </Button>
+
+            <Button Classes="default" HorizontalAlignment="Stretch" Command="{Binding NavigatePageCommand}" CommandParameter="Projects">
+              <StackPanel Orientation="Horizontal">
+                <Label Classes="icon" Content="&#xEDA0;"></Label>
+                <Label Classes="icontext" Content="Projects"></Label>
+              </StackPanel>
+            </Button>
+
+            <Button Classes="default" HorizontalAlignment="Stretch" Command="{Binding NavigatePageCommand}" CommandParameter="Purchases">
+              <StackPanel Orientation="Horizontal">
+                <Label Classes="icon" Content="&#xE41E;"></Label>
+                <Label Classes="icontext" Content="Purchases"></Label>
+              </StackPanel>
+            </Button>
+
+            <Button Classes="default" HorizontalAlignment="Stretch" Command="{Binding NavigatePageCommand}" CommandParameter="Tracking">
+              <StackPanel Orientation="Horizontal">
+                <Label Classes="icon" Content="&#xECA4;"></Label>
+                <Label Classes="icontext" Content="Tracking"></Label>
+              </StackPanel>
+            </Button>
+          </StackPanel>
+
+          <Expander Grid.Row="2" Margin="0 0 0 5" Padding="5 5 5 5" ExpandDirection="Up" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            <Expander.Header>
+              <StackPanel Orientation="Horizontal">
+                <Label Classes="icon" Content="&#xE4C2;"></Label>
+                <Label Classes="icontext" Content="Username"></Label>
+              </StackPanel>
+            </Expander.Header>
+            <StackPanel Spacing="5">
+              <Button Classes="default" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal">
+                  <Label Classes="icon" Content="&#xE4CC;"></Label>
+                  <Label Classes="icontext" Content="User settings"></Label>
+                </StackPanel>
+              </Button>
+              <Button Classes="default" Command="{Binding NavigateCommand}" CommandParameter="Login" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal">
+                  <Label Classes="icon" Content="&#xE42A;"></Label>
+                  <Label Classes="icontext" Content="Sign out"></Label>
+                </StackPanel>
+              </Button>
+            </StackPanel>
+          </Expander>
+          
+          <!-- Profile --><!--
+          <Button Classes="default" Margin="0 0 0 5" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
             <StackPanel Orientation="Horizontal" Width="200">
               <Label Classes="icon" Content="&#xE4C2;"></Label>
               <Label Classes="icontext" Content="Username"></Label>
@@ -53,61 +118,18 @@
                 </StackPanel>
               </Flyout>
             </Button.Flyout>
-          </Button>
+          </Button>-->
 
-          <!-- Navigtaion buttons -->
-          <StackPanel Spacing="5"
-                Grid.Row="1"
-                VerticalAlignment="Top">
-
-            <Button Classes="default" Command="{Binding NavigatePageCommand}" CommandParameter="Home">
-              <StackPanel Orientation="Horizontal" Width="200">
-                <Label Classes="icon" Content="&#xE2C2;"></Label>
-                <Label Classes="icontext" Content="Home"></Label>
-              </StackPanel>
-            </Button>
-
-            <Button Classes="default" Command="{Binding NavigatePageCommand}" CommandParameter="Components">
-              <StackPanel Orientation="Horizontal" Width="200">
-                <Label Classes="icon" Content="&#xE610;"></Label>
-                <Label Classes="icontext" Content="Components"></Label>
-              </StackPanel>
-            </Button>
-
-            <Button Classes="default" Command="{Binding NavigatePageCommand}" CommandParameter="Projects">
-              <StackPanel Orientation="Horizontal" Width="200">
-                <Label Classes="icon" Content="&#xEDA0;"></Label>
-                <Label Classes="icontext" Content="Projects"></Label>
-              </StackPanel>
-            </Button>
-
-            <Button Classes="default" Command="{Binding NavigatePageCommand}" CommandParameter="Purchases">
-              <StackPanel Orientation="Horizontal" Width="200">
-                <Label Classes="icon" Content="&#xE41E;"></Label>
-                <Label Classes="icontext" Content="Purchases"></Label>
-              </StackPanel>
-            </Button>
-
-            <Button Classes="default" Command="{Binding NavigatePageCommand}" CommandParameter="Tracking">
-              <StackPanel Orientation="Horizontal" Width="200">
-                <Label Classes="icon" Content="&#xECA4;"></Label>
-                <Label Classes="icontext" Content="Tracking"></Label>
-              </StackPanel>
-            </Button>
-          </StackPanel>
-
-          <!-- Profile -->
-          <StackPanel Orientation="Horizontal" Grid.Row="2" Spacing="5">
-            <Button Classes="default">
-              <StackPanel Orientation="Horizontal">
-                <Label Classes="icon" Content="&#xE3DA;"></Label>
-              </StackPanel>
-            </Button>
+          <!-- Utility buttons -->
+          <StackPanel Orientation="Horizontal" Grid.Row="3" Spacing="5">
             <Button Classes="default">
               <StackPanel Orientation="Horizontal">
                 <Label Classes="icon" Content="&#xE270;"></Label>
               </StackPanel>
             </Button>
+            <UIElements:NightModeButton></UIElements:NightModeButton>
+            <UIElements:HelpButton></UIElements:HelpButton>
+            <UIElements:ReportBugButton></UIElements:ReportBugButton>
           </StackPanel>
         </Grid>
 

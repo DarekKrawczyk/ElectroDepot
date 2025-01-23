@@ -56,7 +56,7 @@ For now top priority is to write usable desktop application. Next steps will inv
   - **Components tab**  
       ![Components/Components](Assets/Components_Panel_Components_Tab_Refactored.gif) 
   - **Add tab**  
-      ![Components/Components](Assets/In_Progress_Image.png)  
+      ![Components/Components](Assets/Components_Panel_Add_Tab_Refactored.gif)  
   - **Preview tab**  
       ![Components/Components](Assets/In_Progress_Image.png)  
 

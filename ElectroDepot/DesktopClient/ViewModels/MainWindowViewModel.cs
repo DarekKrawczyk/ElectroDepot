@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopClient.Navigation;
+using DesktopClient.Services;
 using ElectroDepotClassLibrary.Stores;
 using System;
 using System.Collections.ObjectModel;
@@ -26,7 +27,7 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        public MainWindowViewModel(WindowNavigatorViewModel entryViewModel, DatabaseStore databaseStore) : base(databaseStore)
+        public MainWindowViewModel(WindowNavigatorViewModel entryViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService) : base(databaseStore, msgBoxService)
         {
             _windowViewModel = entryViewModel;
         }
@@ -37,15 +38,15 @@ namespace DesktopClient.ViewModels
             WindowNavigatorViewModel destinationViewModel;
             if (destination == "Login")
             {
-                destinationViewModel = new LoginPageViewModel(this, DatabaseStore);
+                destinationViewModel = new LoginPageViewModel(this, DatabaseStore, MsBoxService);
             }
             else if (destination == "Root")
             {
-                destinationViewModel = new RootPageViewModel(this, DatabaseStore);
+                destinationViewModel = new RootPageViewModel(this, DatabaseStore, MsBoxService);
             }
             else if (destination == "Register")
             {
-                destinationViewModel = new RegistrationPageViewModel(this, DatabaseStore);
+                destinationViewModel = new RegistrationPageViewModel(this, DatabaseStore, MsBoxService);
             }
             else
             {
