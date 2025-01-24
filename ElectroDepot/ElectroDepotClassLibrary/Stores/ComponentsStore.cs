@@ -1,6 +1,7 @@
 ﻿using ElectroDepotClassLibrary.Containers;
 using ElectroDepotClassLibrary.DataProviders;
 using ElectroDepotClassLibrary.Models;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -37,10 +38,24 @@ namespace ElectroDepotClassLibrary.Stores
             // TODO: OwnsComponent model requires implementation of User model just like the rest of Models....
         }
 
+        public async Task<Component> UpdateComponent(Component component)
+        {
+            Component result = await ComponentDP.UpdateComponent(component);
+            if(result != null)
+            {
+                int index = _components.FindIndex(item => item.ID == component.ID);
+
+                if (index != -1)
+                {
+                    _components[index].ReplaceWith(result);
+                }
+                ComponentsLoaded?.Invoke();
+            }
+            return result;
+        }
+
         public async Task<bool> InsertNewComponent(Component component)
         {
-
-
             Component componentFromDB = await ComponentDP.CreateComponent(component);
 
             if(componentFromDB == null)

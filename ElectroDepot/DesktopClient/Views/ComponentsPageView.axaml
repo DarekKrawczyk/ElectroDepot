@@ -12,6 +12,7 @@
 
   <UserControl.Styles>
     <StyleInclude Source="avares://DesktopClient/Styles/ButtonDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://DesktopClient/Styles/TextBlockStyle.axaml"/>
     <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
     <StyleInclude Source="avares://DesktopClient/Styles/LabelDefaultOverrideStyle.axaml"/>
     <StyleInclude Source="avares://DesktopClient/Styles/TextBoxDefaultOverrideStyle.axaml"/>
@@ -104,6 +105,7 @@
                         Background="White"
                         Grid.Row="1"
                         GridLinesVisibility="All"
+                        SelectedItem="{Binding Components_SelectedComponent}"
                         BorderThickness="1"
                         Margin="5 0 5 5"
                         CornerRadius="5"
@@ -132,12 +134,12 @@
                   <Style Selector="DataGridRow">
                     <Setter Property="ContextMenu">
                       <ContextMenu>
-                        <MenuItem Header="Preview">
+                        <MenuItem Header="Preview" x:DataType="cont:DetailedComponentContainer" Command="{Binding Components_EnterComponentPreviewCommand}">
                           <MenuItem.Icon>
                             <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE32E;"></Label>
                           </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Edit">
+                        <MenuItem Header="Edit" x:DataType="cont:DetailedComponentContainer" Command="{Binding Components_EnterComponentEditCommand}">
                           <MenuItem.Icon>
                             <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE3AE;"></Label>
                           </MenuItem.Icon>
@@ -203,7 +205,7 @@
           </Border>
         </TabItem>
         <TabItem Header="Add" IsEnabled="{Binding Add_IsAddTabEnabled}">
-          <Border BorderBrush="Black" Padding="0" Margin="-12 0 -12 0" Background="Transparent">
+          <Border Margin="-12 0 -12 0">
             <Grid ColumnDefinitions="65* 35*">
               <Border BorderBrush="Black" CornerRadius="5" BorderThickness="1" Background="{DynamicResource SectionGradient}">
                 <Grid RowDefinitions="auto auto * auto">
@@ -329,225 +331,367 @@
           </Border>
         </TabItem>
         <TabItem Header="Preview" IsEnabled="{Binding Add_IsPreviewTabEnabled}">
-          <Grid RowDefinitions="*" ColumnDefinitions="auto, auto, *">
-            <!-- Left section -->
-            <Grid Grid.Column="0" RowDefinitions="auto, *, auto">
-              <!-- Component basic data -->
-              <Grid Grid.Row="0" ColumnDefinitions="auto, auto, 60*">
-                <!-- Image + Find/Upload buttons-->
-                <Grid Grid.Column="0">
-                  <StackPanel Spacing="10">
-                    <Border BorderBrush="Black" BorderThickness="1">
-                      <Image Source="{Binding SelectedComponent.Image}"
-                             Height="173"
-                             Margin="0"></Image>
+          <Border Margin="-12 0 -12 0" Background="Transparent">
+            <Grid ColumnDefinitions="65* 35*">
+              <!-- Left section -->
+              <Border Grid.Column="0" BorderBrush="Black" CornerRadius="5" BorderThickness="1" Background="{DynamicResource SectionGradient}" Margin="0 0 2 0">
+                <Grid RowDefinitions="auto auto * auto">
+
+                  <!-- Main fields section -->
+                  <Grid Grid.Row="0" ColumnDefinitions="auto *">
+
+                    <!-- Image section-->
+                    <Grid Grid.Column="0" Margin="5">
+                      <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}">
+                        <Grid Width="256" Height="256">
+                          <Grid.Background>
+                            <ImageBrush AlignmentY="Center"
+                                        AlignmentX="Center"
+                                        Stretch="UniformToFill"
+                                        Source="{Binding Preview_Image}"></ImageBrush>
+                          </Grid.Background>
+                          <Border Height="256" Width="256">
+                            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0" IsVisible="False">
+                              <!--IsVisible="{Binding Preview_IsEditing}">-->
+                              <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_ImageEditing}">
+                                <UIElements:UploadContentButton Flyout="{StaticResource SharedMenuFlyout}"></UIElements:UploadContentButton>
+                                <UIElements:RevertButton Command="{Binding Preview_ClearImageCommand}"></UIElements:RevertButton>
+                                <UIElements:OkButton Command="{Binding Preview_ImageEditingSaveChangesCommand}"></UIElements:OkButton>
+                              </StackPanel>
+                              <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_ImageNotEditing}">
+                                <UIElements:EditButton Command="{Binding Preview_ImageEditingStartCommand}"></UIElements:EditButton>
+                              </StackPanel>
+                            </StackPanel>
+                          </Border>
+                        </Grid>
+                      </Border>
+                    </Grid>
+
+                    <!-- Fields section-->
+                    <Grid Grid.Column="1" Margin="0 5 5 5">
+                      <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}">
+                        <Grid RowDefinitions="auto auto auto auto" ColumnDefinitions="auto *">
+                          <Label Classes="DefaultLabelRightNoMin" FontWeight="Bold" Grid.Row="0" Grid.Column="0">Name:</Label>
+                          <Label Classes="DefaultLabelRightNoMin" FontWeight="Bold" Grid.Row="1" Grid.Column="0">Manufacturer:</Label>
+                          <Label Classes="DefaultLabelRightNoMin" FontWeight="Bold" Grid.Row="2" Grid.Column="0">Category:</Label>
+                          <Label Classes="DefaultLabelRightNoMin" FontWeight="Bold" Grid.Row="3" Grid.Column="0">Datasheet:</Label>
+
+                          <!-- Name field preview/edit -->
+                          <TextBlock Classes="DefaultTextBlock" x:Name="PreviewNameTextBlock" Grid.Row="0" Grid.Column="1" Text="{Binding Preview_NameField}" IsVisible="{Binding Preview_NameNotEditing}"></TextBlock>
+                          <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="* auto" MinHeight="44">
+                            <TextBox Classes="DefaultTextBoxStretch" Grid.Column="0" Margin="5 5 0 0" Text="{Binding Preview_NameField}" HorizontalAlignment="Stretch" IsVisible="{Binding Preview_NameEditing}"></TextBox>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0" IsVisible="{Binding Preview_IsEditing}">
+                              <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_NameEditing}">
+                                <UIElements:RevertButton Command="{Binding Preview_NameClearCommand}"></UIElements:RevertButton>
+                                <UIElements:OkButton Command="{Binding Preview_NameEditingSaveChangesCommand}"></UIElements:OkButton>
+                              </StackPanel>
+                              <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_NameNotEditing}">
+                                <UIElements:EditButton Command="{Binding Preview_NameEditingStartCommand}"></UIElements:EditButton>
+                              </StackPanel>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0" IsVisible="{Binding Preview_IsPreviewing}">
+                              <UIElements:CopyToClipboardButton Command="{Binding Preview_NameCopyCommand}"></UIElements:CopyToClipboardButton>
+                            </StackPanel>
+                          </Grid>
+
+                          <!-- Manufacturer field preview/edit -->
+                          <TextBlock Classes="DefaultTextBlock" Grid.Row="1" Grid.Column="1" Text="{Binding Preview_ManufacturerField}" IsVisible="{Binding Preview_ManufacturerNotEditing}"></TextBlock>
+                          <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="* auto" MinHeight="44">
+                            <TextBox Classes="DefaultTextBoxStretch" Grid.Column="0" Margin="5 5 0 0" Text="{Binding Preview_ManufacturerField}" HorizontalAlignment="Stretch" IsVisible="{Binding Preview_ManufacturerEditing}"></TextBox>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0" IsVisible="{Binding Preview_IsEditing}">
+                              <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_ManufacturerEditing}">
+                                <UIElements:RevertButton Command="{Binding Preview_ManufacturerClearCommand}"></UIElements:RevertButton>
+                                <UIElements:OkButton Command="{Binding Preview_ManufacturerEditingSaveChangesCommand}"></UIElements:OkButton>
+                              </StackPanel>
+                              <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_ManufacturerNotEditing}">
+                                <UIElements:EditButton Command="{Binding Preview_ManufacturerEditingStartCommand}"></UIElements:EditButton>
+                              </StackPanel>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0" IsVisible="{Binding Preview_IsPreviewing}">
+                              <UIElements:CopyToClipboardButton Command="{Binding Preview_ManufacturerCopyCommand}"></UIElements:CopyToClipboardButton>
+                            </StackPanel>
+                          </Grid>
+
+                          <!-- Category field preview/edit -->
+                          <TextBlock Classes="DefaultTextBlock" Grid.Row="2" Grid.Column="1" Text="{Binding Preview_CategoryField}" IsVisible="{Binding Preview_CategoryNotEditing}"></TextBlock>
+                          <Grid Grid.Row="2" Grid.Column="1" ColumnDefinitions="* auto" MinHeight="44">
+                            <ComboBox Classes="DefaultComboBoxStretch" Grid.Column="0" Margin="5 5 0 0" ItemsSource="{Binding Categories}" SelectedItem="{Binding Preview_CategoryComboBoxItem}" HorizontalAlignment="Stretch" IsVisible="{Binding Preview_CategoryEditing}"></ComboBox>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0" IsVisible="False">
+                              <!--IsVisible="{Binding Preview_IsEditing}">-->
+                              <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_CategoryEditing}">
+                                <UIElements:RevertButton Command="{Binding Preview_CategoryClearCommand}"></UIElements:RevertButton>
+                                <UIElements:OkButton Command="{Binding Preview_CategoryEditingSaveChangesCommand}"></UIElements:OkButton>
+                              </StackPanel>
+                              <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_CategoryNotEditing}">
+                                <UIElements:EditButton Command="{Binding Preview_CategoryEditingStartCommand}"></UIElements:EditButton>
+                              </StackPanel>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0" IsVisible="{Binding Preview_IsPreviewing}">
+                              <UIElements:CopyToClipboardButton Command="{Binding Preview_CategoryCopyCommand}"></UIElements:CopyToClipboardButton>
+                            </StackPanel>
+                          </Grid>
+
+                          <!-- Datasheet field preview/edit -->
+                          <TextBlock Classes="DefaultTextBlock" Grid.Row="3" Grid.Column="1" Text="{Binding Preview_DatasheetField}" IsVisible="{Binding Preview_DatasheetNotEditing}"></TextBlock>
+                          <Grid Grid.Row="3" Grid.Column="1" ColumnDefinitions="* auto" MinHeight="44">
+                            <TextBox Classes="DefaultTextBoxStretch" Grid.Column="0" Margin="5 5 0 0" Text="{Binding Preview_DatasheetField}" HorizontalAlignment="Stretch" IsVisible="{Binding Preview_DatasheetEditing}"></TextBox>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0" IsVisible="{Binding Preview_IsEditing}">
+                              <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_DatasheetEditing}">
+                                <UIElements:PDFButton Command="{Binding Preview_DatasheetDisplayCommand}"></UIElements:PDFButton>
+                                <UIElements:RevertButton Command="{Binding Preview_DatasheetRevertCommand}"></UIElements:RevertButton>
+                                <UIElements:DeleteButton Command="{Binding Preview_DatasheetClearCommand}"></UIElements:DeleteButton>
+                                <UIElements:OkButton Command="{Binding Preview_DatasheetEditingSaveChangesCommand}"></UIElements:OkButton>
+                              </StackPanel>
+                              <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_DatasheetNotEditing}">
+                                <UIElements:EditButton Command="{Binding Preview_DatasheetEditingStartCommand}"></UIElements:EditButton>
+                              </StackPanel>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0" IsVisible="{Binding Preview_IsPreviewing}">
+                              <UIElements:PDFButton IsEnabled="{Binding Preview_CanDisplayDatasheet}" Command="{Binding Preview_DatasheetDisplayCommand}"></UIElements:PDFButton>
+                              <UIElements:CopyToClipboardButton Command="{Binding Preview_DatasheetCopyCommand}"></UIElements:CopyToClipboardButton>
+                            </StackPanel>
+                          </Grid>
+                        </Grid>
+                      </Border>
+                    </Grid>
+                  </Grid>
+
+                  <!-- About section -->
+                  <Grid Grid.Row="1">
+                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="5 0 5 5">
+                      <Grid  RowDefinitions="auto auto">
+                        <!-- Label and buttons -->
+                        <Grid ColumnDefinitions="auto *" Margin="5">
+                          <Label Classes="DefaultLabelLeft" FontWeight="Bold" Grid.Column="0" Height="39">About:</Label>
+                          <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="5" HorizontalAlignment="Right" IsVisible="{Binding Preview_IsEditing}">
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_AboutEditing}">
+                              <UIElements:DownloadOnlineContentButton IsEnabled="False"></UIElements:DownloadOnlineContentButton>
+                              <UIElements:RevertButton Command="{Binding Preview_AboutClearCommand}"></UIElements:RevertButton>
+                              <UIElements:OkButton Command="{Binding Preview_AboutEditingSaveChangesCommand}"></UIElements:OkButton>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_AboutNotEditing}">
+                              <UIElements:EditButton Command="{Binding Preview_AboutEditingStartCommand}"></UIElements:EditButton>
+                            </StackPanel>
+                          </StackPanel>
+                          <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_IsPreviewing}">
+                            <UIElements:CopyToClipboardButton Command="{Binding Preview_AboutCopyCommand}"></UIElements:CopyToClipboardButton>
+                          </StackPanel>
+                        </Grid>
+
+                        <!-- Text -->
+                        <TextBlock Classes="DefaultTextBlock" Grid.Row="1" Margin="5 0 5 5" TextWrapping="Wrap" IsVisible="{Binding Preview_AboutNotEditing}" Padding="5" MinHeight="38" Text="{Binding Preview_AboutField}"></TextBlock>
+                        <TextBox Classes="DefaultTextBox" IsVisible="{Binding Preview_AboutEditing}"
+                                 Grid.Row="1" 
+                                 Margin="5 0 5 5" 
+                                 Text="{Binding Preview_AboutField}" 
+                                 Watermark="Enter brief description" 
+                                 TextWrapping="Wrap" 
+                                 AcceptsReturn="True">
+                        </TextBox>
+                      </Grid>
                     </Border>
-                  </StackPanel>
+                  </Grid>
+
+                  <!-- Detailed description section -->
+                  <Grid Grid.Row="2">
+                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="5 0 5 5">
+                      <Grid RowDefinitions="auto *">
+                        <!-- Label and buttons -->
+                        <Grid ColumnDefinitions="auto *" Margin="5">
+                          <Label Classes="DefaultLabelLeft" FontWeight="Bold" Grid.Column="0" Height="39">Description:</Label>
+                          <StackPanel Orientation="Horizontal" Grid.Column="1" Spacing="5" IsVisible="{Binding Preview_IsEditing}" HorizontalAlignment="Right">
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_DescriptionEditing}">
+                              <UIElements:DownloadOnlineContentButton IsEnabled="False"></UIElements:DownloadOnlineContentButton>
+                              <UIElements:RevertButton Command="{Binding Preview_DescriptionRevertCommand}"></UIElements:RevertButton>
+                              <UIElements:DeleteButton Command="{Binding Preview_DescriptionClearCommand}"></UIElements:DeleteButton>
+                              <UIElements:OkButton Command="{Binding Preview_DescriptionEditingSaveChangesCommand}"></UIElements:OkButton>
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_DescriptionNotEditing}">
+                              <UIElements:EditButton Command="{Binding Preview_DescriptionEditingStartCommand}"></UIElements:EditButton>
+                            </StackPanel>
+                          </StackPanel>
+                          <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_IsPreviewing}">
+                            <UIElements:CopyToClipboardButton Command="{Binding Preview_DescriptionCopyCommand}"></UIElements:CopyToClipboardButton>
+                          </StackPanel>
+                        </Grid>
+                        <TextBlock Classes="DefaultTextBlock" Grid.Row="1" Margin="5 0 5 5" IsVisible="{Binding Preview_DescriptionNotEditing}" Padding="5"
+                                   TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Preview_DescriptionField, Mode=TwoWay}"></TextBlock>
+                        <TextBox Grid.Row="1" 
+                                 IsVisible="{Binding Preview_DescriptionEditing}"
+                                 Classes="DefaultTextBox"
+                                 Margin="5 0 5 5"
+                                 TextWrapping="Wrap"
+                                 VerticalContentAlignment="Top"
+                                 AcceptsReturn="True"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 Watermark="Enter description"
+                                 Text="{Binding Preview_DescriptionField, Mode=TwoWay}">
+                        </TextBox>
+                      </Grid>
+                    </Border>
+                  </Grid>
+
+                  <!-- Buttons section -->
+                  <Grid Grid.Row="3">
+                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="5 0 5 5">
+                      <StackPanel Orientation="Horizontal" Spacing="5" Margin="5">
+                        <UIElements:EditWideButton IsVisible="{Binding Preview_IsPreviewing}" Command="{Binding Preview_EditWholeCommand}"></UIElements:EditWideButton>
+                        <UIElements:SaveButton IsVisible="{Binding Preview_IsEditing}" Command="{Binding Preview_SaveWholeCommand}"></UIElements:SaveButton>
+                        <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_IsEditing}">
+                          <UIElements:RevertWideButton Command="{Binding Preview_ClearAllEditingCommand}"></UIElements:RevertWideButton>
+                          <UIElements:CancelButton Command="{Binding Preview_CancelEditingCommand}"></UIElements:CancelButton>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding Preview_IsPreviewing}">
+                          <UIElements:GenerateRaportButton></UIElements:GenerateRaportButton>
+                        </StackPanel>
+                      </StackPanel>
+                    </Border>
+                  </Grid>
                 </Grid>
+              </Border>
+              <!-- Right section -->
+              <Border Grid.Column="1" BorderBrush="Black" CornerRadius="5" BorderThickness="1" Background="{DynamicResource SectionGradient}" Margin="3 0 0 0">
+                <Grid RowDefinitions="65* 35*">
+                  <!-- Purchases/Projects browser -->
+                  <Border Grid.Row="0" BorderBrush="Black" CornerRadius="5" BorderThickness="1" Background="{DynamicResource PltWhiteMilk}" Margin="5 5 5 5">
+                    <TabControl TabStripPlacement="Top">
+                      <!-- Projects  -->
+                      <TabItem Header="Projects">
+                        <Grid Grid.Column="2" RowDefinitions="auto, *">
+                          <DataGrid ItemsSource="{Binding ProjectsForSelected}"
+                                    Grid.Row="1"
+                                    x:Name="ProjectsDataGrid"
+                                    Margin="-5 3 -5 7"
+                                    Background="White"
+                                    AutoGenerateColumns="False"
+                                    IsReadOnly="True"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Stretch"
+                                    GridLinesVisibility="All"
+                                    BorderThickness="1"
+                                    BorderBrush="Gray">
+                            <DataGrid.Columns>
+                              <DataGridTextColumn Header="Project" x:DataType="cont:DetailedItemProjectContainer" Binding="{Binding ProjectName}" Width="*" />
+                              <DataGridTextColumn Header="Amount" x:DataType="cont:DetailedItemProjectContainer" Binding="{Binding UsedInProject}" Width="auto" />
+                            </DataGrid.Columns>
+                            <DataGrid.Styles>
+                              <Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
+                                <Setter Property="IsVisible" Value="false" />
+                              </Style>
+                              <Style Selector="DataGridRow">
+                                <Setter Property="ContextMenu">
+                                  <ContextMenu>
+                                    <MenuItem Header="Preview" x:DataType="cont:DetailedItemProjectContainer" Command="{Binding NavigateToProjectCommand}">
+                                      <MenuItem.Icon>
+                                        <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE32E;"></Label>
+                                      </MenuItem.Icon>
+                                    </MenuItem>
+                                  </ContextMenu>
+                                </Setter>
+                                <Setter Property="ToolTip.Tip" Value="Help" />
+                              </Style>
+                            </DataGrid.Styles>
+                          </DataGrid>
+                        </Grid>
+                      </TabItem>
 
-                <!-- Separator-->
-                <Grid Grid.Column="1">
-                  <Border Width ="1"
-                          Background="{DynamicResource UIMediumGray}"
-                          Margin="10,0"
-                          HorizontalAlignment="Stretch"/>
+                      <!-- Purchases -->
+                      <TabItem Header="Purchases">
+                        <Grid Grid.Column="0" RowDefinitions="auto, *">
+                          <DataGrid ItemsSource="{Binding PurchasesForSelected}"
+                                    Grid.Row="1"
+                                    x:Name="PurchasesDataGrid"
+                                    Margin="-5 3 -5 7"
+                                    Background="White"
+                                    AutoGenerateColumns="False"
+                                    IsReadOnly="True"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Stretch"
+                                    GridLinesVisibility="All"
+                                    BorderThickness="1"
+                                    BorderBrush="Gray">
+                            <DataGrid.Columns>
+                              <DataGridTemplateColumn Header="Supplier">
+                                <DataGridTemplateColumn.CellTemplate>
+                                  <DataTemplate>
+                                    <Image x:DataType="cont:DetailedItemPurchaseContainer" Source="{Binding Supplier.Image}" Width="64" Height="64" Stretch="UniformToFill" Margin="0"/>
+                                  </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                              </DataGridTemplateColumn>
+                              <DataGridTextColumn Header="Date" x:DataType="cont:DetailedItemPurchaseContainer" Binding="{Binding PurchaseDate}" Width="*" />
+                              <DataGridTextColumn Header="Amount" x:DataType="cont:DetailedItemPurchaseContainer" Binding="{Binding BoughtAmount}" Width="auto" />
+                            </DataGrid.Columns>
+                            <DataGrid.Styles>
+                              <Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
+                                <Setter Property="IsVisible" Value="false" />
+                              </Style>
+                              <Style Selector="DataGridRow">
+                                <Setter Property="ContextMenu">
+                                  <ContextMenu>
+                                    <MenuItem Header="Preview" x:DataType="cont:DetailedItemPurchaseContainer" Command="{Binding NavigateToPurchaseCommand}">
+                                      <MenuItem.Icon>
+                                        <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE32E;"></Label>
+                                      </MenuItem.Icon>
+                                    </MenuItem>
+                                  </ContextMenu>
+                                </Setter>
+                                <Setter Property="ToolTip.Tip" Value="Help" />
+                              </Style>
+                            </DataGrid.Styles>
+                          </DataGrid>
+                        </Grid>
+                      </TabItem>
+
+                    </TabControl>
+                  </Border>
+                  
+                  <!-- Suppliers browser -->
+                  <Border Grid.Row="1" BorderBrush="Black" CornerRadius="5" BorderThickness="1" Background="{DynamicResource PltWhiteMilk}" Margin="5 0 5 5">
+                      <Grid RowDefinitions="auto auto *">
+                        <Grid Grid.Row="0" ColumnDefinitions="* *" Margin="15 15 15 5">
+                          <StackPanel Spacing="20" Grid.Column="0" Orientation="Horizontal" >
+                            <StackPanel Orientation="Horizontal">
+                              <Label Classes="icon" Content="&#xE390;" Foreground="Black"></Label>
+                              <Label Classes="icontext" FontSize="28" Content="Suppliers" Foreground="Black"></Label>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                              <Label Classes="icontext" FontSize="18" Foreground="Black" Content="All"></Label>
+                              <Label Classes="icon" FontSize="22" Foreground="Black" Content="&#xE03E;"></Label>
+                            </StackPanel>
+                          </StackPanel>
+                        </Grid>
+
+                        <!-- Separator -->
+                        <Grid Grid.Row="1">
+                          <Border Height="1"
+                                  Background="Black"
+                                  Margin="10 5 15 5"
+                                  HorizontalAlignment="Stretch"/>
+                        </Grid>
+
+                        <ScrollViewer Grid.Row="2" Margin="5">
+                          <ItemsControl x:Name="SuppliersItemsControl"  ItemsSource="{Binding Suppliers}" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <ItemsControl.ItemsPanel>
+                              <ItemsPanelTemplate>
+                                <UniformGrid  x:Name="SuppliersUniformGrid" Columns="4"/>
+                              </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                              <DataTemplate>
+                                <CustomControls:SupplierNodeButton Image="{Binding Supplier.Image}"
+                                                 Command="{Binding SearchForItemCommand}" CommandParameter="{Binding #PreviewNameTextBlock.Text, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                 Margin="10"/>
+                              </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                          </ItemsControl>
+                        </ScrollViewer>
+                      </Grid>
+                  </Border>
                 </Grid>
-
-                <!-- Component Name/Manufacturer/Datasheet/Category labels -->
-                <Grid Grid.Column="2">
-                  <StackPanel>
-                    <!-- First row -->
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                      <!-- Name -->
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Name</Label>
-                        <Label HorizontalAlignment="Left" Content="{Binding SelectedComponent.Name}">Name</Label>
-                      </StackPanel>
-
-                      <!-- Manufacturer -->
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Manufacturer</Label>
-                        <Label HorizontalAlignment="Left" Content="{Binding SelectedComponent.Manufacturer}">Manufacturer</Label>
-                      </StackPanel>
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Category</Label>
-                        <Label Content="{Binding SelectedComponent.Category.Name}" HorizontalAlignment="Left">Category</Label>
-                      </StackPanel>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Owned</Label>
-                        <Label HorizontalAlignment="Left" Content="{Binding SelectedComponent.OwnedAmount}">Owned</Label>
-                      </StackPanel>
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Used</Label>
-                        <Label HorizontalAlignment="Left" Content="{Binding SelectedComponent.UsedInProjects}">Used</Label>
-                      </StackPanel>
-                      <StackPanel Orientation="Vertical">
-                        <Label FontWeight="Bold" HorizontalAlignment="Left">Available</Label>
-                        <Label HorizontalAlignment="Left" Content="{Binding SelectedComponent.AvailableAmount}">Available</Label>
-                      </StackPanel>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical">
-                    </StackPanel>
-
-                    <!-- Third row -->
-                    <StackPanel Orientation="Vertical">
-                      <Label FontWeight="Bold" HorizontalAlignment="Left">Datasheet</Label>
-                      <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Button IsEnabled="{Binding Preview_CanPreview}" Command="{Binding Preview_OpenDatasheetLinkCommand}">Preview</Button>
-                        <Button IsEnabled="{Binding Preview_CanPreview}" Command="{Binding Preview_CopyToClipboardCommand}">Copy to clibboard</Button>
-                      </StackPanel>
-                    </StackPanel>
-                  </StackPanel>
-
-                </Grid>
-              </Grid>
-
-              <!-- Component description -->
-              <Grid Grid.Row="1">
-                <Grid.RowDefinitions>
-                  <!-- 30% for Short description -->
-                  <RowDefinition Height="3*" />
-                  <!-- 70% for Full description -->
-                  <RowDefinition Height="7*" />
-                </Grid.RowDefinitions>
-
-                <!-- Short Description Section -->
-                <Grid Grid.Row="0">
-                  <Grid.RowDefinitions>
-                    <!-- Short description Label -->
-                    <RowDefinition Height="Auto" />
-                    <!-- Short description TextBox -->
-                    <RowDefinition Height="*" />
-                  </Grid.RowDefinitions>
-
-                  <Label Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Left">Short description</Label>
-                  <TextBox Grid.Row="1"
-                           TextWrapping="Wrap"
-                           VerticalContentAlignment="Top"
-                           HorizontalAlignment="Stretch"
-                           IsReadOnly="True"
-                           VerticalAlignment="Stretch"
-                           Text="{Binding SelectedComponent.LongDescription}"/>
-                </Grid>
-
-                <!-- Full Description Section -->
-                <Grid Grid.Row="1" Margin="0 0 0 10">
-                  <Grid.RowDefinitions>
-                    <!-- Full description Label -->
-                    <RowDefinition Height="Auto" />
-                    <!-- Full description TextBox -->
-                    <RowDefinition Height="*" />
-                  </Grid.RowDefinitions>
-
-                  <Label Grid.Row="0" FontWeight="Bold" HorizontalAlignment="Left">Full description</Label>
-                  <TextBox Grid.Row="1"
-                           Text="{Binding SelectedComponent.LongDescription}"
-                           TextWrapping="Wrap"
-                           VerticalContentAlignment="Top"
-                           AcceptsReturn="True"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Stretch" />
-                </Grid>
-              </Grid>
-
+              </Border>
             </Grid>
-
-            <!-- Separator-->
-            <Grid Grid.Column="1">
-              <Border Width="2"
-                      Background="{DynamicResource UIMediumGray}"
-                      Margin="10,5"
-                      HorizontalAlignment="Stretch"/>
-            </Grid>
-
-            <!-- Right section -->
-            <Grid Grid.Column="2" RowDefinitions="50*, auto, auto">
-              <!-- Upper section -->
-              <Grid Grid.Row="0" ColumnDefinitions="50*, auto, 50*">
-                <!-- Purchases -->
-                <Grid Grid.Column="0" RowDefinitions="auto, *">
-                  <Label Grid.Row="0" FontWeight="Bold">Purchased</Label>
-                  <DataGrid ItemsSource="{Binding PurchasesForSelected}"
-                            Grid.Row="1"
-                            AutoGenerateColumns="False"
-                            IsReadOnly="True"
-                            VerticalAlignment="Stretch"
-                            HorizontalAlignment="Stretch"
-                            GridLinesVisibility="All"
-                            BorderThickness="1"
-                            BorderBrush="Gray">
-                    <DataGrid.Columns>
-                      <DataGridTextColumn Header="Supplier" x:DataType="cont:DetailedItemPurchaseContainer" Binding="{Binding SupplierName}" Width="*" />
-                      <DataGridTextColumn Header="Purchase date" x:DataType="cont:DetailedItemPurchaseContainer" Binding="{Binding PurchaseDate}" Width="140" />
-                      <DataGridTextColumn Header="Amount" x:DataType="cont:DetailedItemPurchaseContainer" Binding="{Binding BoughtAmount}" Width="90" />
-                    </DataGrid.Columns>
-                  </DataGrid>
-                </Grid>
-
-                <!-- Separator -->
-                <Grid Grid.Column="1">
-                  <Border Width="2"
-                          Background="{DynamicResource UIMediumGray}"
-                          Margin="10,0" />
-                </Grid>
-
-                <!-- Projects  -->
-                <Grid Grid.Column="2" RowDefinitions="auto, *">
-                  <Label Grid.Row="0" FontWeight="Bold">Used in projects</Label>
-                  <DataGrid ItemsSource="{Binding ProjectsForSelected}"
-                            Grid.Row="1"
-                            AutoGenerateColumns="False"
-                            IsReadOnly="True"
-                            VerticalAlignment="Stretch"
-                            HorizontalAlignment="Stretch"
-                            GridLinesVisibility="All"
-                            BorderThickness="1"
-                            BorderBrush="Gray">
-                    <DataGrid.Columns>
-                      <DataGridTextColumn Header="Project" x:DataType="cont:DetailedItemProjectContainer" Binding="{Binding ProjectName}" Width="*" />
-                      <DataGridTextColumn Header="Amount" x:DataType="cont:DetailedItemProjectContainer" Binding="{Binding UsedInProject}" Width="90" />
-                    </DataGrid.Columns>
-                  </DataGrid>
-                </Grid>
-              </Grid>
-
-              <!-- Separator -->
-              <Grid Grid.Row="1">
-                <Border Height="2"
-                        Background="{DynamicResource UIMediumGray}"
-                        Margin="0,10" />
-              </Grid>
-
-              <!-- Bottom section -->
-              <Grid Grid.Row="2">
-                <StackPanel>
-                  <Label FontWeight="Bold">Find in suppliers</Label>
-                  <ScrollViewer x:Name="HorizontalScrollViewer"
-                                HorizontalScrollBarVisibility="Hidden"
-                                VerticalScrollBarVisibility="Disabled" Margin="0 0 0 10">
-                    <ItemsControl ItemsSource="{Binding Suppliers}">
-                      <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                          <UniformGrid Rows="1" />
-                        </ItemsPanelTemplate>
-                      </ItemsControl.ItemsPanel>
-
-                      <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                          <CustomControls:SupplierNodeButton Image="{Binding Supplier.Image}"
-                                                             Command="{Binding ItemClickedCommand}"/>
-                        </DataTemplate>
-                      </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                  </ScrollViewer>
-                </StackPanel>
-              </Grid>
-            </Grid>
-
-          </Grid>
+          </Border>
         </TabItem>
       </TabControl>
     </DockPanel>

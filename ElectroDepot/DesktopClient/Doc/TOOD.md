@@ -16,6 +16,13 @@
 		- [ ] Po dodaniu Tooltipa na row's w componentach jest jakuś być i jak już raz sie włączy tooltip to będzie cały czas widoczny jak przejedzie sie na pozostałe elementy. Powinien sie odświeżać za każdym razem jak sie najedzie na immy row.
 	- [ ] Add:
 	- [ ] Preview:
+		- [ ] Póki co jest funkcjonalność aktualizacji zdjęcia i kategorii komponentu ale frontend do tego jest wyłączony bo:
+			- Jeżeli chodzi o zdjęcie to nie ma co dodawać tej funkcjonalności jak nie ma nowego systemu przechowywania zdjęć. Jak zostanie zaimplementowany to sie doda.
+			- Zmiane kategorii można zrobić ale tak sie coś krzaczy z powodu niewłaściwych ID komponentu. Proste do naprawy.
+		- [ ] Dodać przechodzenie do Project/Purchase z widoku Preview komponentu. Ale to dopiero wtedy jak zostaną zrefatoryzowane te strony. 
+		- [ ] Generowanie raportu - potrzebny jest pomysł jak to ma wyglądać. (Póki co: dodatkowe okno z wyświetlonym PDF'em raportu. Przydają sie taki funkcjonalności jak zapisz na dysku/drukuj. Taki raport może zawierać wszystkie pola komponentu oraz spis w których projektach został wykorzystany i kiedy/gdzie został kupiony).
+		- [ ] Funkcjonalności pobrania opisu z digikey czekają aż podepnie sie API z DigiKeya.
+		- [ ] 
 - [ ] Dodać przycisk do zmiany z tryby nocnego/dziennego.
 - [ ] Trzeba poświecić troche czasu jeżeli chodzi o 'MessageBox' bo nie jest to takie proste jak sie wydaje. Póki co zostawiam tak jak jest.
 - [ ] 

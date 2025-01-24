@@ -27,6 +27,7 @@ namespace ElectroDepotClassLibrary.DTOs
     public record UpdateComponentDTO(
         string Name,
         string Manufacturer,
+        int CategoryID,
         string DatasheetLink,
         string ShortDescription,
         string LongDescription
@@ -51,6 +52,7 @@ namespace ElectroDepotClassLibrary.DTOs
             return new UpdateComponentDTO(
                 Name: componentDTO.Name, 
                 Manufacturer: componentDTO.Manufacturer, 
+                CategoryID: componentDTO.CategoryID,
                 ShortDescription: componentDTO.ShortDescription,
                 LongDescription: componentDTO.LongDescription,
                 DatasheetLink: componentDTO.DatasheetLink);

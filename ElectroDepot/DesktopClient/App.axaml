@@ -32,7 +32,12 @@
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/RevertWideButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/RevertButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/OkButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/GenerateRaportButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/ReportBugButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/SaveButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/NightModeButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/HelpButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/AddButton.axaml' />
@@ -43,6 +48,7 @@
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/CopyToClipboardButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/UploadContentButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/DeleteButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/EditWideButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/EditButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/PDFButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/FirstPageButton.axaml' />
@@ -108,6 +114,8 @@
     <SolidColorBrush x:Key="PltGreenS2" Color="#40DD50" />
     <SolidColorBrush x:Key="PltOrangeS1" Color="#ECAA5B" />
     <SolidColorBrush x:Key="PltOrangeS2" Color="#E8A435" />
+    <SolidColorBrush x:Key="PltPurpleS1" Color="#A678E2" />
+    <SolidColorBrush x:Key="PltPurpleS2" Color="#9058DB" />
 
 
     <Color x:Key="PltBlueColorS1">#457B9D</Color>

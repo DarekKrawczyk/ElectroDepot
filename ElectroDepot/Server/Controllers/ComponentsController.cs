@@ -294,7 +294,7 @@ namespace Server.Controllers
         /// <param name="component"></param>
         /// <returns></returns>
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> Update(int id, UpdateComponentDTO component)
+        public async Task<ActionResult<ComponentDTO>> Update(int id, UpdateComponentDTO component)
         {
             Component? existingComponent = await _context.Components.FindAsync(id);
 
@@ -325,7 +325,7 @@ namespace Server.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(existingComponent.ToDTO());
         }
         #endregion
         #region Delete

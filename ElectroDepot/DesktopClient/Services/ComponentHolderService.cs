@@ -1,4 +1,5 @@
 ﻿using DesktopClient.Containers;
+using DesktopClient.ViewModels;
 using DynamicData;
 using ElectroDepotClassLibrary.Models;
 using ElectroDepotClassLibrary.Stores;
@@ -13,12 +14,14 @@ namespace DesktopClient.Services
 {
     internal class ComponentHolderService
     {
+        private readonly ComponentsPageViewModel _viewModel;
         private readonly ComponentsStore _componentsStore;
         private readonly SuppliersStore _suppliersStore;
         private readonly ISourceCache<DetailedComponentContainer, int> _components;
 
-        public ComponentHolderService(ComponentsStore componentsStore)
+        public ComponentHolderService(ComponentsPageViewModel viewModel, ComponentsStore componentsStore)
         {
+            _viewModel = viewModel;
             _componentsStore = componentsStore;
             _suppliersStore = componentsStore.MainStore.SupplierStore;
             _components = new SourceCache<DetailedComponentContainer, int>(e => e.ID);
@@ -44,7 +47,7 @@ namespace DesktopClient.Services
                 OwnsComponent unusedComponent = unusedComponents.ElementAt(i);
                 string manufacturer = component.Manufacturer;
 
-                _components.AddOrUpdate(new DetailedComponentContainer(component, ownedComponent, unusedComponent, suppliersCol));
+                _components.AddOrUpdate(new DetailedComponentContainer(_viewModel, component, ownedComponent, unusedComponent, suppliersCol));
             }
         }
     }

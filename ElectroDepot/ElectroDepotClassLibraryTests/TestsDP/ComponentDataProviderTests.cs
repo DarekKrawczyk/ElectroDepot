@@ -155,8 +155,8 @@ namespace ElectroDepotClassLibraryTests.Tests
                 Component editedCategoryDTO = new Component(id: foundComponent.ID, categoryID: foundComponent.CategoryID, category: null, 
                     name: foundComponent.Name, manufacturer: foundComponent.Manufacturer, shortDescription: "Edited component",
                     longDescription: "long desc", datasheetLink: "google.com", new byte[0] { });
-                bool wasUpdated = await ComponentDP.UpdateComponent(editedCategoryDTO);
-                Assert.True(wasUpdated);
+                Component wasUpdated = await ComponentDP.UpdateComponent(editedCategoryDTO);
+                Assert.True(wasUpdated != null);
             }
             catch (Exception ex)
             {

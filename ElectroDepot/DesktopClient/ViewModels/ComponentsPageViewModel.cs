@@ -36,6 +36,8 @@ using Avalonia.Controls.Primitives;
 using MsBox.Avalonia.Dto;
 using MsBox.Avalonia.Models;
 using System.Security.Cryptography.X509Certificates;
+using Avalonia.Data;
+using Microsoft.Win32;
 
 namespace DesktopClient.ViewModels
 {
@@ -70,7 +72,14 @@ namespace DesktopClient.ViewModels
             }
             else if(SelectedTab == 2)
             {
-                isVisible = true; // TODO: implement function to check wheter previre.modify was changed.
+                if(Preview_IsEditing == true)
+                {
+                    isVisible = false;
+                }
+                else
+                {
+                    isVisible = true;
+                }
             }
             else
             {
@@ -95,7 +104,14 @@ namespace DesktopClient.ViewModels
             }
             else if (SelectedTab == 2)
             {
-                isVisible = true; // TODO: implement function to check wheter previre.modify was changed.
+                if (Preview_IsEditing == true)
+                {
+                    isVisible = false;
+                }
+                else
+                {
+                    isVisible = true;
+                }
             }
             else
             {
@@ -127,6 +143,31 @@ namespace DesktopClient.ViewModels
                 isVisible = true;
             }
             Add_IsPreviewTabEnabled = isVisible;
+        }
+
+        private void ClearPreviewData()
+        {
+            Preview_PreviewedComponent = new DetailedComponentContainer(Components_SelectedComponent);
+            Preview_Image = Preview_PreviewedComponent.Image;
+            Preview_NameField = Preview_PreviewedComponent.Name;
+            Preview_ManufacturerField = Preview_PreviewedComponent.Manufacturer;
+            Preview_CategoryField = Preview_PreviewedComponent.Category.Name;
+            if(Preview_CategoryField != string.Empty)
+            {
+                Preview_CategoryComboBoxItem = Preview_CategoryField;
+            }
+            Preview_DatasheetField = Preview_PreviewedComponent.DatasheetURL;
+            Preview_AboutField = Preview_PreviewedComponent.ShortDescription;
+            Preview_DescriptionField = Preview_PreviewedComponent.LongDescription;
+            if(Preview_DatasheetField != null && Preview_DatasheetField != string.Empty)
+            {
+                Preview_CanDisplayDatasheet = true;
+            }
+        }
+
+        private void NavigationPreparePreviewTab()
+        {
+            ClearPreviewData();
         }
 
         public async Task NavigateTab(ComponentTab tab)
@@ -175,11 +216,19 @@ namespace DesktopClient.ViewModels
                     SelectedTab = 1;
                     break;
                 case ComponentTab.Preview:
-                    PrepareForPreview();
+                    RefreshSelectedComponentsProjectSource();
+                    RefreshSelectedComponentsPurchasesSource();
+                    NavigationPreparePreviewTab();
+                    //ChangeToPreviewMode();
+                    //PrepareForPreview();
                     SelectedTab = 2;
                     break;
                 case ComponentTab.Edit:
-                    Modify_ClearDataToDefault();
+                    RefreshSelectedComponentsProjectSource();
+                    RefreshSelectedComponentsPurchasesSource();
+                    NavigationPreparePreviewTab();
+                    //ChangeToEditMode();
+                    //Modify_ClearDataToDefault();
                     SelectedTab = 2;
                     break;
                 default:
@@ -189,7 +238,15 @@ namespace DesktopClient.ViewModels
 
         }
         #endregion
+
+        #region Components tab
+        [ObservableProperty]
+        private DetailedComponentContainer _components_SelectedComponent;
+
+        #endregion
+
         #region Add tab
+
         #region Main fields section
         #region Name field
         [RelayCommand]
@@ -283,6 +340,7 @@ namespace DesktopClient.ViewModels
         }
         #endregion
         #endregion
+
         #region Main buttons section
         private bool WasAddFormChanged()
         {
@@ -306,6 +364,7 @@ namespace DesktopClient.ViewModels
             await NavigateTab(ComponentTab.Components);
         }
         #endregion
+
         #region About section
         [RelayCommand]
         public void AddTab_DownloadAbout()
@@ -320,6 +379,7 @@ namespace DesktopClient.ViewModels
             Add_ShortDescription = null;
         }
         #endregion
+
         #region Description section
         [RelayCommand]
         public void AddTab_DownloadDescription()
@@ -333,6 +393,668 @@ namespace DesktopClient.ViewModels
             Add_FullDescription = null;
         }
         #endregion
+
+        #endregion
+
+        #region Preview Tab
+        [ObservableProperty]
+        private DetailedComponentContainer _preview_PreviewedComponent;
+
+        partial void OnPreview_PreviewedComponentChanged(DetailedComponentContainer value)
+        {
+            Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Checks if all of the controlls are makred as 'ok' and are not edited right now!
+        /// </summary>
+        /// <returns></returns>
+        private bool IsEditFormInPreviewState()
+        {
+            if (Preview_NameEditing == false && Preview_ManufacturerEditing == false && Preview_CategoryEditing == false && Preview_DatasheetEditing == false &&
+                Preview_AboutEditing == false && Preview_DescriptionEditing == false && Preview_ImageEditing == false) return true;
+            else return false;
+        }
+
+        private bool WasEditFormChanged()
+        {
+            if (Components_SelectedComponent == null) return false;
+            bool nameChanged = Preview_NameField != Components_SelectedComponent.Name;
+            bool manufacturerChanged = Preview_ManufacturerField != Components_SelectedComponent.Manufacturer;
+            bool categoryChanged = (Preview_CategoryField != Components_SelectedComponent.Category.Name) || (Preview_CategoryComboBoxItem != Components_SelectedComponent.Category.Name);
+            bool datasheetChanged = Preview_DatasheetField != Components_SelectedComponent.DatasheetURL;
+            bool imageChanged = Components_SelectedComponent.Component.ByteImage != ImageConverterUtility.BitmapToBytes(Preview_Image);
+            bool aboutChanged = Preview_AboutField != Components_SelectedComponent.ShortDescription;
+            bool descriptionChanged = Preview_DescriptionField != Components_SelectedComponent.LongDescription;
+
+            bool ifAny = (nameChanged || manufacturerChanged || categoryChanged || datasheetChanged || aboutChanged || descriptionChanged);
+            return ifAny;
+        }
+
+        #region Buttons
+        [RelayCommand(CanExecute = nameof(Preview_CanClearAllEditing))]
+        public void Preview_ClearAllEditing()
+        {
+            ClearPreviewData();
+            Preview_ClearAllEditingCommand.NotifyCanExecuteChanged();
+            Preview_SaveWholeCommand.NotifyCanExecuteChanged();
+        }
+
+        public bool Preview_CanClearAllEditing()
+        {
+            bool canClear = WasEditFormChanged() && IsEditFormInPreviewState();
+            return canClear;
+        }
+
+        [RelayCommand]
+        public async Task Preview_CancelEditing()
+        {
+            bool wasChanged = WasEditFormChanged();
+
+            if (wasChanged == true)
+            {
+                string result = await MsBoxService.DisplayMessageBox("It looks like you have unsaved changes. If you cancel this opertaion these changes will be lost. Do you want to proceed?", Icon.Warning);
+
+                if (result == "Yes")
+                {
+                    ClearPreviewData();
+                    ChangeToPreviewMode();
+                }
+                else
+                {
+                    // Stay where you are.
+                }
+            }
+            else
+            {
+                ChangeToPreviewMode();
+            }
+        }
+        #endregion
+
+        #region Name
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_NameEditingSaveChangesCommand))]
+        [NotifyCanExecuteChangedFor(nameof(Preview_NameClearCommand))]
+        private string _preview_NameField = string.Empty;
+
+        partial void OnPreview_NameFieldChanged(string value)
+        {
+            Preview_PreviewedComponent.Name = value;
+        }
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_SaveWholeCommand))]
+        private bool _preview_NameNotEditing = true;
+
+        partial void OnPreview_NameNotEditingChanged(bool value)
+        {
+            Preview_ClearAllEditingCommand.NotifyCanExecuteChanged();
+        }
+
+        [ObservableProperty]
+        private bool _preview_NameEditing;
+
+        [RelayCommand(CanExecute = nameof(Preview_CanNameClear))]
+        public void Preview_NameClear()
+        {
+            Preview_NameField = Components_SelectedComponent.Name;
+        }
+
+        public bool Preview_CanNameClear()
+        {
+            if (Components_SelectedComponent == null || Preview_NameField == Components_SelectedComponent.Name) return false;
+            else return true;
+        }
+
+        [RelayCommand(CanExecute = nameof(Preview_CanExecuteNameEditingSaveChanges))]
+        public void Preview_NameEditingSaveChanges()
+        {
+            Preview_NameEditing = false;
+            Preview_NameNotEditing = true;
+        }
+
+        public bool Preview_CanExecuteNameEditingSaveChanges()
+        {
+            if (Preview_NameField == null || Preview_NameField == string.Empty) return false;
+            else return true;
+        }
+
+        [RelayCommand]
+        public void Preview_NameEditingStart()
+        {
+            Preview_NameNotEditing = false;
+            Preview_NameEditing = true;
+        }
+
+        [RelayCommand]
+        public async Task Preview_NameCopy()
+        {
+            await ClipboardManager.SetText(Preview_NameField);
+        }
+        #endregion
+
+        #region Manufacturer
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_ManufacturerEditingSaveChangesCommand))]
+        [NotifyCanExecuteChangedFor(nameof(Preview_ManufacturerClearCommand))]
+        private string _preview_ManufacturerField = string.Empty;
+
+        partial void OnPreview_ManufacturerFieldChanged(string value)
+        {
+            Preview_PreviewedComponent.Manufacturer = value;
+        }
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_SaveWholeCommand))]
+        private bool _preview_ManufacturerNotEditing = true;
+
+        [ObservableProperty]
+        private bool _preview_ManufacturerEditing;
+
+        partial void OnPreview_ManufacturerEditingChanged(bool value)
+        {
+            Preview_ClearAllEditingCommand.NotifyCanExecuteChanged();
+        }
+
+        [RelayCommand(CanExecute = nameof(Preview_CanManufacturerClear))]
+        public void Preview_ManufacturerClear()
+        {
+            Preview_ManufacturerField = Components_SelectedComponent.Manufacturer;
+        }
+
+        public bool Preview_CanManufacturerClear()
+        {
+            if (Components_SelectedComponent == null || Preview_ManufacturerField == Components_SelectedComponent.Manufacturer) return false;
+            else return true;
+        }
+
+        [RelayCommand(CanExecute = nameof(Preview_CanExecuteManufacturerEditingSaveChanges))]
+        public void Preview_ManufacturerEditingSaveChanges()
+        {
+            Preview_ManufacturerEditing = false;
+            Preview_ManufacturerNotEditing = true;
+        }
+
+        public bool Preview_CanExecuteManufacturerEditingSaveChanges()
+        {
+            if (Preview_ManufacturerField == null || Preview_ManufacturerField == string.Empty) return false;
+            else return true;
+        }
+
+        [RelayCommand]
+        public void Preview_ManufacturerEditingStart()
+        {
+            Preview_ManufacturerNotEditing = false;
+            Preview_ManufacturerEditing = true;
+        }
+
+        [RelayCommand]
+        public async Task Preview_ManufacturerCopy()
+        {
+            await ClipboardManager.SetText(Preview_ManufacturerField);
+        }
+        #endregion
+
+        #region Category
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_CategoryClearCommand))]
+        private string _preview_CategoryComboBoxItem;
+
+        [ObservableProperty]
+        private string _preview_CategoryField = string.Empty;
+
+        partial void OnPreview_CategoryFieldChanged(string value)
+        {
+            Preview_PreviewedComponent.Category = DatabaseStore.CategorieStore.Categories.FirstOrDefault(x => x.Name == value);
+        }
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_SaveWholeCommand))]
+        private bool _preview_CategoryNotEditing = true;
+
+        [ObservableProperty]
+        private bool _preview_CategoryEditing;
+
+        partial void OnPreview_CategoryEditingChanged(bool value)
+        {
+            Preview_ClearAllEditingCommand.NotifyCanExecuteChanged();
+        }
+
+        [RelayCommand(CanExecute = nameof(Preview_CanCategoryClear))]
+        public void Preview_CategoryClear()
+        {
+            Preview_PreviewedComponent.Category = Components_SelectedComponent.Category;
+            Preview_CategoryComboBoxItem = Preview_PreviewedComponent.Category.Name;
+        }
+
+        public bool Preview_CanCategoryClear()
+        {
+            if (Components_SelectedComponent != null && Components_SelectedComponent.Category.Name != Preview_CategoryComboBoxItem) return true;
+            else return false;
+        }
+
+        [RelayCommand]
+        public void Preview_CategoryEditingSaveChanges()
+        {
+            Preview_PreviewedComponent.Category = DatabaseStore.CategorieStore.Categories.FirstOrDefault(x => x.Name == Preview_CategoryComboBoxItem);
+            Preview_CategoryField = Preview_PreviewedComponent.Category.Name;
+            Preview_CategoryEditing = false;
+            Preview_CategoryNotEditing = true;
+        }
+
+        [RelayCommand]
+        public void Preview_CategoryEditingStart()
+        {
+            Preview_CategoryNotEditing = false;
+            Preview_CategoryEditing = true;
+        }
+
+        [RelayCommand]
+        public async Task Preview_CategoryCopy()
+        {
+            await ClipboardManager.SetText(Preview_CategoryField);
+        }
+        #endregion
+
+        #region About
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_AboutEditingSaveChangesCommand))]
+        [NotifyCanExecuteChangedFor(nameof(Preview_AboutClearCommand))]
+        private string _preview_AboutField = string.Empty;
+
+        partial void OnPreview_AboutFieldChanged(string value)
+        {
+            Preview_PreviewedComponent.ShortDescription = value;
+        }
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_SaveWholeCommand))]
+        private bool _preview_AboutNotEditing = true;
+
+        [ObservableProperty]
+        private bool _preview_AboutEditing;
+
+        partial void OnPreview_AboutEditingChanged(bool value)
+        {
+            Preview_ClearAllEditingCommand.NotifyCanExecuteChanged();
+        }
+
+        [RelayCommand(CanExecute = nameof(Preview_CanAboutClear))]
+        public void Preview_AboutClear()
+        {
+            Preview_AboutField = Components_SelectedComponent.Component.ShortDescription;
+        }
+
+        public bool Preview_CanAboutClear()
+        {
+            if (Components_SelectedComponent != null && Preview_AboutField != Components_SelectedComponent.Component.ShortDescription) return true;
+            else return false;
+        }
+
+        [RelayCommand(CanExecute = nameof(Preview_CanExecuteAboutEditingSaveChanges))]
+        public void Preview_AboutEditingSaveChanges()
+        {
+            Preview_AboutEditing = false;
+            Preview_AboutNotEditing = true;
+        }
+
+        public bool Preview_CanExecuteAboutEditingSaveChanges()
+        {
+            if (Preview_AboutField == null || Preview_AboutField == string.Empty) return false;
+            else return true;
+        }
+
+        [RelayCommand]
+        public void Preview_AboutEditingStart()
+        {
+            Preview_AboutNotEditing = false;
+            Preview_AboutEditing = true;
+        }
+
+        [RelayCommand]
+        public async Task Preview_AboutCopy()
+        {
+            await ClipboardManager.SetText(Preview_AboutField);
+        }
+        #endregion
+
+        #region Description
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_DescriptionRevertCommand))]
+        private string _preview_DescriptionField = string.Empty;
+
+        partial void OnPreview_DescriptionFieldChanged(string value)
+        {
+            Preview_PreviewedComponent.LongDescription = value;
+        }
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_SaveWholeCommand))]
+        private bool _preview_DescriptionNotEditing = true;
+
+        [ObservableProperty]
+        private bool _preview_DescriptionEditing;
+
+        partial void OnPreview_DescriptionEditingChanged(bool value)
+        {
+            Preview_ClearAllEditingCommand.NotifyCanExecuteChanged();
+        }
+
+        [RelayCommand]
+        public void Preview_DescriptionClear()
+        {
+            Preview_DescriptionField = string.Empty;
+        }
+
+        [RelayCommand(CanExecute = nameof(Preview_CanDescriptionRevert))]
+        public void Preview_DescriptionRevert()
+        {
+            Preview_DescriptionField = Components_SelectedComponent.Component.LongDescription;
+        }
+
+        public bool Preview_CanDescriptionRevert()
+        {
+            if (Components_SelectedComponent != null && Components_SelectedComponent.Component.LongDescription != Preview_DescriptionField) return true;
+            else return false;
+        }
+
+        [RelayCommand]
+        public void Preview_DescriptionEditingSaveChanges()
+        {
+            Preview_DescriptionEditing = false;
+            Preview_DescriptionNotEditing = true;
+        }
+
+        [RelayCommand]
+        public void Preview_DescriptionEditingStart()
+        {
+            Preview_DescriptionNotEditing = false;
+            Preview_DescriptionEditing = true;
+        }
+
+        [RelayCommand]
+        public async Task Preview_DescriptionCopy()
+        {
+            await ClipboardManager.SetText(Preview_DescriptionField);
+        }
+        #endregion
+
+        #region Datasheet
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_DatasheetRevertCommand))]
+        private string _preview_DatasheetField = string.Empty;
+
+        partial void OnPreview_DatasheetFieldChanged(string value)
+        {
+            Preview_DatasheetIsValid();
+            //Preview_CanDisplayDatasheet = true;
+            Preview_PreviewedComponent.DatasheetURL = value;
+            //Preview_DatasheetDisplayCommand.NotifyCanExecuteChanged();
+        }
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_SaveWholeCommand))]
+        private bool _preview_DatasheetNotEditing = true;
+
+        [ObservableProperty]
+        private bool _preview_DatasheetEditing;
+
+        partial void OnPreview_DatasheetEditingChanged(bool value)
+        {
+            Preview_DatasheetIsValid();
+            Preview_ClearAllEditingCommand.NotifyCanExecuteChanged();
+        }
+
+        [RelayCommand(CanExecute = nameof(Preview_CanDatasheetRevert))]
+        public void Preview_DatasheetRevert()
+        {
+            Preview_DatasheetField = Components_SelectedComponent.DatasheetURL;
+        }
+
+        private bool _isDatasheetDiplayable;
+        private bool _isDatasheetValid;
+
+        public bool Preview_CanDatasheetRevert()
+        {
+            if (Components_SelectedComponent == null || Preview_DatasheetField == Components_SelectedComponent.DatasheetURL) return false;
+            else return true;
+        }
+
+        [RelayCommand(CanExecute = nameof(CanExecutePreviewDatasheetDisplay))]
+        public async Task Preview_DatasheetDisplay()
+        {
+            // Command logic
+        }
+
+        private bool CanExecutePreviewDatasheetDisplay()
+        {
+            return _isDatasheetDiplayable;
+        }
+
+        private bool Preview_CanDatasheetEditingSaveChanges()
+        {
+            return _isDatasheetValid;
+        }
+
+        public async Task Preview_DatasheetIsValid()
+        {
+            try
+            {
+                await Task.Delay(100); // Simulate async operation
+                ValidationResult validationResult = await LinkValidator.ValidateDatasheetLinkAsync(Preview_DatasheetField, new ValidationContext(this));
+                _isDatasheetValid = validationResult == ValidationResult.Success;
+                if(_isDatasheetValid == true && Preview_DatasheetField != null && Preview_DatasheetField != string.Empty)
+                {
+                    _isDatasheetDiplayable = true;
+                }
+                else
+                {
+                    _isDatasheetDiplayable = false;
+                }
+            }
+            catch (Exception)
+            {
+                _isDatasheetValid = false;
+                _isDatasheetDiplayable = false;
+            }
+            finally
+            {
+                // Notify the command that the CanExecute state has changed
+                Preview_DatasheetDisplayCommand.NotifyCanExecuteChanged();
+                Preview_DatasheetEditingSaveChangesCommand.NotifyCanExecuteChanged();
+            }
+        }
+
+        [RelayCommand]
+        public void Preview_DatasheetClear()
+        {
+            Preview_DatasheetField = string.Empty;
+        }
+
+        [RelayCommand(CanExecute = nameof(Preview_CanDatasheetEditingSaveChanges))]
+        public void Preview_DatasheetEditingSaveChanges()
+        {
+            Preview_DatasheetEditing = false;
+            Preview_DatasheetNotEditing = true;
+        }
+
+        [ObservableProperty]
+        private bool _preview_CanDisplayDatasheet;
+
+        [RelayCommand]
+        public void Preview_DatasheetEditingStart()
+        {
+            Preview_DatasheetNotEditing = false;
+            Preview_DatasheetEditing = true;
+        }
+
+        [RelayCommand]
+        public async Task Preview_DatasheetCopy()
+        {
+            await ClipboardManager.SetText(Preview_DatasheetField);
+        }
+        #endregion
+
+        #region Image
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_ClearImageCommand))]
+        private Bitmap _preview_Image;
+
+        partial void OnPreview_ImageChanged(Bitmap value)
+        {
+            Preview_PreviewedComponent.Image = value;
+        }
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(Preview_SaveWholeCommand))]
+        private bool _preview_ImageNotEditing = true;
+
+        [ObservableProperty]
+        private bool _preview_ImageEditing;
+
+        partial void OnPreview_ImageEditingChanged(bool value)
+        {
+            Preview_ClearAllEditingCommand.NotifyCanExecuteChanged();
+        }
+
+        [RelayCommand]
+        public void Preview_ImageEditingSaveChanges()
+        {
+            Preview_ImageEditing = false;
+            Preview_ImageNotEditing = true;
+        }
+
+        [RelayCommand]
+        public void Preview_ImageEditingStart()
+        {
+            Preview_ImageNotEditing = false;
+            Preview_ImageEditing = true;
+        }
+
+        [RelayCommand(CanExecute = nameof(Preview_CanClearImage))]
+        public void Preview_ClearImage()
+        {
+            Preview_Image = Components_SelectedComponent.Image;
+        }
+
+        public bool Preview_CanClearImage()
+        {
+            if (Preview_PreviewedComponent != null && Preview_PreviewedComponent.Component.ByteImage != ImageConverterUtility.BitmapToBytes(Preview_Image)) return true;
+            else return false;  
+        }
+        #endregion
+
+        private void ChangeToEditMode()
+        {
+            Preview_IsPreviewing = false;
+            Preview_IsEditing = true;
+
+            Preview_DescriptionEditing = false;
+            Preview_DescriptionNotEditing = true;
+
+            Preview_AboutEditing = false;
+            Preview_AboutNotEditing = true;
+
+            Preview_NameEditing = false;
+            Preview_NameNotEditing = true;
+
+            Preview_ManufacturerEditing = false;
+            Preview_ManufacturerNotEditing = true;
+
+            Preview_CategoryEditing = false;
+            Preview_CategoryNotEditing = true;
+
+            Preview_DatasheetEditing = false;
+            Preview_DatasheetNotEditing = true;
+
+            Preview_ImageEditing = false;
+            Preview_ImageNotEditing = true;
+        }
+
+        private void ChangeToPreviewMode()
+        {
+            Preview_IsPreviewing = true;
+            Preview_IsEditing = false;
+
+            Preview_DescriptionEditing = false;
+            Preview_DescriptionNotEditing = true;
+
+            Preview_AboutEditing = false;
+            Preview_AboutNotEditing = true;
+
+            Preview_NameEditing = false;
+            Preview_NameNotEditing = true;
+
+            Preview_ManufacturerEditing = false;
+            Preview_ManufacturerNotEditing = true;
+
+            Preview_CategoryEditing = false;
+            Preview_CategoryNotEditing = true;
+
+            Preview_DatasheetEditing = false;
+            Preview_DatasheetNotEditing = true;
+
+            Preview_ImageEditing = false;
+            Preview_ImageNotEditing = true;
+        }
+
+        [RelayCommand]
+        public void Preview_EditWhole()
+        {
+            ChangeToEditMode();
+        }
+
+        [RelayCommand(CanExecute = nameof(Preview_CanSaveWhole))]
+        public async Task Preview_SaveWhole()
+        {
+            // TODO: Implement
+
+            try
+            {
+                Component result = await DatabaseStore.ComponentStore.UpdateComponent(Preview_PreviewedComponent.Component);
+
+                if (result != null)
+                {
+                    string dialogResult = await MsBoxService.DisplayMessageBox("Components modified successfully! Do you to be navigated to 'Components' tab?", Icon.Question);
+
+                    //Add_ClearComponent();
+                    if (dialogResult == "Yes")
+                    {
+                        NavigateTab(ComponentTab.Components);
+                    }
+                }
+                else
+                {
+                    string dialogResult = await MsBoxService.DisplayMessageBox("There was an error while editing component. Try again or contact administrator!", Icon.Error);
+                }
+            }
+            catch (Exception exception)
+            {
+
+            }
+
+            ChangeToPreviewMode();
+        }
+
+        public bool Preview_CanSaveWhole()
+        {
+            if(Preview_DescriptionNotEditing == true && Preview_AboutNotEditing == true && Preview_NameNotEditing == true && Preview_ManufacturerNotEditing == true &&
+               Preview_CategoryNotEditing == true && Preview_DatasheetNotEditing == true && Preview_ImageNotEditing == true && WasEditFormChanged() == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        [ObservableProperty]
+        private bool _preview_IsPreviewing = true;
+
+        [ObservableProperty]
+        private bool _preview_IsEditing;
         #endregion
 
         [ObservableProperty]
@@ -457,7 +1179,14 @@ namespace DesktopClient.ViewModels
             }
             else
             {
-                CurrentAddPredefinedImage = SelectedPredefinedImage.Image;
+                if(Preview_IsEditing == true)
+                {
+                    Preview_Image = SelectedPredefinedImage.Image;
+                }
+                else
+                {
+                    CurrentAddPredefinedImage = SelectedPredefinedImage.Image;
+                }
                 IsSelectingPredefinedImagePopupOpen = false;
                 SelectedPredefinedImage = null;
             }
@@ -475,7 +1204,16 @@ namespace DesktopClient.ViewModels
 
             byte[] imageData = memoryStream.ToArray();
             Bitmap imageAsBitmap = ImageConverterUtility.BytesToBitmap(imageData);
-            CurrentAddPredefinedImage = imageAsBitmap;
+
+            // Load but where
+            if (Preview_IsEditing == true)
+            {
+                Preview_Image = imageAsBitmap;
+            }
+            else
+            {
+                CurrentAddPredefinedImage = imageAsBitmap;
+            }
         }
 
         private async Task<IStorageFile?> DoOpenFilePickerAsync()
@@ -569,8 +1307,8 @@ namespace DesktopClient.ViewModels
                 {
                     Add_CanAdd = !HasErrors;
                 }
-                Evaluate_AddTabVisibilty();
             }
+            Evaluate_AddTabVisibilty();
         }
 
         [ObservableProperty]
@@ -1054,7 +1792,7 @@ namespace DesktopClient.ViewModels
         #region Constructor
         public ComponentsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService) : base(defaultRootPageViewModel, databaseStore, msgBoxService)
         {
-            _componentsService = new ComponentHolderService(DatabaseStore.ComponentStore);
+            _componentsService = new ComponentHolderService(this, DatabaseStore.ComponentStore);
 
             _pager = new BehaviorSubject<PageRequest>(new PageRequest(FirstPageIndex, SelectedPageSize));
 
@@ -1087,58 +1825,6 @@ namespace DesktopClient.ViewModels
 
             PredefinedImages = new ObservableCollection<ImageContainer>();
 
-            //ComponentsSource = new List<DetailedComponentContainer>();
-            
-            //Components = new DataGridCollectionView(ComponentsSource);
-            //Components.CurrentChanged += CurrentChangedHandler;
-            //Components.Filter = (object component) =>
-            //{
-            //    if(component is DetailedComponentContainer detailedComponent)
-            //    {
-            //        bool isManufacturer = true;
-            //        bool isCategory = true;
-            //        bool isNameOrDesc = false;
-            //        bool onlyAvailable = true;
-                    
-            //        if(OnlyAvailableFlag == true)
-            //        {
-            //            if (detailedComponent.AvailableAmount <= 0)
-            //            {
-            //                onlyAvailable = false;
-            //            }
-            //        }
-
-            //        if(SelectedManufacturer != null)
-            //        {
-            //            if (!detailedComponent.Manufacturer.Contains(SelectedManufacturer, StringComparison.InvariantCultureIgnoreCase))
-            //            {
-            //                isManufacturer = false;
-            //            }
-            //        }
-
-            //        if (SelectedCategory!= null)
-            //        {
-            //            if (!detailedComponent.Category.Name.Contains(SelectedCategory, StringComparison.InvariantCultureIgnoreCase))
-            //            {
-            //                isCategory = false;
-            //            }
-            //        }
-
-            //        if (detailedComponent.Name.Contains(_searchByNameOrDesc, StringComparison.InvariantCultureIgnoreCase) ||
-            //           detailedComponent.ShortDescription.Contains(_searchByNameOrDesc, StringComparison.InvariantCultureIgnoreCase) ||
-            //           detailedComponent.LongDescription.Contains(_searchByNameOrDesc, StringComparison.InvariantCultureIgnoreCase))
-            //        {
-            //            isNameOrDesc = true;
-            //        }
-
-            //        if(isNameOrDesc == true && isManufacturer == true && isCategory == true && onlyAvailable == true)
-            //        {
-            //            return true;
-            //        }
-            //    }
-            //    return false;
-            //};
-
             SelectedComponentsPurchasesSource = new List<DetailedItemPurchaseContainer>();
             SelectedComponentsProjectSource = new List<DetailedItemProjectContainer>();
             PurchasesForSelected = new DataGridCollectionView(SelectedComponentsPurchasesSource);
@@ -1148,6 +1834,7 @@ namespace DesktopClient.ViewModels
 
             Manufacturers = new ObservableCollection<string>() { };
             DatabaseStore.ComponentStore.Load();
+            DatabaseStore.ComponentStore.ComponentsLoaded += ComponentStore_ComponentsLoadedHandler; ;
 
             Categories = new ObservableCollection<string>() { };
             DatabaseStore.CategorieStore.Load();
@@ -1165,6 +1852,11 @@ namespace DesktopClient.ViewModels
             CurrentAddPredefinedImage = PredefinedImages[0].Image;
 
             Evaluate_AddTabVisibilty();
+        }
+
+        private void ComponentStore_ComponentsLoadedHandler()
+        {
+            _componentsService.LoadData();
         }
         #endregion
 
@@ -1204,7 +1896,7 @@ namespace DesktopClient.ViewModels
         {
             // TODO: Implement sobe better and faster way with buffor. For now this will work
             // Request data for selected component
-            IEnumerable<ProjectComponent> componentsPurchaseItem = await DatabaseStore.ProjectStore.ProjectComponentDP.GetAllProjectComponentsOfComponents(SelectedComponent.Component);
+            IEnumerable<ProjectComponent> componentsPurchaseItem = await DatabaseStore.ProjectStore.ProjectComponentDP.GetAllProjectComponentsOfComponents(Components_SelectedComponent.Component);
             
             SelectedComponentsProjectSource.Clear();
             foreach(ProjectComponent component in componentsPurchaseItem)
@@ -1219,7 +1911,7 @@ namespace DesktopClient.ViewModels
         {
             // TODO: Implement sobe better and faster way with buffor. For now this will work
             // Request data for selected component
-            IEnumerable<PurchaseItem> componentsPurchaseItems = await DatabaseStore.PurchaseStore.PurchaseItemDP.GetPurchaseItemsFromComponent(SelectedComponent.Component);
+            IEnumerable<PurchaseItem> componentsPurchaseItems = await DatabaseStore.PurchaseStore.PurchaseItemDP.GetPurchaseItemsFromComponent(Components_SelectedComponent.Component);
 
             SelectedComponentsPurchasesSource.Clear();
             foreach (PurchaseItem purchaseItem in componentsPurchaseItems)

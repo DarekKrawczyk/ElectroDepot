@@ -16,6 +16,14 @@ namespace ElectroDepotClassLibrary.Models
             Quantity = quantity;
         }
 
+        public OwnsComponent(OwnsComponent other)
+        {
+            ID = other.ID;
+            UserID = other.UserID;
+            ComponentID = other.ComponentID;
+            Quantity = other.Quantity;
+        }
+
         public override string ToString()
         {
             return $"ID: '{ID}', UserID: '{UserID}', ComponentID: '{ComponentID}', Quantity: '{Quantity}'";

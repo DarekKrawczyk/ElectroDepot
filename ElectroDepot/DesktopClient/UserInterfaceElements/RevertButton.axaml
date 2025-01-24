@@ -1,28 +1,29 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:DesktopClient.UserInterfaceElements">
-
   <Design.PreviewWith>
-    <controls:EditButton />
+          <controls:RevertButton />
   </Design.PreviewWith>
  
-  <ControlTheme x:Key="{x:Type controls:EditButton}" TargetType="controls:EditButton">
+  <ControlTheme x:Key="{x:Type controls:RevertButton}" TargetType="controls:RevertButton">
     <Setter Property="Template">
       <ControlTemplate>
-        <Button x:Name="EditButton" Width="44" MaxWidth="44" MinWidth="44" Command="{TemplateBinding Command}">
-            <Label Classes="ButtonIcon" Content="&#xE3AE;"></Label>
+        <Button x:Name="TrashButton" Width="44" MaxWidth="44" MinWidth="44" Command="{TemplateBinding Command}">
+          <StackPanel Orientation="Horizontal">
+            <Label Classes="ButtonIcon" Content="&#xE1A0;"></Label>
+          </StackPanel>
           <Button.Styles>
-            <Style Selector="Button#EditButton">
+            <Style Selector="Button#TrashButton">
               <Setter Property="BorderBrush" Value="Black"></Setter>
               <Setter Property="BorderThickness" Value="1"></Setter>
-              <Setter Property="Background" Value="{DynamicResource PltOrangeS2}"/>
+              <Setter Property="Background" Value="{DynamicResource PltPurpleS2}"/>
               <Setter Property="Foreground" Value="Black"/>
             </Style>
 
-            <Style Selector="Button#EditButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Style Selector="Button#TrashButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
               <Setter Property="BorderBrush" Value="Black"></Setter>
               <Setter Property="BorderThickness" Value="1"></Setter>
-              <Setter Property="Background" Value="{DynamicResource PltOrangeS1}"></Setter>
+              <Setter Property="Background" Value="{DynamicResource PltPurpleS1}"></Setter>
               <Setter Property="Foreground" Value="Black"/>
             </Style>
           </Button.Styles>

@@ -28,6 +28,15 @@ namespace ElectroDepotClassLibrary.Models
             Description = description;
             ByteImage = image;
         }
+
+        public Category(Category other)
+        {
+            this.ID = other.ID;
+            this.Name = other.Name;
+            this.Description = other.Description;
+            this.ByteImage = other.ByteImage;
+        }
+
         public override string ToString()
         {
             return $"ID: '{ID}', Name: '{Name}', Description: '{Description}'";

@@ -7,8 +7,8 @@ namespace ElectroDepotClassLibrary.Models
 {
     public class Component
     {
-        public int ID { get; }
-        public int CategoryID { get; }
+        public int ID { get; set; }
+        public int CategoryID { get; set; }
         public Category Category { get; set; }
         public string Name { get; set; }
         public string Manufacturer { get; set; }
@@ -41,9 +41,42 @@ namespace ElectroDepotClassLibrary.Models
             ByteImage = byteImage;
         }
 
+        public Component(Component other)
+        {
+            ID = other.ID;
+            CategoryID = other.CategoryID;
+            Category = new Category(other.Category);
+            Name = other.Name;
+            Manufacturer = other.Manufacturer;
+            ShortDescription = other.ShortDescription;
+            LongDescription = other.LongDescription;
+            DatasheetLink = other.DatasheetLink;
+            ByteImage = other.ByteImage;
+
+        }
+
         public override string ToString()
         {
             return $"ID: '{ID}', Name: '{Name}', Manufacturer: '{Manufacturer}', CategoryID: '{CategoryID}'";
+        }
+
+        /// <summary>
+        /// Copy data from another component
+        /// </summary>
+        public void ReplaceWith(Component other)
+        {
+            ID = other.ID;
+            CategoryID = other.CategoryID;
+            Category = other.Category;
+            Name = other.Name;
+            Manufacturer = other.Manufacturer;
+            ShortDescription = other.ShortDescription;
+            LongDescription = other.LongDescription;
+            DatasheetLink = other.DatasheetLink;
+            if(other.ByteImage != null && other.ByteImage.Length > 0)
+            {
+                ByteImage = other.ByteImage;
+            }
         }
     }
 
@@ -58,7 +91,7 @@ namespace ElectroDepotClassLibrary.Models
         }
         public static UpdateComponentDTO ToUpdateDTO(this Component component)
         {
-            return new UpdateComponentDTO(Name: component.Name, Manufacturer: component.Manufacturer, 
+            return new UpdateComponentDTO(Name: component.Name, Manufacturer: component.Manufacturer, CategoryID: component.CategoryID, 
                 ShortDescription: component.ShortDescription, LongDescription: component.LongDescription,
                 DatasheetLink: component.DatasheetLink);
         }
