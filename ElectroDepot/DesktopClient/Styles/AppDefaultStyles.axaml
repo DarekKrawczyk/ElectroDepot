@@ -1,7 +1,10 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:UIE="using:DesktopClient.UserInterfaceElements">
   <Design.PreviewWith>
     <StackPanel Background="White">
+      <UIE:ClearButton></UIE:ClearButton>
+      <UIE:DeleteButton></UIE:DeleteButton>
       <Button Classes="default">
         <StackPanel Orientation="Horizontal" Width="200">
           <Label Classes="icon" Content="&#xE2C2;"></Label>
@@ -89,6 +92,7 @@
       </Button>
     </StackPanel>
   </Design.PreviewWith>
+
   
   <!-- Project Node Button -->
   <Style Selector="Button.ProjectNodeButton">
@@ -255,6 +259,22 @@
     <Setter Property="HorizontalAlignment" Value="Center"></Setter>
   </Style>
 
+  <Style Selector="Label.ButtonIconLabel">
+    <Setter Property="FontSize" Value="20"></Setter>
+    <Setter Property="Padding" Value="0"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+  </Style>
+
+  <Style Selector="Label.ButtonIcon">
+    <Setter Property="FontFamily" Value="{DynamicResource Phosphor}"></Setter>
+    <Setter Property="FontSize" Value="26"></Setter>
+    <Setter Property="Padding" Value="0"></Setter>
+    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+    <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+  </Style>
+  
   <Style Selector="Label.icontext">
     <Setter Property="FontSize" Value="22"></Setter>
     <Setter Property="VerticalAlignment" Value="Center"></Setter>

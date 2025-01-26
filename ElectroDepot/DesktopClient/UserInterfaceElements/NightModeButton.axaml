@@ -1,0 +1,39 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:DesktopClient.UserInterfaceElements">
+
+  <Design.PreviewWith>
+    <controls:NightModeButton />
+  </Design.PreviewWith>
+ 
+  <ControlTheme x:Key="{x:Type controls:NightModeButton}" TargetType="controls:NightModeButton">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Button x:Name="ReportBugButton" Width="56" MaxWidth="56" MinWidth="56" Command="{TemplateBinding Command}">
+          <StackPanel Orientation="Horizontal">
+            <Label Classes="icon" Content="&#xE330;"></Label>
+          </StackPanel>
+          <Button.Styles>
+            <Style Selector="Button#ReportBugButton">
+              <Setter Property="BorderBrush" Value="Black"></Setter>
+              <Setter Property="BorderThickness" Value="1"></Setter>
+              <Setter Property="FontSize" Value="32"></Setter>
+              <!--<Setter Property="Background" Value="{DynamicResource PltOrangeS2}"/>-->
+              <Setter Property="Background" Value="{DynamicResource PltWhiteMilk}"></Setter>
+              <Setter Property="Foreground" Value="Black"/>
+            </Style>
+
+            <Style Selector="Button#ReportBugButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+              <Setter Property="BorderBrush" Value="Black"></Setter>
+              <Setter Property="BorderThickness" Value="1"></Setter>
+              <Setter Property="FontSize" Value="32"></Setter>
+              <!--<Setter Property="Background" Value="{DynamicResource PltOrangeS1}"></Setter>-->
+              <Setter Property="Background" Value="{DynamicResource PltGray}"></Setter>
+              <Setter Property="Foreground" Value="Black"/>
+            </Style>
+          </Button.Styles>
+        </Button>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

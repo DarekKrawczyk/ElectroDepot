@@ -1,9 +1,12 @@
-﻿using ElectroDepotClassLibrary.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using ElectroDepotClassLibrary.Models;
+using System;
 using System.Net.NetworkInformation;
 
 namespace DesktopClient.Containers
 {
-    public class DetailedItemProjectContainer
+    public partial class DetailedItemProjectContainer : ObservableObject
     {
         private readonly Project _project;
         private readonly ProjectComponent _projectComponent;
@@ -13,6 +16,12 @@ namespace DesktopClient.Containers
         {
             _project = project;
             _projectComponent = projectComponent;
+        }
+
+        [RelayCommand]
+        public void NavigateToProject()
+        {
+            Console.WriteLine();
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopClient.Services;
 
 namespace DesktopClient.ViewModels
 {
@@ -61,20 +62,18 @@ namespace DesktopClient.ViewModels
 
             if(status == LoggingStatus.Success)
             {
-                var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Login successfull", ButtonEnum.Ok);
-                ButtonResult buttonResult = await box.ShowAsync();
+                string buttonResult = await MsBoxService.DisplayMessageBox("Login successfull", Icon.Success);
                 //_navigator.NavigateTo(Page.Root);
             }
             else
             {
-                var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Failed to login!", ButtonEnum.Ok);
-                ButtonResult buttonResult = await box.ShowAsync();
+                string buttonResult = await MsBoxService.DisplayMessageBox("Failed to login!", Icon.Error);
                 ClearText();
             }
 
         }
 
-        public LoginPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore) : base(windowViewModel, databaseStore)
+        public LoginPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(windowViewModel, databaseStore, messageBoxService)
         {
         }
 

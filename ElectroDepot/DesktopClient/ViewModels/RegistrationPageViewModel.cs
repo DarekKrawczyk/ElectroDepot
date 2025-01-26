@@ -14,6 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using DesktopClient.Services;
 
 namespace DesktopClient.ViewModels
 {
@@ -113,18 +114,16 @@ namespace DesktopClient.ViewModels
 
             if (status == RegistrationStatus.Success)
             {
-                var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "User registered successfully", ButtonEnum.Ok);
-                ButtonResult buttonResult = await box.ShowAsync();
+                string buttonResult = await MsBoxService.DisplayMessageBox("User registered successfully", Icon.Success);
                 //_navigator.NavigateTo(Page.Login);
             }
             else
             {
-                var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Failed to register user!", ButtonEnum.Ok);
-                ButtonResult buttonResult = await box.ShowAsync();
+                string buttonResult = await MsBoxService.DisplayMessageBox("Failed to register user!", Icon.Error);
             }
         }
 
-        public RegistrationPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore) : base(windowViewModel, databaseStore)
+        public RegistrationPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(windowViewModel, databaseStore, messageBoxService)
         {
         }
 

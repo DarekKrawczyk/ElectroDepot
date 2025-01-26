@@ -1,0 +1,36 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:DesktopClient.UserInterfaceElements">
+
+  <Design.PreviewWith>
+    <controls:AddButton />
+  </Design.PreviewWith>
+ 
+  <ControlTheme x:Key="{x:Type controls:AddButton}" TargetType="controls:AddButton">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Button x:Name="TrashButton" Command="{TemplateBinding Command}">
+          <Grid ColumnDefinitions="auto *" Width="150">
+            <Label Grid.Column="0" Classes="ButtonIcon" Content="&#xE3D4;"></Label>
+            <Label Grid.Column="1" Classes="ButtonIconLabel" Content="Add"></Label>
+          </Grid>
+          <Button.Styles>
+            <Style Selector="Button#TrashButton">
+              <Setter Property="BorderBrush" Value="Black"></Setter>
+              <Setter Property="BorderThickness" Value="1"></Setter>
+              <Setter Property="Background" Value="{DynamicResource PltGreenS2}"/>
+              <Setter Property="Foreground" Value="Black"/>
+            </Style>
+
+            <Style Selector="Button#TrashButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+              <Setter Property="BorderBrush" Value="Black"></Setter>
+              <Setter Property="BorderThickness" Value="1"></Setter>
+              <Setter Property="Background" Value="{DynamicResource PltGreenS1}"></Setter>
+              <Setter Property="Foreground" Value="Black"/>
+            </Style>
+          </Button.Styles>
+        </Button>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

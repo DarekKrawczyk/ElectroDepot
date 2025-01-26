@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DesktopClient.Navigation;
+using DesktopClient.Services;
 
 namespace DesktopClient.ViewModels
 {
@@ -88,8 +89,7 @@ namespace DesktopClient.ViewModels
                 User loggedInUser = DatabaseStore.UsersStore.LoggedInUser;
                 if (loggedInUser == null)
                 {
-                    var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "User needs to be logged in to execute this operation", ButtonEnum.Ok);
-                    ButtonResult buttonResult = await box.ShowAsync();
+                    string buttonResult = await MsBoxService.DisplayMessageBox("User needs to be logged in to execute this operation", Icon.Error);
                     return;
                 }
 
@@ -102,8 +102,7 @@ namespace DesktopClient.ViewModels
                 Project projectFromDB = await DatabaseStore.ProjectStore.InsertNewProject(newProject);
                 if(projectFromDB == null)
                 {
-                    var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "There was an error while creating project, try again.", ButtonEnum.Ok);
-                    ButtonResult buttonResult = await box.ShowAsync();
+                    string buttonResult = await MsBoxService.DisplayMessageBox("There was an error while creating project, try again.", Icon.Error);
                     return;
                 }
 
@@ -112,15 +111,13 @@ namespace DesktopClient.ViewModels
                 
                 if (addedToDb == true)
                 {
-                    var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Project added successfully", ButtonEnum.Ok);
-                    ButtonResult buttonResult = await box.ShowAsync();
+                    string buttonResult = await MsBoxService.DisplayMessageBox("Project added successfully", Icon.Success);
                     Add_ClearProject();
                     SelectedTab = 0;
                 }
                 else
                 {
-                    var box = MessageBoxManager.GetMessageBoxStandard("Electro Depot", "Project couldn't be added", ButtonEnum.Ok);
-                    ButtonResult buttonResult = await box.ShowAsync();
+                    string buttonResult = await MsBoxService.DisplayMessageBox("Project couldn't be added", Icon.Error);
                 }
             }
             catch (Exception exception)
@@ -295,7 +292,7 @@ namespace DesktopClient.ViewModels
         private int _collection_Rows;
         public List<ProjectContainerHolder> ProjectsSource { get; set; }
         public DataGridCollectionView ProjectsDataView { get; set; }
-        public ProjectsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore) : base(defaultRootPageViewModel, databaseStore)
+        public ProjectsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(defaultRootPageViewModel, databaseStore, messageBoxService)
         {
             DatabaseStore.CategorieStore.Load();
             ProjectsSource = new List<ProjectContainerHolder>();

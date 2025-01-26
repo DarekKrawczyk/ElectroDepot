@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopClient.Navigation;
+using DesktopClient.Services;
 using ElectroDepotClassLibrary.Stores;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        public RootNavigatorViewModel(RootPageViewModel defaultPageViewModel, DatabaseStore databaseStore) : base(databaseStore)
+        public RootNavigatorViewModel(RootPageViewModel defaultPageViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService) : base(databaseStore, msgBoxService)
         {
             _rootPage = defaultPageViewModel;
         }

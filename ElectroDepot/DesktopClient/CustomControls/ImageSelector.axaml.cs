@@ -33,6 +33,12 @@ public class ImageSelector : ListBox
         set => SetValue(MyTextProperty, value);
     }
 
+    private void ClearData()
+    {
+        //imagesListBox.SelectedItem = null;
+        searchTextBox.Text = string.Empty;
+        FilteredImages.Refresh();
+    }
 
     public static readonly StyledProperty<DataGridCollectionView> FilteredImagesProperty =
     AvaloniaProperty.Register<ImageSelector, DataGridCollectionView>(nameof(FilteredImages));
@@ -67,36 +73,7 @@ public class ImageSelector : ListBox
     private TextBox searchTextBox;
     private ListBox imagesListBox;
     private Button selectButton;
-    //public ImageSelector()
-    //{
-    //    //Images = new ObservableCollection<ImageContainer>();
-
-    //    DataContext = this;
-
-    //    FilteredImages = new DataGridCollectionView(ImageContainers);
-    //    FilteredImages.Filter = (object item) =>
-    //    {
-    //        if (item != null && item is ImageContainer imgContainer)
-    //        {
-    //            if (searchTextBox != null)
-    //            {
-    //                if (imgContainer.Name.ToLower().Contains(searchTextBox!.Text.ToLower(), StringComparison.InvariantCulture))
-    //                {
-    //                    return true;
-    //                }
-    //                else
-    //                {
-    //                    return false;
-    //                }
-    //            }
-    //            else
-    //            {
-    //                return true;
-    //            }
-    //        }
-    //        return true;
-    //    };
-    //}
+    private Button cancelButton;
 
     // Define dependency properties for the commands
     public static readonly StyledProperty<ICommand?> SelectCommandProperty =
@@ -129,6 +106,7 @@ public class ImageSelector : ListBox
         var inputtext = e.NameScope.Find<Control>("TextBoxInput");
         var imagesListBoxx = e.NameScope.Find<Control>("ImagesListBox");
         var selectButtonn = e.NameScope.Find<Control>("SelectButton");
+        var cancelButtonn = e.NameScope.Find<Control>("CancelButton");
 
         if (inputtext != null)
         {
@@ -143,6 +121,19 @@ public class ImageSelector : ListBox
         if (selectButtonn != null)
         {
             selectButton = (selectButtonn as Button);
+            selectButton.Click += (s, e) =>
+            {
+                ClearData();
+            };
+        }
+
+        if (cancelButtonn != null)
+        {
+            cancelButton = (cancelButtonn as Button);
+            cancelButton.Click += (s, e) =>
+            {
+                ClearData();
+            };
         }
 
         //Images = new ObservableCollection<ImageContainer>();

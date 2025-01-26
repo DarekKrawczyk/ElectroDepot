@@ -1,0 +1,33 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:DesktopClient.UserInterfaceElements">
+
+  <Design.PreviewWith>
+    <controls:LastPageButton />
+  </Design.PreviewWith>
+ 
+  <ControlTheme x:Key="{x:Type controls:LastPageButton}" TargetType="controls:LastPageButton">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Button x:Name="FirstPageButton" Width="44" MaxWidth="44" MinWidth="44" Command="{TemplateBinding Command}">
+          <Label Classes="ButtonIcon" Content="&#xE064;"></Label>
+          <Button.Styles>
+            <Style Selector="Button#FirstPageButton">
+              <Setter Property="BorderBrush" Value="Black"></Setter>
+              <Setter Property="BorderThickness" Value="1"></Setter>
+              <Setter Property="Background" Value="{DynamicResource PltWhiteMilk}"/>
+              <Setter Property="Foreground" Value="Black"/>
+            </Style>
+
+            <Style Selector="Button#FirstPageButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+              <Setter Property="BorderBrush" Value="Black"></Setter>
+              <Setter Property="BorderThickness" Value="1"></Setter>
+              <Setter Property="Background" Value="{DynamicResource PltGray}"></Setter>
+              <Setter Property="Foreground" Value="Black"/>
+            </Style>
+          </Button.Styles>
+        </Button>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

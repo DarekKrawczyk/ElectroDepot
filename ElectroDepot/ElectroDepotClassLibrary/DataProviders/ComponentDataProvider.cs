@@ -199,7 +199,7 @@ namespace ElectroDepotClassLibrary.DataProviders
             }
         }
 
-        public async Task<bool> UpdateComponent(Component component)
+        public async Task<Component> UpdateComponent(Component component)
         {
             UpdateComponentDTO updateDTO = component.ToUpdateDTO();
 
@@ -209,7 +209,20 @@ namespace ElectroDepotClassLibrary.DataProviders
             string url = ComponentEndpoints.Update(component.ID);
             var response = await HTTPClient.PutAsync(url, content);
 
-            return response.IsSuccessStatusCode;
+            if (response.IsSuccessStatusCode)
+            {
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+
+                var jsonRes = await response.Content.ReadAsStringAsync();
+                ComponentDTO? updatedComponent = JsonSerializer.Deserialize<ComponentDTO>(jsonRes, options);
+
+                return updatedComponent.ToModel();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<bool> DeleteComponent(int ID)

@@ -11,15 +11,50 @@
   </Application.DataTemplates>
 
   <Application.Styles>
-    <FluentTheme />
+    <FluentTheme/>
     <themes:RangeSliderTheme />
     <StyleInclude Source="avares://DesktopClient/Styles/AppDefaultStyles.axaml"/>
     <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+
+    <!-- MessageBox -->
+    <Style Selector="Grid.MsBoxCustomContainer">
+      <Setter Property="Background" Value="{DynamicResource SectionGradient}"></Setter>
+      <!--<Setter Property="Background">
+        <Setter.Value>
+          <ImageBrush Source="avares://DesktopClient/Assets/Background_FHD_White.png" AlignmentY="Center"
+                                        AlignmentX="Center"
+                                        Stretch="UniformToFill"/>
+        </Setter.Value>
+      </Setter>-->
+    </Style>
   </Application.Styles>
 
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/RevertWideButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/RevertButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/OkButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/GenerateRaportButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/ReportBugButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/SaveButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/NightModeButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/HelpButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/AddButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/SelectButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/CancelButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/ClearButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/DownloadOnlineContentButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/CopyToClipboardButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/UploadContentButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/DeleteButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/EditWideButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/EditButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/PDFButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/FirstPageButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/LastPageButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/NextPageButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/PreviousPageButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/CustomControls/ImageSelector.axaml' />
         <ResourceInclude Source='avares://DesktopClient/CustomControls/SupplierNodeButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/CustomControls/ComponentNodeButton.axaml' />
@@ -75,6 +110,13 @@
     <SolidColorBrush x:Key="PltBlue" Color="#457B9D" />
     <SolidColorBrush x:Key="PltDarkBlue" Color="#1D3557" />
     <SolidColorBrush x:Key="PltDarkBlueS2" Color="#192F4D" />
+    <SolidColorBrush x:Key="PltGreenS1" Color="#60E672" />
+    <SolidColorBrush x:Key="PltGreenS2" Color="#40DD50" />
+    <SolidColorBrush x:Key="PltOrangeS1" Color="#ECAA5B" />
+    <SolidColorBrush x:Key="PltOrangeS2" Color="#E8A435" />
+    <SolidColorBrush x:Key="PltPurpleS1" Color="#A678E2" />
+    <SolidColorBrush x:Key="PltPurpleS2" Color="#9058DB" />
+
 
     <Color x:Key="PltBlueColorS1">#457B9D</Color>
     <Color x:Key="PltDarkBlueColorS1">#1D3557</Color>
@@ -87,12 +129,21 @@
     <Color x:Key="PltLightBlueColorS3">#154165</Color>
     <Color x:Key="PltBlueColor">#457B9D</Color>
 
+    <Color x:Key="PltMilkColorS1">#00F7F5E7</Color>
+    <Color x:Key="PltMilkColorS2">#80F7F5E7</Color>
+    <Color x:Key="PltMilkColorS3">#FFF7F5E7</Color>
+
     <LinearGradientBrush x:Key="SectionGradient" StartPoint="0%,0%" EndPoint="100%,100%">
       <GradientStop Color="{DynamicResource PltLightBlueColorS1}" Offset="0.1"/>
       <GradientStop Color="{DynamicResource PltLightBlueColorS2}" Offset="0.5"/>
       <GradientStop Color="{DynamicResource PltLightBlueColorS3}" Offset="1.0"/>
     </LinearGradientBrush>
 
+    <RadialGradientBrush x:Key="MiddleGradient">
+      <GradientStop Color="{DynamicResource PltMilkColorS3}" Offset="0.5"/>
+      <GradientStop Color="{DynamicResource PltMilkColorS2}" Offset="1"/>
+    </RadialGradientBrush>
+    
   </Application.Resources>
-
+  
 </Application>

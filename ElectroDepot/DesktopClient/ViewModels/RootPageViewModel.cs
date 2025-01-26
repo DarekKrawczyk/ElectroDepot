@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopClient.Navigation;
+using DesktopClient.Services;
 using ElectroDepotClassLibrary.Stores;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace DesktopClient.ViewModels
         }
 
 
-        public RootPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore) : base(windowViewModel, databaseStore)
+        public RootPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(windowViewModel, databaseStore, messageBoxService)
         {
             DatabaseStore.PredefinedImagesStore.Load();
         }
@@ -40,23 +41,23 @@ namespace DesktopClient.ViewModels
             RootNavigatorViewModel destinationViewModel;
             if (destination == "Home")
             {
-                destinationViewModel = new HomePageViewModel(this, DatabaseStore);
+                destinationViewModel = new HomePageViewModel(this, DatabaseStore, MsBoxService);
             }
             else if (destination == "Components")
             {
-                destinationViewModel = new ComponentsPageViewModel(this, DatabaseStore);
+                destinationViewModel = new ComponentsPageViewModel(this, DatabaseStore, MsBoxService);
             }
             else if (destination == "Projects")
             {
-                destinationViewModel = new ProjectsPageViewModel(this, DatabaseStore);
+                destinationViewModel = new ProjectsPageViewModel(this, DatabaseStore, MsBoxService);
             }
             else if (destination == "Purchases")
             {
-                destinationViewModel = new PurchasesPageViewModel(this, DatabaseStore);
+                destinationViewModel = new PurchasesPageViewModel(this, DatabaseStore, MsBoxService);
             }
             else if (destination == "Tracking")
             {
-                destinationViewModel = new MonitoringPageViewModel(this, DatabaseStore);
+                destinationViewModel = new MonitoringPageViewModel(this, DatabaseStore, MsBoxService);
             }
             else
             {
