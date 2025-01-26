@@ -13,7 +13,9 @@
   <Application.Styles>
     <FluentTheme/>
     <themes:RangeSliderTheme />
+    <StyleInclude Source="avares://AvaloniaProgressRing/Styles/ProgressRing.xaml"/>
     <StyleInclude Source="avares://DesktopClient/Styles/AppDefaultStyles.axaml"/>
+    <StyleInclude Source="avares://Notification.Avalonia/Themes/Generic.xaml" />
     <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 
     <!-- MessageBox -->
@@ -133,6 +135,12 @@
     <Color x:Key="PltMilkColorS2">#80F7F5E7</Color>
     <Color x:Key="PltMilkColorS3">#FFF7F5E7</Color>
 
+    <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="30%,0%" EndPoint="50%,100%">
+      <GradientStop Color="{DynamicResource PltDarkBlueColorS2}" Offset="0.0"/>
+      <GradientStop Color="{DynamicResource PltDarkBlueColorS1}" Offset="0.5"/>
+      <GradientStop Color="{DynamicResource PltBlueColorS1}" Offset="1.0"/>
+    </LinearGradientBrush>
+    
     <LinearGradientBrush x:Key="SectionGradient" StartPoint="0%,0%" EndPoint="100%,100%">
       <GradientStop Color="{DynamicResource PltLightBlueColorS1}" Offset="0.1"/>
       <GradientStop Color="{DynamicResource PltLightBlueColorS2}" Offset="0.5"/>

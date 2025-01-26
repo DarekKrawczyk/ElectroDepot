@@ -12,8 +12,8 @@ namespace ElectroDepotClassLibrary.Stores
         private readonly UserDataProvider _userDataProvider;
         private User _loggedInUser;
 
-        //public User LoggedInUser { get { return _loggedInUser; } }
-        public User LoggedInUser { get { return new User(1011, "username", "password", "email", "Darius"); } }
+        public User LoggedInUser { get { return _loggedInUser; } }
+        //public User LoggedInUser { get { return new User(1011, "username", "password", "email", "Darius"); } }
         public UserDataProvider UsersDP { get { return _userDataProvider; } }
 
         public event Action UserLoggedIn;
@@ -40,6 +40,21 @@ namespace ElectroDepotClassLibrary.Stores
             LoggingStatus status = await _loginService.Login(username, password);
 
             if(status == LoggingStatus.Success)
+            {
+                _loggedInUser = _loginService.UserCredentials;
+                UserLoggedIn?.Invoke();
+            }
+
+            return status;
+        }
+
+        public async Task<LoggingStatus> UserRememberMeLogin(string username, string passwordHash)
+        {
+            UserLogout();
+
+            LoggingStatus status = await _loginService.LoginViaHash(username, passwordHash);
+
+            if (status == LoggingStatus.Success)
             {
                 _loggedInUser = _loginService.UserCredentials;
                 UserLoggedIn?.Invoke();

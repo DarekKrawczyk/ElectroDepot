@@ -45,7 +45,7 @@ namespace DesktopClient
             AvaloniaXamlLoader.Load(this);
         }
 
-        public override void OnFrameworkInitializationCompleted()
+        public override async void OnFrameworkInitializationCompleted()
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
@@ -55,18 +55,20 @@ namespace DesktopClient
 
                 MessageBoxService _msgService = new MessageBoxService();
 
-                _databaseStore.UsersStore.UserLogin("username", "password"); // While using  async on this method, windows doesn't show up!
+                //_databaseStore.UsersStore.UserLogin("username", "password"); // While using  async on this method, windows doesn't show up!
 
                 //Navigator navigator = new Navigator(_databaseStore);
                 MainWindowViewModel windowViewModel = new MainWindowViewModel(null, _databaseStore, _msgService);
 
-                HomePageViewModel home = new HomePageViewModel(null, _databaseStore, _msgService);
-                RootPageViewModel root = new RootPageViewModel(windowViewModel, _databaseStore, _msgService);
-                home.Root = root;
+                LoginPageViewModel home = new LoginPageViewModel(windowViewModel, _databaseStore, _msgService, false);
+                //HomePageViewModel home = new HomePageViewModel(null, _databaseStore, _msgService);
+                //RootPageViewModel root = new RootPageViewModel(windowViewModel, _databaseStore, _msgService);
+                //home.Root = root;
 
-                root.PageView = home;
+                //root.PageView = home;
 
-                windowViewModel.View = root;
+                windowViewModel.View = home;
+                //windowViewModel.View = root;
 
                 //MainWindowViewModel window = new MainWindowViewModel(_databaseStore, root);
                 //navigator.Window = window;
@@ -78,6 +80,8 @@ namespace DesktopClient
                     DataContext = windowViewModel,
                 };
                 _msgService.SetWindow(desktop.MainWindow);
+
+                await home.TryAutoLogin();
             }
 
             base.OnFrameworkInitializationCompleted();

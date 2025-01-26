@@ -1,4 +1,4 @@
-# ⚡ ElectroDepot  
+![ElektroDepot](Assets/ElectroDepotLogo.png)  
 
 **ElectroDepot** is a **inventory management application** for electronic components. It helps electronics enthusiasts and professionals keep track of their **integrated circuits (ICs)** and other parts, solving the common problem of losing track of components or making unnecessary purchases.  
 
@@ -49,6 +49,12 @@ ElectroDepot is designed to be the tool for organizing components, and ensuring 
 For now top priority is to write usable desktop application. Next steps will involve porting this app to other platforms.
 
 #### Functionalities implemented
+- **User utility** 
+  - **Sign in** 
+      ![Projects tab](Assets/User_Panel_Signin_Tab_Refactored.gif)
+  - **Sign up** 
+      ![Projects tab](Assets/User_Panel_Signup_Tab_Refactored.gif)
+
 - **Home page**  
 ![Home](Assets/Home_Panel_Refactored.gif)  
 
@@ -65,8 +71,7 @@ For now top priority is to write usable desktop application. Next steps will inv
 ![Purchases tab](Assets/Panel_Purchases.gif)  
 - **Projects**  
 ![Projects tab](Assets/Panel_Projects.gif)
-- **User Login and Registration**  
-![Projects tab](Assets/Panel_Login.gif)
+
 
 ---
 

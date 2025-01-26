@@ -41,6 +41,9 @@ namespace ElectroDepotClassLibrary.DataProviders
                 string url = UserEndpoints.GetByUsername(name);
                 var response = await HTTPClient.GetAsync(url);
 
+                // TODO: Delete dummy wait time. Because of that UI thread is forzen and spinning circle is not spinning.
+                //Thread.Sleep(3000);
+
                 if (response.IsSuccessStatusCode)
                 {
                     JsonSerializerOptions options = new JsonSerializerOptions();

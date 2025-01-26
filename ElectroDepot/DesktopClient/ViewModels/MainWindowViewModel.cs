@@ -38,7 +38,7 @@ namespace DesktopClient.ViewModels
             WindowNavigatorViewModel destinationViewModel;
             if (destination == "Login")
             {
-                destinationViewModel = new LoginPageViewModel(this, DatabaseStore, MsBoxService);
+                destinationViewModel = new LoginPageViewModel(this, DatabaseStore, MsBoxService, true);
             }
             else if (destination == "Root")
             {

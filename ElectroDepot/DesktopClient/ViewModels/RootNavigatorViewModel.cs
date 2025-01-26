@@ -13,6 +13,8 @@ namespace DesktopClient.ViewModels
 {
     public partial class RootNavigatorViewModel : BaseViewModel, INavigator
     {
+        private readonly SecureStorageHelperService _secureStorageService;
+
         [ObservableProperty]
         private RootPageViewModel _rootPage;   
         
@@ -31,6 +33,7 @@ namespace DesktopClient.ViewModels
         public RootNavigatorViewModel(RootPageViewModel defaultPageViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService) : base(databaseStore, msgBoxService)
         {
             _rootPage = defaultPageViewModel;
+            _secureStorageService = new SecureStorageHelperService();
         }
 
         [RelayCommand]
