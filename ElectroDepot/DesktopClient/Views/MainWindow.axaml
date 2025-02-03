@@ -13,7 +13,7 @@
         MaxWidth="1555"
         x:Class="DesktopClient.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/Visual/ElectroDepotIcon.ico"
         Title="DesktopClient"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"

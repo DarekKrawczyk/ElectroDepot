@@ -3,6 +3,7 @@
         xmlns:UIE="using:DesktopClient.UserInterfaceElements">
   <Design.PreviewWith>
     <StackPanel Background="White">
+      <Button Classes="defaultNormal">Login</Button>
       <UIE:ClearButton></UIE:ClearButton>
       <UIE:DeleteButton></UIE:DeleteButton>
       <Button Classes="default">
@@ -288,6 +289,16 @@
     <Setter Property="BorderThickness" Value="1"></Setter>
   </Style>
 
+  <Style Selector="Button.defaultNormal">
+    <Setter Property="Background" Value="{DynamicResource PltWhiteMilk}"></Setter>
+    <Setter Property="Foreground" Value="{DynamicResource PltGrayDarkDarkDark}"/>
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="FontSize" Value="20"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="MinWidth" Value="140"/>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+  </Style>
 
   <Style Selector="Button/template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Transitions">
@@ -299,6 +310,13 @@
   </Style>
 
   <Style Selector="Button.default:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background" Value="{DynamicResource PltGray}"/>
+    <Setter Property="Foreground" Value="Black"/>
+    <Setter Property="BorderBrush" Value="Black"></Setter>
+    <Setter Property="BorderThickness" Value="1"></Setter>
+  </Style>
+
+  <Style Selector="Button.defaultNormal:pointerover /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="Background" Value="{DynamicResource PltGray}"/>
     <Setter Property="Foreground" Value="Black"/>
     <Setter Property="BorderBrush" Value="Black"></Setter>

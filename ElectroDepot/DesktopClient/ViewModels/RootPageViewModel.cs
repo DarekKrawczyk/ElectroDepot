@@ -34,6 +34,7 @@ namespace DesktopClient.ViewModels
         public RootPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(windowViewModel, databaseStore, messageBoxService)
         {
             DatabaseStore.PredefinedImagesStore.Load();
+            NavigatePage("Home");
         }
 
         private RootNavigatorViewModel GetViewModel(string destination)

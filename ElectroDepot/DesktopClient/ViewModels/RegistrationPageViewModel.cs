@@ -15,11 +15,37 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DesktopClient.Services;
+using Avalonia.Notification;
 
 namespace DesktopClient.ViewModels
 {
     public partial class RegistrationPageViewModel : WindowNavigatorViewModel
     {
+        [ObservableProperty]
+        private bool _signingUp = false;
+
+        public INotificationMessageManager Manager { get; } = new NotificationMessageManager();
+
+        public void ClearText()
+        {
+            SetProperty(ref _name, "", false, nameof(Name));
+            ClearErrors(nameof(Name));
+
+            SetProperty(ref _username, "", false, nameof(Username));
+            ClearErrors(nameof(Username));
+
+            SetProperty(ref _email, "", false, nameof(Email));
+            ClearErrors(nameof(Email));
+
+            SetProperty(ref _password, "", false, nameof(Password));
+            ClearErrors(nameof(Password));
+
+            SetProperty(ref _confirmedPassword, "", false, nameof(ConfirmedPassword));
+            ClearErrors(nameof(ConfirmedPassword));
+
+            //SetProperty(ref _name, "", false, nameof(Name));
+        }
+
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required(ErrorMessage = "You have to provide Name!")]
@@ -105,22 +131,99 @@ namespace DesktopClient.ViewModels
             }
         }
 
+        public bool CanUserRegister()
+        {
+            return HasErrors;
+        }
+
+        private async Task AfterRegisterAction(RegistrationStatus status)
+        {
+            switch (status)
+            {
+                case RegistrationStatus.Success:
+                    SigningUp = false;
+                    Manager
+                        .CreateMessage()
+                        .Animates(true)
+                        .Background("#333")
+                        .Accent("#40DD50")
+                        .HasBadge("Success")
+                        .HasMessage("User registered.")
+                        .Dismiss().WithDelay(TimeSpan.FromSeconds(5))
+                        .Dismiss().WithButton("Sign in", button =>
+                        {
+                            Navigate("Login");
+                        })
+                        .Queue();
+                    ClearText();
+                    break;
+                case RegistrationStatus.Failure:
+                    SigningUp = false;
+                    Manager
+                        .CreateMessage()
+                        .Animates(true)
+                        .Background("#333")
+                        .Accent("#E63946")
+                        .HasBadge("Error")
+                        .HasMessage("Failed to register user.")
+                        .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                        .Queue();
+                    break;
+                case RegistrationStatus.FailureEmailTaken:
+                    SigningUp = false;
+                    Manager
+                        .CreateMessage()
+                        .Animates(true)
+                        .Background("#333")
+                        .Accent("#E63946")
+                        .HasBadge("Error")
+                        .HasMessage("This E-mail is already taken.")
+                        .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                        .Queue();
+                    break;
+                case RegistrationStatus.FailureUsernameTaken:
+                    SigningUp = false;
+                    Manager
+                        .CreateMessage()
+                        .Animates(true)
+                        .Background("#333")
+                        .Accent("#E63946")
+                        .HasBadge("Error")
+                        .HasMessage("This username is already taken.")
+                        .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                        .Queue();
+                    break;
+                case RegistrationStatus.FailurePasswordDontMath:
+                    SigningUp = false;
+                    Manager
+                        .CreateMessage()
+                        .Animates(true)
+                        .Background("#333")
+                        .Accent("#E63946")
+                        .HasBadge("Error")
+                        .HasMessage("Passwords don't match.")
+                        .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                        .Queue();
+                    break;
+                default:
+                    //ClearText();
+                    break;
+            }
+
+            //ValidateAllProperties();
+
+            CanRegister = !CanUserRegister();
+        }
+
         [RelayCommand]
         public async void Register()
         {
             CanRegister = false;
+            SigningUp = true;
 
             RegistrationStatus status = await DatabaseStore.UsersStore.UserRegister(Username, Password, ConfirmedPassword, Email, Name);
 
-            if (status == RegistrationStatus.Success)
-            {
-                string buttonResult = await MsBoxService.DisplayMessageBox("User registered successfully", Icon.Success);
-                //_navigator.NavigateTo(Page.Login);
-            }
-            else
-            {
-                string buttonResult = await MsBoxService.DisplayMessageBox("Failed to register user!", Icon.Error);
-            }
+            await AfterRegisterAction(status);
         }
 
         public RegistrationPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(windowViewModel, databaseStore, messageBoxService)

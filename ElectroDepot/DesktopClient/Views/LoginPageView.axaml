@@ -5,48 +5,84 @@
              mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="720"
              xmlns:vm="using:DesktopClient.ViewModels"
              x:Class="DesktopClient.Views.LoginPageView"
+             xmlns:svg="clr-namespace:Avalonia.Svg.Skia;assembly=Avalonia.Svg.Skia"
+             xmlns:progRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
+             xmlns:notification="clr-namespace:Avalonia.Notification.Controls;assembly=Notification.Avalonia"
              x:DataType="vm:LoginPageViewModel">
 
   <UserControl.Styles>
-    <StyleInclude Source="avares://DesktopClient/Styles/ButtonDefaultOverrideStyle.axaml"/>
     <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
     <StyleInclude Source="avares://DesktopClient/Styles/LabelDefaultOverrideStyle.axaml"/>
     <StyleInclude Source="avares://DesktopClient/Styles/TextBoxDefaultOverrideStyle.axaml"/>
     <StyleInclude Source="avares://DesktopClient/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
   </UserControl.Styles>
 
-  <Grid ColumnDefinitions="33* auto 33*" >
-    <Grid Grid.Column="1" RowDefinitions="33* auto 33*">
-      <Border Grid.Row="1" CornerRadius="10" BorderThickness="1" BorderBrush="{DynamicResource UIMediumGray}">
-      <StackPanel Spacing="20" Margin="10">
-        <Label FontSize="32">Log in</Label>
-
-        <StackPanel Orientation="Horizontal" Spacing="10">
-          <Label>Don't have an account?</Label>
-          <Button Command="{Binding CreateAccountCommand}" >Create an account</Button>
-        </StackPanel>
-
-        <StackPanel Orientation="Vertical">
-          <Label FontWeight="Bold">Username</Label>
-          <TextBox Text="{Binding UsernameText}" Watermark="Enter username"></TextBox>
-        </StackPanel>
-
-        <StackPanel Orientation="Vertical">
-          <StackPanel Orientation="Horizontal" Spacing="10">
-            <Label FontWeight="Bold">Password</Label>
-            <CheckBox>Show</CheckBox>
-          </StackPanel>
-          <TextBox Text="{Binding PasswordText}" Watermark="Enter password"></TextBox>
-        </StackPanel>
-        
-        <CheckBox>Keep me logged in</CheckBox>
-        <Button IsEnabled="{Binding CanLogin}" Command="{Binding LoginCommand}">Login</Button>
-        <StackPanel Orientation="Horizontal">
-          <Button>Forgot password</Button>
-          <Button>Forgot username</Button>
-        </StackPanel>
-      </StackPanel>
+  <Border>
+    <Grid RowDefinitions="auto *">
+      <Border Grid.Row="0" Height="30" HorizontalAlignment="Stretch" Background="{DynamicResource PltDarkBlue}" IsHitTestVisible="False">
       </Border>
+      <Grid Grid.Row="1" ColumnDefinitions="70* 30*"  Background="{DynamicResource PltDarkBlue}" >
+        <Border Grid.Column="0" CornerRadius="0 5 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}">
+          <Grid ColumnDefinitions="40* 60*">
+            <Grid.Background>
+              <ImageBrush AlignmentY="Center"
+                          AlignmentX="Center"
+                          Source="avares://DesktopClient/Assets/Visual/ElectroDepotLogo.png"
+                          Stretch="UniformToFill">
+                
+              </ImageBrush>
+            </Grid.Background>
+            <Border Grid.Row="0" Margin="10" VerticalAlignment="Bottom">
+              <notification:NotificationMessageContainer HorizontalAlignment="Stretch" Manager="{Binding Manager}" />
+            </Border>
+          </Grid>
+        </Border>
+        <Border Grid.Column="1" CornerRadius="5" BorderThickness="1" Margin="0 0 0 0">
+            <StackPanel Spacing="10" Margin="40 10 40 10" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+              <Label Foreground="{DynamicResource PltWhiteMilk}" FontSize="48">Sign in</Label>
+
+              <Grid ColumnDefinitions="auto *">
+                <Label Foreground="White" Grid.Column="0" VerticalAlignment="Center">Don't have an account?</Label>
+                <Button IsEnabled="{Binding !LoggingIn}" Classes="defaultNormal" Grid.Column="1" HorizontalAlignment="Right" Command="{Binding NavigateCommand}" CommandParameter="Register">Sign up</Button>
+              </Grid>
+
+              <StackPanel Orientation="Vertical" Margin="0 30 0 0">
+                <Label Foreground="{DynamicResource PltWhiteMilk}" FontSize="20">Username</Label>
+                <TextBox IsEnabled="{Binding !LoggingIn}" Text="{Binding UsernameText}" FontSize="18"></TextBox>
+              </StackPanel>
+
+              <StackPanel Orientation="Vertical">
+                <Label Foreground="{DynamicResource PltWhiteMilk}" FontSize="20">Password</Label>
+                <TextBox Classes="revealPasswordButton" FontSize="18"
+                         PasswordChar="*"
+                         IsEnabled="{Binding !LoggingIn}"
+                         Text="{Binding PasswordText}" />
+              </StackPanel>
+
+              <CheckBox Foreground="White" IsChecked="{Binding RememberMe}" IsEnabled="{Binding !LoggingIn}">Remember me</CheckBox>
+              
+              <Grid ColumnDefinitions="50* 50*">
+                <Button Classes="defaultNormal" IsEnabled="{Binding CanLogin}" Command="{Binding LoginCommand}" HorizontalAlignment="Stretch">Login</Button>
+              </Grid>
+
+
+              <progRing:ProgressRing 
+                       Width="80"
+                       Height="80"
+                       IsActive="{Binding LoggingIn, Mode=TwoWay}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="{DynamicResource PltWhiteMilk}"
+                       Margin="10"/>
+              
+              <Label Foreground="White" Margin="0 0 0 0">Forgot password or username?</Label>
+              <Grid ColumnDefinitions="auto 10 auto">
+                <Button IsEnabled="{Binding !LoggingIn}" Classes="defaultNormal" Grid.Column="0">Forgot password</Button>
+                <Button IsEnabled="{Binding !LoggingIn}" Classes="defaultNormal" Grid.Column="2">Forgot username</Button>
+              </Grid>
+            </StackPanel>
+          </Border>
+      </Grid>
     </Grid>
-  </Grid>
+  </Border>    
 </UserControl>

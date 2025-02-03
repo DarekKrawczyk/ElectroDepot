@@ -64,5 +64,32 @@ namespace ElectroDepotClassLibrary.Services
                 return LoggingStatus.FatalError;
             }
         }
+
+        public async Task<LoggingStatus> LoginViaHash(string username, string passwordHash)
+        {
+            try
+            {
+                User fromDB = null;
+                _loggedUser = null;
+
+                fromDB = await _usersStore.UsersDP.GetUserByUsername(username);
+                if (fromDB == null)
+                {
+                    return LoggingStatus.FailureUserDoesntExist;
+                }
+
+                if(fromDB.Password != passwordHash)
+                {
+                    return LoggingStatus.FailureInvalidCredentials;
+                }
+
+                _loggedUser = fromDB;
+                return LoggingStatus.Success;
+            }
+            catch (Exception exception)
+            {
+                return LoggingStatus.FatalError;
+            }
+        }
     }
 }
