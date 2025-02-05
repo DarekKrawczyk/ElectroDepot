@@ -15,6 +15,10 @@
     <!-- Upper strip-->
     <Grid Grid.Row="0" IsHitTestVisible="False"
       Background="{DynamicResource PltDarkBlueS2}">
+      <!--<StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="7 0 0 0">
+        <Image Width="48" Height="48" Source="avares://DesktopClient/Assets/Visual/ElectroDepotIcon.png"/>
+        <Label Foreground="{DynamicResource PltWhiteMilk}" VerticalAlignment="Center" FontSize="16">ElektroDepot</Label>
+      </StackPanel>-->
     </Grid>
 
     <!-- Two panels, left and right -->

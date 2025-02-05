@@ -59,6 +59,34 @@ namespace ElectroDepotClassLibrary.DataProviders
             }
         }
 
+        public async Task<Component> GetComponentByIDWithImage(int ID)
+        {
+            try
+            {
+                string url = ComponentEndpoints.GetByIDWithImage(ID);
+                var response = await HTTPClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    JsonSerializerOptions options = new JsonSerializerOptions();
+                    options.PropertyNameCaseInsensitive = true;
+
+                    var json = await response.Content.ReadAsStringAsync();
+                    ComponentDTO? component = JsonSerializer.Deserialize<ComponentDTO>(json, options);
+
+                    return component.ToModel();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<Component> GetComponentByID(int ID)
         {
             try

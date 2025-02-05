@@ -66,9 +66,17 @@ For now top priority is to write usable desktop application. Next steps will inv
   - **Preview tab**  
       ![Components/Components](Assets/Components_Panel_Preview_Tab_Refactored.gif)  
 
+- **Purchases page**
+  - **Purchases tab**  
+      ![Purchases/Purchases](Assets/Purchases_Panel_Purchases_Tab_Refactored.gif) 
+  - **Add tab**  
+      ![Purchases/Add](Assets/Purchases_Panel_Add_Tab_Refactored.gif)  
+  - **Import tab**  
+      ![Purchases/Import](Assets/Purchases_Panel_Add_Import_Refactored.gif)
+  - **Preview tab**  
+      ![Purchases/Preview](Assets/Purchases_Panel_Add_Preview_Refactored.gif)
+
 #### Refactoring needed
-- **Purchases**  
-![Purchases tab](Assets/Panel_Purchases.gif)  
 - **Projects**  
 ![Projects tab](Assets/Panel_Projects.gif)
 

@@ -21,14 +21,25 @@ namespace DesktopClient.Containers
             Component = component;
         }
 
-        [RelayCommand]
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(AddToPurchasedComponentsCommand))]
+        public bool _canAdd = true;
+
+        [RelayCommand(CanExecute = nameof(CanAddToPurchasedComponents))]
         private void AddToPurchasedComponents()
         {
-            Console.WriteLine();
-            PurchaseItem pItem = new PurchaseItem(0, 0, Component.Component.ID, 0, 0);
+            PurchaseItem pItem = new PurchaseItem(0, 0, Component.Component.ID, 1, 0);
             PurchaseItemComponentContainer piContainer = new PurchaseItemComponentContainer(Component.Component, pItem, Component.Category);
             _viewModel.PurchaseComponentsSource?.Add(new PurchaseItemComponentContainerHolder(_viewModel, piContainer));
+            CanAdd = false;
             _viewModel.RefreshPurchasedComponents();
+            _viewModel.Add_ReevaluateTotalPrice();
+            _viewModel.CartComponentsSizeChanged();
+        }
+
+        private bool CanAddToPurchasedComponents()
+        {
+            return _canAdd;
         }
     }
 }

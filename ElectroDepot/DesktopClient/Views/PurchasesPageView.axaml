@@ -5,7 +5,11 @@
              mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="720"
              xmlns:vm="using:DesktopClient.ViewModels"
              xmlns:cont="using:ElectroDepotClassLibrary.Containers"
+             xmlns:contD="using:DesktopClient.Containers"
+             xmlns:UIElements="using:DesktopClient.UserInterfaceElements"
              xmlns:spccont="using:DesktopClient.Containers"
+             xmlns:interactivity="http://reactiveui.net"
+             xmlns:interaction="http://reactiveui.net/interaction"
              xmlns:CustomControls="using:DesktopClient.CustomControls"
              x:DataType="vm:PurchasesPageViewModel"
              xmlns:rs="using:RangeSlider.Avalonia.Controls"
@@ -18,329 +22,737 @@
     <StyleInclude Source="avares://DesktopClient/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
   </UserControl.Styles>
 
-
   <Grid ColumnDefinitions="0, *, 0" x:Name="MainGrid">
     <DockPanel Grid.Column="1">
       <TabControl TabStripPlacement="Top" SelectedIndex="{Binding SelectedTab}">
-        <TabItem Header="Collection">
-          <Grid RowDefinitions="auto, *, auto">
-            <!-- Header with filters, selectors, and search -->
-            <StackPanel Grid.Row="0"
-                        Spacing="20"
-                        Orientation="Horizontal"
-                        VerticalAlignment="Center"
-                        Margin="0 10 0 10">
+        <TabItem Header="Purchases" IsEnabled="{Binding Add_IsPurchasesTabEnabled}">
+          <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="-12 0 -12 0" Background="{DynamicResource SectionGradient}">
+            <Grid RowDefinitions="auto, *, auto">
+              <!-- Header with filters, selectors, and search -->
+              <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0 5 0 5" ColumnDefinitions="auto auto * auto auto">
 
-              <!-- Date -->
-              <StackPanel Spacing="10">
-                <StackPanel Orientation="Horizontal">
-                  <Label HorizontalAlignment="Left">From</Label>
-                  <DatePicker MaxYear="{Binding Collection_DateMaxYear}"
-                              MinYear="{Binding Collection_DateMinYear}"
-                              SelectedDate="{Binding Collection_SelectedFromDate, Mode=TwoWay}"></DatePicker>
-                </StackPanel>
+                <!-- Date -->
+                <Border Grid.Column="0" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                  <Grid RowDefinitions="auto auto" Margin="5">
+                    <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
+                      <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Right">
+                        <Label Classes="DefaultLabelAdjust" HorizontalAlignment="Left">From</Label>
+                        <DatePicker MaxYear="{Binding Purchases_DateMaxYear}"
+                                    FontSize="23"
+                                    MinYear="{Binding Purchases_DateMinYear}"
+                                    SelectedDate="{Binding Purchases_SelectedFromDate, Mode=TwoWay}"></DatePicker>
+                        <UIElements:DeleteButton Command="{Binding Purchases_ClearFromDateCommand}" Grid.Column="1"/>
+                      </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1" ColumnDefinitions="* auto" Margin="0 0 0 0">
+                      <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Right">
+                        <Label Classes="DefaultLabelAdjust" HorizontalAlignment="Left">To</Label>
+                        <DatePicker MaxYear="{Binding Purchases_DateMaxYear}"
+                                    FontSize="23"
+                                    MinYear="{Binding Purchases_DateMinYear}>"
+                                    SelectedDate="{Binding Purchases_SelectedToDate, Mode=TwoWay}"></DatePicker>
+                        <UIElements:DeleteButton Command="{Binding Purchases_ClearToDateCommand}" Grid.Column="1"/>
+                      </StackPanel>
+                    </Grid>
+                  </Grid>
+                </Border>
 
-                <StackPanel Orientation="Horizontal">
-                  <Label HorizontalAlignment="Left">To</Label>
-                  <DatePicker MaxYear="{Binding Collection_DateMaxYear}"
-                              MinYear="{Binding Collection_DateMinYear}>"
-                              SelectedDate="{Binding Collection_SelectedToDate, Mode=TwoWay}"></DatePicker>
-                </StackPanel>
-              </StackPanel>
+                <!-- Supplier -->
+                <Border Grid.Column="1" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                  <Grid RowDefinitions="auto auto" Margin="5">
+                    <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
+                      <Label Grid.Column="0" Classes="DefaultLabelLeft">Supplier</Label>
+                      <UIElements:DeleteButton Grid.Column="1" Command="{Binding Purchases_ClearSupplierCommand}"/>
+                    </Grid>
+                    <ComboBox ItemsSource="{Binding SupplierSource}" SelectedItem="{Binding Purchases_SelectedSupplier}" Grid.Row="1" Classes="DefaultComboBox"></ComboBox>
+                  </Grid>
+                </Border>
 
-              <!-- Price -->
-              <StackPanel Orientation="Vertical" Spacing="0">
-                <StackPanel Orientation="Horizontal">
-                  <Label>From</Label>
-                  <TextBox Text="{Binding Collection_PriceFrom}"></TextBox>
-                  <Label>To</Label>
-                  <TextBox Text="{Binding Collection_PriceTo}"></TextBox>
-                </StackPanel>
-                <rs:RangeSlider Minimum="{Binding Collection_MinPrice}"
-                                Maximum="{Binding Collection_MaxPrice}"
-                                LowerSelectedValue="{Binding Collection_SelectedLowPrice}"
-                                UpperSelectedValue="{Binding Collection_SelectedHighPrice}"
-                                IsThumbOverlap="False">
-                </rs:RangeSlider>
-              </StackPanel>
+                <!-- Price -->
+                <Border Grid.Column="2" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                  <Grid RowDefinitions="auto auto" Margin="5 5 5 0">
+                    <Grid Grid.Row="0" ColumnDefinitions="* *" Margin="0 0 0 0">
+                          <StackPanel Orientation="Horizontal" Spacing="5" Grid.Column="0" HorizontalAlignment="Left" Height="41">
+                            <Label Classes="DefaultLabelAdjust">From</Label>
+                            <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                              <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="50" Width="100" FontSize="20" TextAlignment="Center"
+                                         Text="{Binding Purchases_PriceFromFormated}"></TextBlock>
+                            </Border>
 
-              <!-- Supplier -->
-              <StackPanel Orientation="Vertical" Spacing="10">
-                <Label HorizontalAlignment="Left">Supplier</Label>
-                <ComboBox SelectedItem="{Binding Collection_SelectedSupplier, Mode=TwoWay}" ItemsSource="{Binding SupplierSource}" HorizontalAlignment="Left" VerticalAlignment="Center"></ComboBox>
-              </StackPanel>
+                          </StackPanel>
 
+                          <StackPanel Orientation="Horizontal" Spacing="5" Grid.Column="1" HorizontalAlignment="Right">
+                            <Label Classes="DefaultLabelAdjust">To</Label>
+                            <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                              <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="50" Width="100" FontSize="20" TextAlignment="Center"
+                                         Text="{Binding Purchases_PriceToFormated}"></TextBlock>
+                            </Border>
+                          </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1" ColumnDefinitions="auto * auto">
+                      <UIElements:DeleteButton Grid.Column="0" Command="{Binding Purchases_ClearPriceFromCommand}"/>
+                      <rs:RangeSlider Grid.Column="1"
+                          Minimum="{Binding Purchases_MinPrice}" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"
+                                        Maximum="{Binding Purchases_MaxPrice}"
+                                        LowerSelectedValue="{Binding Purchases_SelectedLowPrice}"
+                                        UpperSelectedValue="{Binding Purchases_SelectedHighPrice}"
+                                        IsThumbOverlap="False">
+                      </rs:RangeSlider>
+                      <UIElements:DeleteButton Grid.Column="2" Command="{Binding Purchases_ClearPriceToCommand}"/>
+                    </Grid>
+                  </Grid>
+                </Border>
 
-              <!-- Clear settings -->
-              <StackPanel Orientation="Vertical" Spacing="10">
-                <Label>...</Label>
-                <Button Command="{Binding Collection_ClearSettingsCommand}" >Clear settings</Button>
-              </StackPanel>
-            </StackPanel>
-
-            <!-- Components grid -->
-            <DataGrid ItemsSource="{Binding Purchases}"
-                      SelectedItem="{Binding SelectedPurchase}"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      x:Name="Comps"
-                      GridLinesVisibility="All"
-                      Grid.Row="1"
-                      BorderThickness="1"
-                      BorderBrush="Gray"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch">
-              <DataGrid.Columns>
-                <DataGridTextColumn Header="Date" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.PurchaseDateAsDate}" Width="*"/>
-                <DataGridTextColumn Header="Supplier" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.SupplierName}" Width="*"/>
-                <DataGridTextColumn Header="Components" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.ComponentsQuantity}" Width="200"/>
-                <DataGridTextColumn Header="Price" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.TotalPrice}" Width="200"/>
-              </DataGrid.Columns>
-              <DataGrid.Styles>
-                <Style Selector="DataGridRow">
-                  <Setter Property="ContextMenu">
-                    <ContextMenu>
-                      <MenuItem Header="Preview" x:DataType="spccont:DetailedPurchaseContainerHolder" Command="{Binding PreviewPurchaseCommand}"/>
-                    </ContextMenu>
-                  </Setter>
-                </Style>
-              </DataGrid.Styles>
-            </DataGrid>
-
-            <!-- Footer with buttons -->
-            <StackPanel Grid.Row="2"
-                        Orientation="Horizontal"
-                        Spacing="10"
-                        HorizontalAlignment="Right"
-                        Margin="0 10 0 10">
-              <Button Command="{Binding Collection_RefreshCommand}">Refresh</Button>
-            </StackPanel>
-          </Grid>
-        </TabItem>
-        <TabItem Header="Add">
-          <Grid ColumnDefinitions="50* auto 50*" Margin="0 0 0 10">
-            
-            <!-- Left side -->
-            <Grid Grid.Column="0" RowDefinitions="auto auto * auto">
-              <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10">
-                <StackPanel Orientation="Vertical" Spacing="10">
-                  <Label HorizontalAlignment="Left" FontWeight="Bold">Supplier</Label>
-                  <ComboBox ItemsSource="{Binding SupplierSource}" SelectedItem="{Binding Add_SelectedSupplier}"></ComboBox>
-                </StackPanel>
-
-                <StackPanel Orientation="Vertical" Spacing="10">
-                  <Label HorizontalAlignment="Left" FontWeight="Bold">Purchase date</Label>
-                  <!-- This date size is because of custom buttons styles ... -->
-                  <CalendarDatePicker Watermark="Insert date" Width="300" SelectedDate="{Binding Add_SelectedDate, Mode=TwoWay}"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Vertical" Spacing="10">
-                  <Label HorizontalAlignment="Left" FontWeight="Bold">Total price</Label>
-                  <Label HorizontalAlignment="Left" Content="{Binding Add_TotalPrice, Mode = TwoWay}"></Label>
-                </StackPanel>
-              </StackPanel>
-
-              <!-- Separator -->
-              <Grid Grid.Row="1">
-                <Border Height = "1"
-                        Background = "{DynamicResource UIMediumGray}"
-                        Margin = "10,5"
-                        HorizontalAlignment = "Stretch"/>
+                <!-- Clear / Sorting -->
+                <Border Grid.Column="3" Margin="5 0 5 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                  <Grid RowDefinitions="auto auto" Margin="5">
+                    <Grid ColumnDefinitions="* auto">
+                      <UIElements:ClearButton Grid.Column="0" Margin="0 0 5 0" Command="{Binding Purchases_ClearFormCommand}"/>
+                      <UIElements:DeleteButton Grid.Column="1" Command="{Binding Purchases_ClearSelectedSortingCommand}"/>
+                    </Grid>
+                    <Grid Grid.Row="1" ColumnDefinitions="* auto" Margin="0 5 0 0">
+                      <!--<Button Classes="defaultNormal" Content="Sort" Grid.Column="0" Flyout="{StaticResource SharedMenuFlyout}" Margin="0 0 5 0"/>-->
+                      <ComboBox Classes="DefaultComboBoxFullStretch" Width="220"
+                                PlaceholderText="Select sorting"
+                                SelectedItem="{Binding Purchases_SelectedSorting}" 
+                                Grid.Row="0">
+                        <ComboBox.Styles>
+                          <Style Selector="ComboBox">
+                            
+                          </Style>
+                        </ComboBox.Styles>
+                        <ComboBoxItem>
+                          <StackPanel Orientation="Horizontal">
+                            <Label Classes="ButtonIcon" Content="&#xE156;"></Label>
+                            <Label>Price ascending</Label>
+                          </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                          <StackPanel Orientation="Horizontal">
+                            <Label Classes="ButtonIcon" Content="&#xE8B6;"></Label>
+                            <Label>Price descending</Label>
+                          </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                          <StackPanel Orientation="Horizontal">
+                            <Label Classes="ButtonIcon" Content="&#xE714;"></Label>
+                            <Label>Date ascending</Label>
+                          </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                          <StackPanel Orientation="Horizontal">
+                            <Label Classes="ButtonIcon" Content="&#xEA14;"></Label>
+                            <Label>Date descending</Label>
+                          </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                          <StackPanel Orientation="Horizontal">
+                            <Label Classes="ButtonIcon" Content="&#xE446;"></Label>
+                            <Label>Count ascending</Label>
+                          </StackPanel>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                          <StackPanel Orientation="Horizontal">
+                            <Label Classes="ButtonIcon" Content="&#xE444;"></Label>
+                            <Label>Count descending</Label>
+                          </StackPanel>
+                        </ComboBoxItem>
+                      </ComboBox>
+                    </Grid>
+                  </Grid>
+                </Border>
               </Grid>
 
-                <Grid Grid.Row="2" RowDefinitions="auto *">
-                  <DataGrid Grid.Row="1" Margin="0 0 0 10" ItemsSource="{Binding PurchaseComponents}">
-                    <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="Image">
-                      <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                          <Image x:DataType="spccont:PurchaseItemComponentContainerHolder"  Source="{Binding Image}" Width="64" Height="64" Stretch="UniformToFill" />
-                        </DataTemplate>
-                      </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Name" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding Name}" Width="*"/>
-                    <DataGridTextColumn Header="Category" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding CategoryName}" Width="*"/>
-                    <DataGridTextColumn Header="Quantity" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding Quantity, Mode = TwoWay}" Width="*"/>
-                    <DataGridTextColumn Header="Price" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding UnitPrice, Mode = TwoWay}" Width="*"/>
-                  </DataGrid.Columns>
-                    <DataGrid.Styles>
-                      <Style Selector="DataGridRow">
-                        <Setter Property="ContextMenu">
-                          <ContextMenu>
-                            <MenuItem Header="Details"/>
-                            <MenuItem Header="Datasheet"/>
-                            <MenuItem Header="Footprint"/>
-                            <MenuItem Header="Find at suppliers">
-                              <MenuItem Header="Digikey" />
-                              <MenuItem Header="Mouser" />
-                              <MenuItem Header="Botland" />
-                              <MenuItem Header="..." />
-                            </MenuItem>
-                            <MenuItem Header="Remove from purchase" x:DataType="spccont:PurchaseItemComponentContainerHolder" Command="{Binding RemoveFromCollectionCommand}"/>
-                          </ContextMenu>
-                        </Setter>
-                      </Style>
-                    </DataGrid.Styles>
-                  </DataGrid>
-                </Grid>
-              
-              <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10">
-                <Button Command="{Binding Add_ClearCommand}">Clear</Button>
-                <Button IsEnabled="{Binding Add_CanAdd}" Command="{Binding Add_AddPurchaseCommand}">Add</Button>
-              </StackPanel>
-            </Grid>
-            
-            <!-- Separator -->
-            <Grid Grid.Column="1">
-              <Border Width="1"
-                      Background="{DynamicResource UIMediumGray}"
-                      Margin="10,5"
-                      HorizontalAlignment="Stretch"/>
-            </Grid>
-            
-            <!-- Right side -->
-            <Grid Grid.Column="2" RowDefinitions="auto *">
-              <StackPanel Orientation="Horizontal" Spacing="10">
-                <TextBox Text="{Binding Purchase_AddAllComponentsFilter}"></TextBox>
-                <ComboBox></ComboBox>
-                <Button Command="{Binding Purchase_ClearFiltersForAllComponentsCommand}">Clear</Button>
-              </StackPanel>
-              <DataGrid Grid.Row="1" Margin="0 0 0 10" ItemsSource="{Binding AllComponents}">
+              <!-- Components -->
+              <DataGrid ItemsSource="{Binding PurchasesCollection}"
+                        SelectedItem="{Binding PurchasesCollectionSelectedItem}"
+                        AutoGenerateColumns="False"
+                        IsReadOnly="True"
+                        x:Name="Comps"
+                        Background="White"
+                        CanUserSortColumns="False"
+                        CanUserReorderColumns="True"
+                        CanUserResizeColumns="True"
+                        Grid.Row="1"
+                        GridLinesVisibility="All"
+                        BorderThickness="1"
+                        Margin="5 0 5 5"
+                        CornerRadius="5"
+                        BorderBrush="Black"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
                 <DataGrid.Columns>
-                  <DataGridTemplateColumn Header="Image">
+                  <DataGridTemplateColumn Header="Supplier">
                     <DataGridTemplateColumn.CellTemplate>
                       <DataTemplate>
-                        <Image x:DataType="spccont:ComponentWithCategoryContainerHolder" Source="{Binding Component.Image}" Width="64" Height="64" Stretch="UniformToFill" />
+                        <Image x:DataType="spccont:DetailedPurchaseContainerHolder" Source="{Binding Container.Supplier.Image}" Width="96" Height="96" Stretch="UniformToFill" Margin="0"/>
                       </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                   </DataGridTemplateColumn>
-                  <DataGridTextColumn Header="Name" x:DataType="spccont:ComponentWithCategoryContainerHolder" Binding="{Binding Component.Name}" Width="*"/>
-                  <DataGridTextColumn Header="Manufacturer" x:DataType="spccont:ComponentWithCategoryContainerHolder" Binding="{Binding Component.Manufacturer}" Width="*"/>
-                  <DataGridTextColumn Header="Category" x:DataType="spccont:ComponentWithCategoryContainerHolder" Binding="{Binding Component.CategoryName}" Width="*"/>
+                  <DataGridTextColumn Header="Name" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.SupplierName}" Width="*"/>
+                  <DataGridTextColumn Header="Date" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.PurchaseDateAsDateShort}" Width="*"/>
+                  <DataGridTextColumn Header="Components" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.ComponentsQuantity}" Width="auto"/>
+                  <DataGridTextColumn Header="Price" x:DataType="spccont:DetailedPurchaseContainerHolder" Binding="{Binding Container.TotalPriceAsCurrency}" Width="*"/>
                 </DataGrid.Columns>
                 <DataGrid.Styles>
+                  <Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
+                    <Setter Property="IsVisible" Value="false" />
+                  </Style>
                   <Style Selector="DataGridRow">
                     <Setter Property="ContextMenu">
                       <ContextMenu>
-                        <MenuItem Header="Add to purchase" x:DataType="spccont:ComponentWithCategoryContainerHolder" Command="{Binding AddToPurchasedComponentsCommand}" />
+                        <!-- Preview button -->
+                        <MenuItem Header="Preview" x:DataType="spccont:DetailedPurchaseContainerHolder" Command="{Binding PreviewPurchaseCommand}">
+                          <MenuItem.Icon>
+                            <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE32E;"></Label>
+                          </MenuItem.Icon>
+                        </MenuItem>
+                        <!-- Supplier store button -->
+                        <MenuItem Header="Suppliers store" x:DataType="spccont:DetailedPurchaseContainerHolder">
+                          <MenuItem.Icon>
+                            <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE470;"></Label>
+                          </MenuItem.Icon>
+                        </MenuItem>
+                        <!-- Open cart button -->
+                        <MenuItem Header="Open cart">
+                          <MenuItem.Icon>
+                            <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE964;"></Label>
+                          </MenuItem.Icon>
+                        </MenuItem>
                       </ContextMenu>
                     </Setter>
                   </Style>
                 </DataGrid.Styles>
               </DataGrid>
+
+              <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5 0 5 5" Background="{DynamicResource PltWhiteMilk}">
+                <Grid ColumnDefinitions="auto *">
+                  <!-- Show from -->
+                  <Grid Grid.Column="0">
+                    <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
+                      <Label Foreground="Black" FontSize="20" VerticalAlignment="Center">Showing</Label>
+                      <ComboBox SelectedIndex="{Binding SelectedPageSizeIndex}" VerticalAlignment="Center" Width="80">
+                        <ComboBoxItem>10</ComboBoxItem>
+                        <ComboBoxItem>25</ComboBoxItem>
+                        <ComboBoxItem>50</ComboBoxItem>
+                        <ComboBoxItem>100</ComboBoxItem>
+                      </ComboBox>
+                      <Label Foreground="Black" FontSize="20" VerticalAlignment="Center">of</Label>
+                      <Label Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Content="{Binding TotalItems}">1500</Label>
+                      <UIElements:RefreshButton Command="{Binding Purchases_RefreshDataCommand}"></UIElements:RefreshButton>
+                    </StackPanel>
+                  </Grid>
+
+                  <!-- Paging -->
+                  <Grid Grid.Column="1" HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
+                      <UIElements:FirstPageButton Command="{Binding FirstPageCommand}"></UIElements:FirstPageButton>
+                      <UIElements:PreviousPageButton Command="{Binding PreviousPageCommand}"></UIElements:PreviousPageButton>
+                      <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5">
+                        <TextBlock Width="80" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" Text="{Binding CurrentPage}"></TextBlock>
+                      </Border>
+                      <UIElements:NextPageButton Command="{Binding NextPageCommand}"></UIElements:NextPageButton>
+                      <UIElements:LastPageButton Command="{Binding LastPageCommand}"></UIElements:LastPageButton>
+                    </StackPanel>
+                  </Grid>
+                </Grid>
+              </Border>
             </Grid>
-          </Grid>
+          </Border>
         </TabItem>
-        <TabItem Header="Import" IsEnabled="False"></TabItem>
-        <TabItem Header="Preview" IsEnabled="{Binding PreviewEnabled}">
-          <Grid RowDefinitions="*" ColumnDefinitions="50*, auto, 50*">
-            <!-- Left section -->
-            <Grid Grid.Column="0" RowDefinitions="auto, auto, *">
-              <!-- Purchase Data -->
-              <StackPanel Spacing="10" Grid.Row="0">
+        <TabItem Header="Add" IsEnabled="{Binding Add_IsAddTabEnabled}">
+          <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="-12 0 -12 0" Background="{DynamicResource SectionGradient}">
+              <Grid ColumnDefinitions="50* 5 50*">
+                <Grid RowDefinitions="auto auto * auto">
+                    <!-- Main fields section -->
+                    <Grid Grid.Row="0" ColumnDefinitions="auto *">
 
-                <StackPanel Orientation="Vertical">
-                  <Label HorizontalAlignment="Left" FontWeight="Bold">Supplier</Label>
-                  <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Border BorderBrush="Black" BorderThickness="1">
-                      <Image Source="{Binding SelectedPurchase.Container.Supplier.Image}"
-                             Height="128"
-                             Margin="0"/>
+                      <!-- Image section-->
+                      <Grid Grid.Column="0" Margin="5">
+                        <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}">
+                          <Grid Width="140" Height="140">
+                            <Grid.Background>
+                              <ImageBrush AlignmentY="Center"
+                                          AlignmentX="Center"
+                                          Stretch="UniformToFill"
+                                          Source="{Binding Add_SelectedSupplierLogo}"></ImageBrush>
+                            </Grid.Background>
+                          </Grid>
+                        </Border>
+                      </Grid>
+
+                      <!-- Fields section-->
+                      <Grid Grid.Column="1" Margin="0 5 0 5">
+                        <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}">
+                          <Grid RowDefinitions="auto auto auto auto" ColumnDefinitions="auto * auto">
+                            <Label Classes="DefaultLabelRightNoMin" Grid.Row="0" Grid.Column="0">Supplier</Label>
+                            <Label Classes="DefaultLabelRightNoMin" Grid.Row="1" Grid.Column="0">Date</Label>
+                            <Label Classes="DefaultLabelRightNoMin" Grid.Row="2" Grid.Column="0">Price</Label>
+
+                            <ComboBox Classes="DefaultComboBoxStretch" ItemsSource="{Binding SupplierSource}" SelectedItem="{Binding Add_SelectedSupplier}" Grid.Row="0" Grid.Column="1" Margin="5 5 0 0"></ComboBox>
+                            <CalendarDatePicker FontSize="20" Grid.Row="1" Grid.Column="1" Margin="5 5 0 0" Watermark="Purchase date" HorizontalAlignment="Stretch" Height="40" SelectedDate="{Binding Add_SelectedDate, Mode=TwoWay}"/>
+                            <Border BorderBrush="Black" BorderThickness="1" Grid.Row="2" Grid.Column="1" CornerRadius="5" Height="40" Margin="5 5 0 0">
+                              <TextBlock Text="{Binding Add_TotalPrice}" Margin="5 5 0 0" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Center"></TextBlock>
+                            </Border>
+
+                            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0">
+                              <UIElements:DeleteButton Command="{Binding Add_ClearSelectedSupplierCommand}"></UIElements:DeleteButton>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0">
+                              <UIElements:DeleteButton Command="{Binding Add_ClearSelectedDateCommand}"></UIElements:DeleteButton>
+                            </StackPanel>
+                            <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0">
+                              <UIElements:CopyToClipboardButton Command="{Binding Add_CopyPriceToClipboardCommand}"></UIElements:CopyToClipboardButton>
+                            </StackPanel>
+                          </Grid>
+                        </Border>
+                      </Grid>
+                    </Grid>
+
+                    <!-- About section -->
+                    <Grid Grid.Row="1">
+                      <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="5 0 0 5">
+                        <Grid  RowDefinitions="auto auto">
+                          <!-- Label and buttons -->
+                          <Grid ColumnDefinitions="auto *" Margin="5">
+                            <StackPanel HorizontalAlignment="Left" Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                              <Label Classes="DefaultLabelRightNoMin">Name</Label>
+                              <TextBox Classes="DefaultTextBox" Text="{Binding Add_CartNameFilter}"></TextBox>
+                              <UIElements:DeleteButton Command="{Binding Add_ClearCartNameFilterCommand}"></UIElements:DeleteButton>
+                            </StackPanel>
+                            <Grid Grid.Column="1" HorizontalAlignment="Stretch" ColumnDefinitions="auto * auto" Margin="20 0 0 0">
+                              <Label Grid.Column="0" Classes="DefaultLabelRightNoMin" Margin="0 0 0 0">Category</Label>
+                              <ComboBox Grid.Column="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding Add_CartSelectedCategory}"  Classes="DefaultComboBoxFullStretch" Margin="5 0 0 0"></ComboBox>
+                              <UIElements:DeleteButton Command="{Binding Add_ClearCartSelectedCategoryFilterCommand}" Grid.Column="2" Margin="5 0 0 0"></UIElements:DeleteButton>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Border>
+                    </Grid>
+
+                    <!-- Cart components -->
+                    <Grid Grid.Row="2">
+                      <Border CornerRadius="5" 
+                              BorderThickness="1" 
+                              BorderBrush="Black" 
+                              Background="White" 
+                              Margin="5 0 0 5">
+                        <DataGrid Grid.Row="1" 
+                                  x:Name="CartComps"
+                                  GridLinesVisibility="All" 
+                                  Margin="0 0 0 10" 
+                                  ItemsSource="{Binding PurchaseComponents}">
+                          <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Image">
+                              <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                  <Image x:DataType="spccont:PurchaseItemComponentContainerHolder"  Source="{Binding Image}" Width="64" Height="64" Stretch="UniformToFill" />
+                                </DataTemplate>
+                              </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Name" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Category" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding CategoryName}" Width="*"/>
+                            <DataGridTemplateColumn Header="Quantity" Width="*">
+                              <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                  <NumericUpDown ShowButtonSpinner="False"
+                                                 BorderThickness="0"
+                                                 x:DataType="spccont:PurchaseItemComponentContainerHolder"
+                                                 Value="{Binding QuantitySetter, Mode = TwoWay}"
+                                                 Background="Transparent"
+                                                 Minimum="1"
+                                                 x:Name="QuantityNum"
+                                                 VerticalContentAlignment="Center"
+                                                 HorizontalContentAlignment="Center"
+                                                 FormatString="F0"
+                                                 VerticalAlignment="Stretch"
+                                                 HorizontalAlignment="Stretch"/>
+                                </DataTemplate>
+                              </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Price" Width="*">
+                              <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                  <NumericUpDown ShowButtonSpinner="False"
+                                                 BorderThickness="0"
+                                                 Background="Transparent"
+                                                 x:DataType="spccont:PurchaseItemComponentContainerHolder"
+                                                 Value="{Binding UnitPriceSetter, Mode = TwoWay}"
+                                                 Minimum="0"
+                                                 VerticalContentAlignment="Center"
+                                                 HorizontalContentAlignment="Center"
+                                                 Increment="1"
+                                                 FormatString="C2"
+                                                 VerticalAlignment="Stretch"
+                                                 HorizontalAlignment="Stretch"/>
+                                </DataTemplate>
+                              </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                          </DataGrid.Columns>
+                          <DataGrid.Styles>
+                            <Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
+                              <Setter Property="IsVisible" Value="false" />
+                            </Style>
+                            <Style Selector="DataGridRow">
+                              <Setter Property="ContextMenu">
+                                <ContextMenu>
+                                  <MenuItem Header="Browse for component" ItemsSource="{Binding Suppliers}" x:DataType="spccont:PurchaseItemComponentContainerHolder"
+                                            Command="{Binding NavigateToWebsiteCommand}">
+                                    <MenuItem.Icon>
+                                      <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE30C;"></Label>
+                                    </MenuItem.Icon>
+                                    <MenuItem.ItemTemplate>
+                                      <DataTemplate>
+                                        <Grid ColumnDefinitions="auto 150">
+                                          <Image Grid.Column="0" Source="{Binding Supplier.Image}" Width="32" Height="32"></Image>
+                                          <Label Grid.Column="1" Content="{Binding Supplier.Name}" HorizontalAlignment="Left" VerticalAlignment="Center"></Label>
+                                        </Grid>
+                                      </DataTemplate>
+                                    </MenuItem.ItemTemplate>
+                                  </MenuItem>
+                                  <MenuItem Header="Remove from cart" x:DataType="spccont:PurchaseItemComponentContainerHolder" Command="{Binding RemoveFromCollectionCommand}">
+                                    <MenuItem.Icon>
+                                      <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE32A;"></Label>
+                                    </MenuItem.Icon>
+                                  </MenuItem>
+                                </ContextMenu>
+                              </Setter>
+                            </Style>
+                          </DataGrid.Styles>
+                        </DataGrid>
+                      </Border>
+                    </Grid>
+
+                    <!-- Buttons section -->
+                    <Grid Grid.Row="3">
+                      <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="5 0 0 5">
+                        <StackPanel Orientation="Horizontal" Spacing="5" Margin="5">
+                          <UIElements:AddButton Command="{Binding Add_AddPurchaseCommand}"></UIElements:AddButton>
+                          <UIElements:ClearButton Command="{Binding Add_ClearCommand}"></UIElements:ClearButton>
+                          <UIElements:CancelButton Command="{Binding Add_CancelCommand}"></UIElements:CancelButton>
+                        </StackPanel>
+                      </Border>
+                    </Grid>
+                  </Grid>
+                <Grid Grid.Column="2" RowDefinitions="auto *">
+                  <!-- About section -->
+                  <Border Grid.Row="0" CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="0 5 5 5">
+                      <Grid  RowDefinitions="auto auto">
+                        <!-- Label and buttons -->
+                        <Grid ColumnDefinitions="auto *" Margin="5">
+                          <StackPanel HorizontalAlignment="Left" Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                            <Label Classes="DefaultLabelRightNoMin">Name</Label>
+                            <TextBox Classes="DefaultTextBox" Text="{Binding Add_AllComponentsNameFilter}"></TextBox>
+                            <UIElements:DeleteButton Command="{Binding Add_ClearAllComponentsNameFilterCommand}"></UIElements:DeleteButton>
+                          </StackPanel>
+                          <Grid Grid.Column="1" HorizontalAlignment="Stretch" ColumnDefinitions="auto * auto" Margin="20 0 0 0">
+                            <Label Grid.Column="0" Classes="DefaultLabelRightNoMin" Margin="0 0 0 0">Category</Label>
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding Add_AllComponentsCategoryFilter}" Classes="DefaultComboBoxFullStretch" Margin="5 0 0 0"></ComboBox>
+                            <UIElements:DeleteButton Grid.Column="2" Margin="5 0 0 0" Command="{Binding Add_ClearAllComponentsCategoryFilterCommand}"></UIElements:DeleteButton>
+                          </Grid>
+                        </Grid>
+                      </Grid>
                     </Border>
-                    <Label Content="{Binding SelectedPurchase.Container.Supplier.Name}"></Label>
-                  </StackPanel>
-                </StackPanel>
-                
-                <StackPanel Orientation="Vertical">
-                  <Label HorizontalAlignment="Left" FontWeight="Bold">Purchase date</Label>
-                  <Label HorizontalAlignment="Left" Content="{Binding SelectedPurchase.Container.PurchaseDateAsDate}">21.04.2002</Label>
-                </StackPanel>
-                
-                <StackPanel Orientation="Vertical">
-                  <Label HorizontalAlignment="Left" FontWeight="Bold">Total price</Label>
-                  <Label HorizontalAlignment="Left" Content="{Binding SelectedPurchase.Container.TotalPriceAsCurrency}">0 zł</Label>
-                </StackPanel>
-              
-              </StackPanel>
 
-              <!-- Separator-->
-              <Grid Grid.Row="1">
-                <Border Height="1"
-                        Background="{DynamicResource UIMediumGray}"
-                        Margin="0, 10"
-                        HorizontalAlignment="Stretch"/>
+                  <!-- Detailed description section -->
+                  <Border CornerRadius="5" Grid.Row="1" BorderThickness="1" BorderBrush="Black" Background="White" Margin="0 0 5 5">
+                      <DataGrid Grid.Row="1"
+                                GridLinesVisibility="All"
+                                Margin="0 0 0 10" ItemsSource="{Binding AllComponents}">
+                        <DataGrid.Columns>
+                          <DataGridTemplateColumn Header="Image">
+                            <DataGridTemplateColumn.CellTemplate>
+                              <DataTemplate>
+                                <Image x:DataType="spccont:ComponentWithCategoryContainerHolder" Source="{Binding Component.Image}" Width="64" Height="64" Stretch="UniformToFill" />
+                              </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                          </DataGridTemplateColumn>
+                          <DataGridTextColumn Header="Name" x:DataType="spccont:ComponentWithCategoryContainerHolder" Binding="{Binding Component.Name}" Width="*"/>
+                          <DataGridTextColumn Header="Manufacturer" x:DataType="spccont:ComponentWithCategoryContainerHolder" Binding="{Binding Component.Manufacturer}" Width="*"/>
+                          <DataGridTextColumn Header="Category" x:DataType="spccont:ComponentWithCategoryContainerHolder" Binding="{Binding Component.CategoryName}" Width="*"/>
+                        </DataGrid.Columns>
+                        <DataGrid.Styles>
+                          <Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
+                            <Setter Property="IsVisible" Value="false" />
+                          </Style>
+                          <Style Selector="DataGridRow">
+                            <Setter Property="ContextMenu">
+                              <ContextMenu>
+                                <!-- Add button -->
+                                <MenuItem Header="Add to cart" x:DataType="spccont:ComponentWithCategoryContainerHolder" Command="{Binding AddToPurchasedComponentsCommand}" >
+                                  <MenuItem.Icon>
+                                    <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE3D4;"></Label>
+                                  </MenuItem.Icon>
+                                </MenuItem>
+                              </ContextMenu>
+                            </Setter>
+                          </Style>
+                        </DataGrid.Styles>
+                      </DataGrid>
+                    </Border>
+                </Grid>
               </Grid>
+          </Border>
+        </TabItem>
+        <TabItem Header="Import" IsEnabled="{Binding Add_IsImportTabEnabled}">
+          <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="-12 0 -12 0" Background="{DynamicResource SectionGradient}">
+            <Grid RowDefinitions="auto, *, auto">
+              <!-- Components -->
+              <DataGrid AutoGenerateColumns="False"
+                        ItemsSource="ImportItems"
+                        IsReadOnly="True"
+                        Background="White"
+                        CanUserSortColumns="False"
+                        CanUserReorderColumns="False"
+                        CanUserResizeColumns="False"
+                        Grid.Row="1"
+                        GridLinesVisibility="All"
+                        BorderThickness="1"
+                        Margin="5 5 5 5"
+                        CornerRadius="5"
+                        BorderBrush="Black"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Name" Width="*"/>
+                  <DataGridTemplateColumn Header="Verify">
+                    <DataGridTemplateColumn.CellTemplate>
+                      <DataTemplate>
+                        <UIElements:OkButton Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"></UIElements:OkButton>
+                      </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                  </DataGridTemplateColumn>
+                  <DataGridTemplateColumn Header="Status">
+                    <DataGridTemplateColumn.CellTemplate>
+                      <DataTemplate>
+                        <Label Classes="icon" Content="&#xE606;"></Label>
+                        <!-- Not checked -> E608 -->
+                        <!-- Failed -> E60C -->
+                        <!-- Good -> E606 -->
+                      </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                  </DataGridTemplateColumn>
+                  <DataGridTemplateColumn Header="Import">
+                    <DataGridTemplateColumn.CellTemplate>
+                      <DataTemplate>
+                        <UIElements:DownloadOnlineContentButton Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"></UIElements:DownloadOnlineContentButton>
+                      </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                  </DataGridTemplateColumn>
+                  <DataGridTemplateColumn Header="Status">
+                    <DataGridTemplateColumn.CellTemplate>
+                      <DataTemplate>
+                        <ProgressBar Margin="5" Height="39"
+                                        Minimum="0" Maximum="100" Value="50"
+                                        Foreground="Green"
+                                        ShowProgressText="True"/>
+                      </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                  </DataGridTemplateColumn>
+                  <DataGridTemplateColumn Header="Delete">
+                    <DataGridTemplateColumn.CellTemplate>
+                      <DataTemplate>
+                        <UIElements:DeleteButton Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center"></UIElements:DeleteButton>
+                      </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                  </DataGridTemplateColumn>
+                </DataGrid.Columns>
+                <DataGrid.Styles>
+                  <Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
+                    <Setter Property="IsVisible" Value="false" />
+                  </Style>
+                </DataGrid.Styles>
+              </DataGrid>
 
-              <!-- Component description -->
-              <Grid Grid.Row="2">
-                <Grid.RowDefinitions>
-                  <RowDefinition Height="Auto"/>
-                  <!-- For the label -->
-                  <RowDefinition Height="*"/>
-                  <!-- For the ScrollViewer -->
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0" FontWeight="Bold">Faktura</Label>
-                <Border Grid.Row="1" BorderBrush="{DynamicResource UIMediumGray}" BorderThickness="1" Margin="0 10 0 10">
-                  <ScrollViewer>
-                    <Image Source="/Assets/NoImage.png" />
-                  </ScrollViewer>
+              <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5 0 5 5" Background="{DynamicResource PltWhiteMilk}">
+                <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
+                  <UIElements:UploadFileButton></UIElements:UploadFileButton>
+                  <UIElements:ClearButton></UIElements:ClearButton>
+                  <UIElements:CancelButton></UIElements:CancelButton>
+                </StackPanel>
+              </Border>
+            </Grid>
+          </Border>
+        </TabItem>
+        <TabItem Header="Preview" IsEnabled="{Binding Add_IsPreviewTabEnabled}">
+            <Grid ColumnDefinitions="60* 40*">
+          <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="-12 0 0 0" Background="{DynamicResource SectionGradient}">
+              <Grid RowDefinitions="auto auto * auto auto" Margin="0 0 5 0">
+                <!-- Main fields section -->
+                <Grid Grid.Row="0" ColumnDefinitions="auto *">
+
+                  <!-- Image section-->
+                  <Grid Grid.Column="0" Margin="5">
+                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}">
+                      <Grid Width="140" Height="140">
+                        <Grid.Background>
+                          <ImageBrush AlignmentY="Center"
+                                      AlignmentX="Center"
+                                      Stretch="UniformToFill"
+                                      Source="{Binding Preview_PreviewedPurchase.Container.Supplier.Image}"></ImageBrush>
+                        </Grid.Background>
+                      </Grid>
+                    </Border>
+                  </Grid>
+
+                  <!-- Fields section-->
+                  <Grid Grid.Column="1" Margin="0 5 0 5">
+                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}">
+                      <Grid RowDefinitions="auto auto auto auto" ColumnDefinitions="auto * auto">
+                        <Label Classes="DefaultLabelRightNoMin" Margin="5 5 0 0" Grid.Row="0" Grid.Column="0">Supplier</Label>
+                        <Label Classes="DefaultLabelRightNoMin" Margin="5 5 0 0" Grid.Row="1" Grid.Column="0">Date</Label>
+                        <Label Classes="DefaultLabelRightNoMin" Margin="5 5 0 0" Grid.Row="2" Grid.Column="0">Price</Label>
+
+                        <Border BorderBrush="Black" BorderThickness="1" Grid.Row="0" Grid.Column="1" CornerRadius="5"  Margin="5 5 0 0">
+                          <TextBlock Grid.Row="0" Grid.Column="1" Padding="5 0 0 0" Margin="0" FontSize="20" x:Name="SupplierNameTextBlock"
+                                     VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Center" Text="{Binding Preview_PreviewedPurchase.Container.SupplierName}"></TextBlock>
+                        </Border>
+                        <Border BorderBrush="Black" BorderThickness="1" Grid.Row="1" Grid.Column="1" Margin="5 5 0 0" CornerRadius="5" >
+                          <TextBlock FontSize="20" Padding="5 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Text="{Binding Preview_PreviewedPurchase.Container.PurchaseDateAsDateShort}"></TextBlock>
+                        </Border>
+                        <Border BorderBrush="Black" BorderThickness="1" Grid.Row="2" Grid.Column="1" CornerRadius="5"  Margin="5 5 0 0">
+                          <TextBlock Margin="0" FontSize="20" 
+                                     VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Center" Padding="5 0 0 0"
+                                     Text="{Binding Preview_PreviewedPurchase.Container.TotalPriceAsCurrency}"></TextBlock>
+                        </Border>
+
+                        <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0">
+                          <UIElements:CopyToClipboardButton Command="{Binding Preview_CopySupplierToClipboardCommand}"></UIElements:CopyToClipboardButton>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0">
+                          <UIElements:CopyToClipboardButton Command="{Binding Preview_CopyDateToClipboardCommand}"></UIElements:CopyToClipboardButton>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 5 5 0">
+                          <UIElements:CopyToClipboardButton Command="{Binding Preview_CopyPriceToClipboardCommand}"></UIElements:CopyToClipboardButton>
+                        </StackPanel>
+                      </Grid>
+                    </Border>
+                  </Grid>
+                </Grid>
+
+                <!-- About section -->
+                <Grid Grid.Row="1">
+                  <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="5 0 0 5">
+                    <Grid  RowDefinitions="auto auto">
+                      <!-- Label and buttons -->
+                      <Grid ColumnDefinitions="auto *" Margin="5">
+                        <StackPanel HorizontalAlignment="Left" Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                          <Label Classes="DefaultLabelRightNoMin">Name</Label>
+                          <TextBox Classes="DefaultTextBox" Text="{Binding Preview_CartNameFilter}"></TextBox>
+                          <UIElements:DeleteButton Command="{Binding Preview_ClearCartNameFilterCommand}"></UIElements:DeleteButton>
+                        </StackPanel>
+                        <Grid Grid.Column="1" HorizontalAlignment="Stretch" ColumnDefinitions="auto * auto" Margin="20 0 0 0">
+                          <Label Grid.Column="0" Classes="DefaultLabelRightNoMin" Margin="0 0 0 0">Category</Label>
+                          <ComboBox Grid.Column="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding Preview_CartSelectedCategory}"  Classes="DefaultComboBoxFullStretch" Margin="5 0 0 0"></ComboBox>
+                          <UIElements:DeleteButton Command="{Binding Preview_ClearCartSelectedCategoryFilterCommand}" Grid.Column="2" Margin="5 0 0 0"></UIElements:DeleteButton>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Border>
+                </Grid>
+
+                <!-- Cart components -->
+                <Grid Grid.Row="2">
+                  <Border CornerRadius="5"
+                          BorderThickness="1"
+                          BorderBrush="Black"
+                          Background="White"
+                          Margin="5 0 0 5">
+                    <DataGrid Grid.Row="1"
+                              ItemsSource="{Binding Preivew_Components}"
+                              GridLinesVisibility="All"
+                              CanUserSortColumns="False"
+                              CanUserReorderColumns="False"
+                              CanUserResizeColumns="False"
+                              Margin="0 0 0 10">
+                      <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Image">
+                          <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                              <Image x:DataType="spccont:PurchaseItemComponentContainerHolder"  Source="{Binding PurchaseItem.Image}" Width="64" Height="64" Stretch="UniformToFill" />
+                            </DataTemplate>
+                          </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Name" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding PurchaseItem.Name}" Width="*"/>
+                        <DataGridTextColumn Header="Category" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding PurchaseItem.CategoryName}" Width="*"/>
+                        <DataGridTextColumn Header="Quantity" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding PurchaseItem.Quantity}" Width="auto"/>
+                        <DataGridTextColumn Header="UnitPrice" x:DataType="spccont:PurchaseItemComponentContainerHolder" Binding="{Binding PurchaseItem.UnitPriceAsCurrency}" Width="*"/>
+                      </DataGrid.Columns>
+                      <DataGrid.Styles>
+                        <Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
+                          <Setter Property="IsVisible" Value="false" />
+                        </Style>
+                        <Style Selector="DataGridRow">
+                          <Setter Property="ContextMenu">
+                            <ContextMenu>
+                              <MenuItem Header="Preview" x:DataType="spccont:PurchaseItemComponentContainerHolder" Command="{Binding PreviewComponentCommand}">
+                                <MenuItem.Icon>
+                                  <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE32E;"></Label>
+                                </MenuItem.Icon>
+                              </MenuItem>
+                              <MenuItem Header="Datasheet" x:DataType="spccont:PurchaseItemComponentContainerHolder" Command="{Binding OpenDatasheetCommand}">
+                                <MenuItem.Icon>
+                                  <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE702;"></Label>
+                                </MenuItem.Icon>
+                              </MenuItem>
+                              <Separator></Separator>
+                              <MenuItem Header="Find in store" x:DataType="spccont:PurchaseItemComponentContainerHolder" Command="{Binding NavigateToWebsiteCommand}"
+                                        CommandParameter="{Binding #SupplierNameTextBlock.Text}">
+                                <MenuItem.Icon>
+                                  <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE30C;"></Label>
+                                </MenuItem.Icon>
+                              </MenuItem>
+                            </ContextMenu>
+                          </Setter>
+                        </Style>
+                      </DataGrid.Styles>
+                    </DataGrid>
+                  </Border>
+                </Grid>
+
+                <Border Grid.Row="3" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="5 0 0 5" Background="{DynamicResource PltWhiteMilk}">
+                  <Grid ColumnDefinitions="auto *">
+                    <!-- Show from -->
+                    <Grid Grid.Column="0">
+                      <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
+                        <Label Foreground="Black" FontSize="20" VerticalAlignment="Center">Showing</Label>
+                        <ComboBox SelectedIndex="{Binding Preview_selectedPageSizeIndex}" VerticalAlignment="Center" Width="80">
+                          <ComboBoxItem>10</ComboBoxItem>
+                          <ComboBoxItem>25</ComboBoxItem>
+                          <ComboBoxItem>50</ComboBoxItem>
+                          <ComboBoxItem>100</ComboBoxItem>
+                        </ComboBox>
+                        <Label Foreground="Black" FontSize="20" VerticalAlignment="Center">of</Label>
+                        <Label Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Content="{Binding Preview_totalItems}">1500</Label>
+                      </StackPanel>
+                    </Grid>
+
+                    <!-- Paging -->
+                    <Grid Grid.Column="1" HorizontalAlignment="Right">
+                      <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
+                        <UIElements:FirstPageButton Command="{Binding Preview_FirstPageCommand}"></UIElements:FirstPageButton>
+                        <UIElements:PreviousPageButton Command="{Binding Preview_PreviousPageCommand}"></UIElements:PreviousPageButton>
+                        <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5">
+                          <TextBlock Width="80" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Center" Text="{Binding Preview_currentPage}">1</TextBlock>
+                        </Border>
+                        <UIElements:NextPageButton Command="{Binding Preview_NextPageCommand}"></UIElements:NextPageButton>
+                        <UIElements:LastPageButton Command="{Binding Preview_LastPageCommand}"></UIElements:LastPageButton>
+                      </StackPanel>
+                    </Grid>
+                  </Grid>
                 </Border>
+                
+                <!-- Buttons section -->
+                <Grid Grid.Row="4">
+                  <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="5 0 0 5">
+                    <StackPanel Orientation="Horizontal" Spacing="5" Margin="5">
+                      <UIElements:GenerateRaportButton></UIElements:GenerateRaportButton>
+                    </StackPanel>
+                  </Border>
+                </Grid>
               </Grid>
-
-
+          </Border>
             </Grid>
-
-            <!-- Separator-->
-            <Grid Grid.Column="1">
-              <Border Width="1"
-                      Background="{DynamicResource UIMediumGray}"
-                      Margin="10,5"
-                      HorizontalAlignment="Stretch"/>
-            </Grid>
-
-            <!-- Right section -->
-            <Grid Grid.Column="2" RowDefinitions="*" Margin="0 0 0 10">
-              <!-- Purchases -->
-                  <DataGrid ItemsSource="{Binding Preview_ProjectItems}"
-                            AutoGenerateColumns="False"
-                            IsReadOnly="True"
-                            VerticalAlignment="Stretch"
-                            HorizontalAlignment="Stretch"
-                            GridLinesVisibility="All"
-                            BorderThickness="1"
-                            BorderBrush="Gray">
-                    <DataGrid.Columns>
-                      <DataGridTemplateColumn Header="Image">
-                        <DataGridTemplateColumn.CellTemplate>
-                          <DataTemplate>
-                            <Image x:DataType="cont:PurchaseItemContainer"  Source="{Binding Image}" Width="64" Height="64" Stretch="UniformToFill" />
-                          </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                      </DataGridTemplateColumn>
-                      <DataGridTextColumn Header="Name" x:DataType="cont:PurchaseItemContainer" Binding="{Binding Name}" Width="*"/>
-                      <DataGridTextColumn Header="Quantity" x:DataType="cont:PurchaseItemContainer" Binding="{Binding Quantity}" Width="*"/>
-                      <DataGridTextColumn Header="Price" x:DataType="cont:PurchaseItemContainer" Binding="{Binding PricePerUnitAsCurrency}" Width="*"/>
-                    </DataGrid.Columns>
-                    <DataGrid.Styles>
-                      <Style Selector="DataGridRow">
-                        <Setter Property="ContextMenu">
-                          <ContextMenu>
-                            <MenuItem Header="Details"/>
-                            <MenuItem Header="Datasheet"/>
-                            <MenuItem Header="Footprint"/>
-                            <MenuItem Header="Find at suppliers">
-                              <MenuItem Header="Digikey" />
-                              <MenuItem Header="Mouser" />
-                              <MenuItem Header="Botland" />
-                              <MenuItem Header="..." />
-                            </MenuItem>
-                          </ContextMenu>
-                        </Setter>
-                      </Style>
-                    </DataGrid.Styles>
-                  </DataGrid>
-            </Grid>
-          </Grid>
         </TabItem>
       </TabControl>
     </DockPanel>
