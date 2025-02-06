@@ -49,4 +49,17 @@
     <Setter Property="VerticalContentAlignment" Value="Center"/>
     <Setter Property="HorizontalContentAlignment" Value="Left"/>
   </Style>
+
+  <Style Selector="ComboBox.DefaultComboBoxFullStretch">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="FontSize" Value="20"/>
+    <Setter Property="Height" Value="40"/>
+    <Setter Property="BorderBrush" Value="Black"/>
+    <Setter Property="CornerRadius" Value="5"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="Black"/>
+    <Setter Property="Padding" Value="4 0 4 0"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+  </Style>
 </Styles>

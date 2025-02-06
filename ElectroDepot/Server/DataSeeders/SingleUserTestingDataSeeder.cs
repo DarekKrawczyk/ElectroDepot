@@ -15,7 +15,7 @@ public static class SingleUserTestingDataSeeder
         await context.Purchases.ExecuteDeleteAsync();
         await context.Components.ExecuteDeleteAsync();
 
-        //await context.Users.ExecuteDeleteAsync();
+        await context.Users.ExecuteDeleteAsync();
         await context.Suppliers.ExecuteDeleteAsync();
         await context.Categories.ExecuteDeleteAsync();
 
@@ -27,10 +27,10 @@ public static class SingleUserTestingDataSeeder
         {
             List<User> users = new List<User>
             {
-                new User { UserID = 1011, Username = "username", Password = "AQAAAAIAAYagAAAAEA2lwymUiArgx0/bwiQEU85o0l1KusTazhFkiNvE48/Vr7EB8I26gkOyKQZvCuobeA==", Email = "valid.email@gmail.com" },
+                new User { Username = "darikra", Password = "AQAAAAIAAYagAAAAEA2lwymUiArgx0/bwiQEU85o0l1KusTazhFkiNvE48/Vr7EB8I26gkOyKQZvCuobeA==", Email = "dariusz@gmail.com", Name = "Dariusz" },
             };
 
-            //context.Users.AddRange(users);
+            context.Users.AddRange(users);
             await context.SaveChangesAsync();
 
             string fullPath = "D:\\Repo\\ElectronDepot\\ElectroDepot\\Server\\Assests\\";
@@ -65,6 +65,7 @@ public static class SingleUserTestingDataSeeder
             // Seed Suppliers
             List<Supplier> suppliers = new List<Supplier>
             {
+                new Supplier { Name = "Other", Website = "https://www.google.com/", Image = File.ReadAllBytes(fullPath + "OtherIcon.png") },
                 new Supplier { Name = "DigiKey", Website = "https://www.digikey.pl/", Image = File.ReadAllBytes(fullPath + "DigiKeyIcon.png") },
                 new Supplier { Name = "Botland", Website = "https://botland.com.pl/", Image = File.ReadAllBytes(fullPath + "BotlandIcon.png") },
                 new Supplier { Name = "Mouser", Website = "https://www.mouser.com/", Image = File.ReadAllBytes(fullPath + "MouserIcon.png") },

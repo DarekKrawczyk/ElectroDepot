@@ -1,0 +1,35 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:DesktopClient.UserInterfaceElements">
+  
+  <Design.PreviewWith>
+    <controls:RefreshButton />
+  </Design.PreviewWith>
+ 
+  <ControlTheme x:Key="{x:Type controls:RefreshButton}" TargetType="controls:RefreshButton">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Button x:Name="RefreshButton" Command="{TemplateBinding Command}" Width="44" MaxWidth="44" MinWidth="44">
+          <StackPanel Orientation="Horizontal">
+            <Label Classes="ButtonIcon" Content="&#xE094;"></Label>
+          </StackPanel>
+          <Button.Styles>
+            <Style Selector="Button#RefreshButton">
+              <Setter Property="BorderBrush" Value="Black"></Setter>
+              <Setter Property="BorderThickness" Value="1"></Setter>
+              <Setter Property="Background" Value="{DynamicResource PltWhiteMilk}"/>
+              <Setter Property="Foreground" Value="Black"/>
+            </Style>
+
+            <Style Selector="Button#RefreshButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+              <Setter Property="BorderBrush" Value="Black"></Setter>
+              <Setter Property="BorderThickness" Value="1"></Setter>
+              <Setter Property="Background" Value="{DynamicResource PltGray}"></Setter>
+              <Setter Property="Foreground" Value="Black"/>
+            </Style>
+          </Button.Styles>
+        </Button>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

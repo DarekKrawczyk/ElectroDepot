@@ -13,6 +13,7 @@ namespace ElectroDepotClassLibrary.Containers
         private readonly Purchase _purchase;
         private readonly Supplier _supplier;
         private readonly IEnumerable<PurchaseItem> _purchasedItems;
+        public List<PurchaseItem> PurchasedItems { get { return _purchasedItems.ToList(); } }
         public int ID { get { return _purchase.ID; } }
         public DateTime PurchaseDate { get { return _purchase.PurchaseDate; } }
         public string PurchaseDateAsDate { get { return PurchaseDate.ToString("D"); } }

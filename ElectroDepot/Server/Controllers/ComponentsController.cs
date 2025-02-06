@@ -104,6 +104,24 @@ namespace Server.Controllers
         }
 
         /// <summary>
+        /// GET: ElectroDepot/Components/GetComponentByID/{id}
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("GetComponentByIDWithImage/{id}")]
+        public async Task<ActionResult<ComponentDTO>> GetComponentWithImage(int id)
+        {
+            var component = await _context.Components.FindAsync(id);
+
+            if (component == null)
+            {
+                return NotFound();
+            }
+
+            return component.ToDTOWithImage(ISS);
+        }
+
+        /// <summary>
         /// GET: ElectroDepot/Components/GetComponentByName?name=someName
         /// </summary>
         /// <param name="id"></param>

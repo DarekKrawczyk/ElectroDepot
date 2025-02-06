@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DesktopClient.Navigation;
+using DesktopClient.ViewModels;
 using ElectroDepotClassLibrary.Containers;
 using System;
 using System.Collections.Generic;
@@ -11,17 +13,19 @@ namespace DesktopClient.Containers
 {
     public partial class DetailedPurchaseContainerHolder : ObservableObject
     {
+        private readonly PurchasesPageViewModel _viewModel;
         private readonly DetailedPurchaseContainer _purchaseContainer;
         public DetailedPurchaseContainer Container { get { return _purchaseContainer; } } 
-        public DetailedPurchaseContainerHolder(DetailedPurchaseContainer purchaseContainer)
+        public DetailedPurchaseContainerHolder(DetailedPurchaseContainer purchaseContainer, PurchasesPageViewModel viewModel)
         {
+            _viewModel = viewModel;
             _purchaseContainer = purchaseContainer;
         }
 
         [RelayCommand]
-        public void PreviewPurchaseCommand()
+        public async Task PreviewPurchase()
         {
-            Console.WriteLine();
+            await _viewModel.NavigateTab(PurchasesTab.Preview);
         }
     }
 }
