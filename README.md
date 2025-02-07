@@ -76,10 +76,9 @@ For now top priority is to write usable desktop application. Next steps will inv
   - **Preview tab**  
       ![Purchases/Preview](Assets/Purchases_Panel_Add_Preview_Refactored.gif)
 
-#### Refactoring needed
-- **Projects**  
-![Projects tab](Assets/Panel_Projects.gif)
-
+- **Projects page**
+  - **Projects tab**  
+      ![Purchases/Purchases](Assets/Projects_Panel_Projects_Tab_Refactored.gif) 
 
 ---
 

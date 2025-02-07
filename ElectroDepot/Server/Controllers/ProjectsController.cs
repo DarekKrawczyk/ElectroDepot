@@ -207,7 +207,7 @@ namespace Server.Controllers
                                                                           ShortDescription = components.ShortDescription,
                                                                           LongDescription = components.LongDescription
                                                                       }).ToListAsync();
-                return Ok(componentsFromProject);
+                return Ok(componentsFromProject.Select(x=>x.ToDTOWithImage(ISS)));
             }
             catch (Exception exception)
             {
@@ -223,7 +223,7 @@ namespace Server.Controllers
         /// <param name="projectDTO"></param>
         /// <returns></returns>
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> UpdateProject(int id, UpdateProjectDTO projectDTO)
+        public async Task<ActionResult<ProjectDTO>> UpdateProject(int id, UpdateProjectDTO projectDTO)
         {
             Project? project = await _context.Projects.FindAsync(id);
             if (project == null)
@@ -258,7 +258,7 @@ namespace Server.Controllers
                 }
             }
 
-            return Ok();
+            return Ok(project.ToProjectDTO(ISS));
         }
         #endregion
         #region Delete

@@ -208,7 +208,7 @@ namespace ElectroDepotClassLibrary.DataProviders
             }
         }
 
-        public async Task<IEnumerable<ComponentDTO>> GetAllComponentsFromProject(Project project)
+        public async Task<IEnumerable<Component>> GetAllComponentsFromProject(Project project)
         {
             try
             {
@@ -222,8 +222,7 @@ namespace ElectroDepotClassLibrary.DataProviders
 
                     var json = await response.Content.ReadAsStringAsync();
                     IEnumerable<ComponentDTO> componentsOfProject = JsonSerializer.Deserialize<IEnumerable<ComponentDTO>>(json, options);
-
-                    return componentsOfProject;
+                    return componentsOfProject.Select(x=>x.ToModel());
                 }
                 else
                 {
@@ -236,15 +235,30 @@ namespace ElectroDepotClassLibrary.DataProviders
             }
         }
 
-        public async Task<bool> UpdateProject(Project project)
+        public async Task<Project> UpdateProject(Project project)
         {
             var json = JsonSerializer.Serialize(project.ToUpdateDTO());
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             string url = ProjectEndpoints.Update(project.ID);
             var response = await HTTPClient.PutAsync(url, content);
-            
-            return response.IsSuccessStatusCode;
+
+            if (response.IsSuccessStatusCode)
+            {
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.PropertyNameCaseInsensitive = true;
+
+                var jsonRes = await response.Content.ReadAsStringAsync();
+                ProjectDTO projectWithID = JsonSerializer.Deserialize<ProjectDTO>(jsonRes, options);
+
+                Project result = projectWithID.ToModel();
+                result.Image = project.Image;
+                return result;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<bool> DeleteProject(Project project)

@@ -227,7 +227,7 @@ namespace DesktopClient.ViewModels
                     RefreshSelectedComponentsProjectSource();
                     RefreshSelectedComponentsPurchasesSource();
                     NavigationPreparePreviewTab();
-                    //ChangeToEditMode();
+                    ChangeToEditMode();
                     //Modify_ClearDataToDefault();
                     SelectedTab = 2;
                     break;

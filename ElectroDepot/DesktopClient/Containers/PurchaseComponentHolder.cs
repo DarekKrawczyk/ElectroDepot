@@ -18,6 +18,7 @@ namespace DesktopClient.Containers
         private readonly Component _component;
         private readonly OwnsComponent _ownsComponent;
         private readonly Category _category;
+        private ProjectPurchaseComponentHolder _projectComponentRefrence;
         public int ComponentID { get {  return _component.ID; } }
         public string Name { get { return _component.Name; } }
         public string Manufacturer { get { return _component.Manufacturer; } }
@@ -46,6 +47,12 @@ namespace DesktopClient.Containers
             _ownsComponent = ownsComponent;
             _category = category;
             _used = 0;
+        }
+
+
+        public void RegisterProjectsComponent(ProjectPurchaseComponentHolder projectComponent)
+        {
+            _projectComponentRefrence = projectComponent;
         }
 
         [RelayCommand]

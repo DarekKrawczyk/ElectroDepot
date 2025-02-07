@@ -83,9 +83,9 @@ namespace ElectroDepotClassLibraryTests.Tests
                 Project? project = projects.FirstOrDefault();
                 Assert.NotNull(project);
 
-                IEnumerable<ComponentDTO> componentsOfProject = await ProjectDP.GetAllComponentsFromProject(project);
+                IEnumerable<Component> componentsOfProject = await ProjectDP.GetAllComponentsFromProject(project);
                 Assert.NotNull(componentsOfProject);
-                foreach (ComponentDTO components in componentsOfProject)
+                foreach (Component components in componentsOfProject)
                 {
                     Console.WriteLine($"{components.ToString()}");
                 }
@@ -117,8 +117,8 @@ namespace ElectroDepotClassLibraryTests.Tests
                 Project projectUpdated = projects.FirstOrDefault();
                 Project projectToSend = new Project(id: 0, userID: projectUpdated.UserID, user: user, name: "Fajna stacja pogodowa", image: null, description: projectUpdated.Description, createdAt: projectUpdated.CreatedAt);
 
-                bool wasChanged = await ProjectDP.UpdateProject(projectToSend);
-                Assert.True(wasChanged);
+                Project wasChanged = await ProjectDP.UpdateProject(projectToSend);
+                Assert.True(wasChanged != null);
 
                 IEnumerable<Project> updatedProjects = await ProjectDP.GetAllProjectOfUser(user);
                 Assert.NotNull(updatedProjects);
