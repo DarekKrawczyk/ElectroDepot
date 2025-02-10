@@ -158,7 +158,7 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
                 Project project = await ProjectDP.GetProjectByID(projectID); 
                 Assert.NotNull(project);
 
-                IEnumerable<ComponentDTO> ComponentsOfProject = await ProjectDP.GetAllComponentsFromProject(project);
+                IEnumerable<Component> ComponentsOfProject = await ProjectDP.GetAllComponentsFromProject(project);
                 Assert.NotNull(ComponentsOfProject);
                 Assert.NotEmpty(ComponentsOfProject);
 
@@ -167,7 +167,7 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
                 bool isSame = ComponentsIDsFromProject0.SequenceEqual(ids);
                 Assert.True(isSame);
 
-                foreach (ComponentDTO ownedComponent in ComponentsOfProject)
+                foreach (Component ownedComponent in ComponentsOfProject)
                 {
                     Console.WriteLine(ownedComponent.ToString());
                 }

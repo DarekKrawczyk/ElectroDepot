@@ -34,6 +34,8 @@
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/MinusButton.axaml' />
+        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/PlusButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/UploadFileButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/RefreshButton.axaml' />
         <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/RevertWideButton.axaml' />

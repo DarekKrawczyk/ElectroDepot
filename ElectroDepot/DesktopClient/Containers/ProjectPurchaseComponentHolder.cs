@@ -9,14 +9,14 @@ namespace DesktopClient.Containers
     public partial class ProjectPurchaseComponentHolder : ObservableObject
     {
         private readonly ProjectsPageViewModel _viewModel;
-        private readonly PurchaseComponentHolder _purchaseComponentHolder;
+        private readonly PurchaseComponentHolder _avalableComponentRefrence;
         private int _used;
-        public PurchaseComponentHolder ComponentFromDBRefrence { get {  return _purchaseComponentHolder; } }
-        public int ComponentID { get { return _purchaseComponentHolder.ComponentID; } }
-        public string Name { get { return _purchaseComponentHolder.Name; } }
-        public string Manufacturer { get { return _purchaseComponentHolder.Manufacturer; } }
-        public string Category { get { return _purchaseComponentHolder.Name; } }
-        public Bitmap Image { get { return _purchaseComponentHolder.Image; } }
+        public PurchaseComponentHolder ComponentFromDBRefrence { get {  return _avalableComponentRefrence; } }
+        public int ComponentID { get { return _avalableComponentRefrence.ComponentID; } }
+        public string Name { get { return _avalableComponentRefrence.Name; } }
+        public string Manufacturer { get { return _avalableComponentRefrence.Manufacturer; } }
+        public string Category { get { return _avalableComponentRefrence.Name; } }
+        public Bitmap Image { get { return _avalableComponentRefrence.Image; } }
         public int Used
         {
             get
@@ -35,9 +35,41 @@ namespace DesktopClient.Containers
         public ProjectPurchaseComponentHolder(ProjectsPageViewModel viewmodel, PurchaseComponentHolder purchaseComponentHolder)
         {
             _viewModel = viewmodel;
-            _purchaseComponentHolder = purchaseComponentHolder;
-            Used = 1;
+            _avalableComponentRefrence = purchaseComponentHolder;
         }
+
+        //public void IncrementUsed()
+        //{
+        //    if(_avalableComponentRefrence != null)
+        //    {
+        //        _avalableComponentRefrence.ConsumeComponent();
+        //        Used++;
+        //        _viewModel.RefreshProjectComponents();
+        //    }
+        //}
+
+        //public void DecrementUsed()
+        //{
+        //    if(_avalableComponentRefrence != null)
+        //    {
+        //        _avalableComponentRefrence.ReturnComponent();
+        //        Used--;
+        //        _viewModel.RefreshProjectComponents();
+        //    }
+        //}
+
+        [RelayCommand]
+        public void IncreaseUsed()
+        {
+            //IncrementUsed();
+        }
+
+        [RelayCommand]
+        public void DecreaseUsed()
+        {
+            //DecrementUsed();
+        }
+
 
         [RelayCommand]
         public void RemoveFromProject()

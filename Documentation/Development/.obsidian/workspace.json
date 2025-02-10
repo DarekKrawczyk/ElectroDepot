@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "e3eb96b919931aa9",
+        "id": "5fca1cd226f08dc3",
         "type": "tabs",
         "children": [
           {
-            "id": "72dd68340530b0b5",
+            "id": "5d73a1e0e24a4111",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "DesktopClient.md",
-                "mode": "preview",
+                "file": "DesktopClient/TODO.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "DesktopClient"
+              "title": "TODO"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "DesktopClient.md",
+                "file": "DesktopClient/TODO.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for DesktopClient"
+              "title": "Backlinks for TODO"
             }
           },
           {
@@ -155,7 +155,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -164,12 +164,25 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "obsidian-excalidraw-plugin:New drawing": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "50e311359704a269",
+  "active": "5d73a1e0e24a4111",
   "lastOpenFiles": [
+    "Excalidraw/Drawing 2025-02-07 01.04.02.excalidraw.md",
+    "Excalidraw/Drawing 2025-02-07 00.47.13.excalidraw.md",
+    "DesktopClient/UI Refactoring/Projects collection layout.md",
+    "DesktopClient/UI Refactoring/Projects add tab refactoring.md",
+    "Pasted Image 20250207010446_784.png",
+    "DesktopClient/UI Refactoring/Edit tab refactoring.md",
+    "DesktopClient/TODO.md",
+    "DesktopClient/DesktopClient.md",
     "Server.md",
-    "DesktopClient.md"
+    "Projects Preview",
+    "Excalidraw",
+    "DesktopClient/UI Refactoring",
+    "DesktopClient"
   ]
 }

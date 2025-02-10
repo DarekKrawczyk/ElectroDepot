@@ -1,6 +1,8 @@
-﻿using Avalonia.Media.Imaging;
+﻿using Avalonia;
+using Avalonia.Media.Imaging;
 using ElectroDepotClassLibrary.DTOs;
 using ElectroDepotClassLibrary.Utility;
+using System.Xml.Linq;
 
 namespace ElectroDepotClassLibrary.Models
 {
@@ -11,7 +13,7 @@ namespace ElectroDepotClassLibrary.Models
         public User User { get; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime CreatedAt { get; }
+        public DateTime CreatedAt { get; set; }
         public Bitmap Image { get; set; }
         public Project(int id, int userID, User user, string name, string description, DateTime createdAt, Bitmap image)
         {
@@ -22,6 +24,17 @@ namespace ElectroDepotClassLibrary.Models
             Description = description;
             CreatedAt = createdAt;
             Image = image;
+        }
+
+        public Project(Project other)
+        {
+            ID = other.ID;
+            UserID = other.UserID;
+            User = other.User;
+            Name = other.Name;
+            Description = other.Description;
+            CreatedAt = other.CreatedAt;
+            Image = other.Image;
         }
 
         public override string ToString()
