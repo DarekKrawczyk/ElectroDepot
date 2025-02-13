@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using DesktopClient.Navigation;
 using DesktopClient.Services;
 using ElectroDepotClassLibrary.Stores;
+using ElectroDepotClassLibrary.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace DesktopClient.ViewModels
 {
     public partial class RootNavigatorViewModel : BaseViewModel, INavigator
     {
-        private readonly SecureStorageHelperService _secureStorageService;
+        private readonly ApplicationConfig _secureStorageService;
 
         [ObservableProperty]
         private RootPageViewModel _rootPage;   
@@ -30,10 +31,10 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        public RootNavigatorViewModel(RootPageViewModel defaultPageViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService) : base(databaseStore, msgBoxService)
+        public RootNavigatorViewModel(RootPageViewModel defaultPageViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService, ApplicationConfig appConfig) : base(databaseStore, msgBoxService)
         {
             _rootPage = defaultPageViewModel;
-            _secureStorageService = new SecureStorageHelperService();
+            _secureStorageService = appConfig;
         }
 
         [RelayCommand]

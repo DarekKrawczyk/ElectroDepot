@@ -6,6 +6,8 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationIcon>Assets\Visual\ElectroDepotIconBig.ico</ApplicationIcon>
+    <AssemblyName>ElectroDepot</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +30,10 @@
     <None Remove="Assets\Roboto.ttf" />
     <None Remove="Assets\Supplier_icon.png" />
     <None Remove="Assets\Temperature_Sensor_Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Visual\ElectroDepotIconBig.ico" />
   </ItemGroup>
 
   <ItemGroup>

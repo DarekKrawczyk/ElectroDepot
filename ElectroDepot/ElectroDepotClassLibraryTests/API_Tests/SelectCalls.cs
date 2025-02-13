@@ -1,5 +1,6 @@
 ﻿using ElectroDepotClassLibrary.DTOs;
 using ElectroDepotClassLibrary.Models;
+using ElectroDepotClassLibrary.Utility;
 using Xunit.Abstractions;
 
 namespace ElectroDepotClassLibraryTests.TestsOperations
@@ -59,9 +60,9 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
                 foreach(Component component in componentsOfUser)
                 {
                     // Bias is Used to match with ids from TestingData.md
-                    Console.WriteLine($"UserID: '{user.ID - Utility.UserIDBias}', ComponentID: '{component.ID - Utility.ComponentIDBias}'");
+                    Console.WriteLine($"UserID: '{user.ID}', ComponentID: '{component.ID}'");
                 }
-                int[] dbIDs = componentsOfUser.Select(x => x.ID - Utility.ComponentIDBias).ToArray();
+                int[] dbIDs = componentsOfUser.Select(x => x.ID).ToArray();
 
                 Assert.True(CompsIDsOfJacekJaworek.OrderBy(x => x).SequenceEqual(dbIDs.OrderBy(x => x)));
             }
@@ -84,9 +85,9 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
                 foreach (Project project in projectsOfUser)
                 {
                     // Bias is used to match with ids from TestingData.md
-                    Console.WriteLine($"UserID: '{user.ID - Utility.UserIDBias}', Project: '{project.Name}'");
+                    Console.WriteLine($"UserID: '{user.ID}', Project: '{project.Name}'");
                 }
-                int[] dbIDs = projectsOfUser.Select(x => x.ID - Utility.ProjectIDBias).ToArray();
+                int[] dbIDs = projectsOfUser.Select(x => x.ID).ToArray();
 
                 Assert.True(ProjectsIDsOfJacekJaworek.OrderBy(x => x).SequenceEqual(dbIDs.OrderBy(x => x)));
             }
@@ -121,9 +122,9 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
                 foreach (OwnsComponent ownedComponent in OwnedComponentsOfUser)
                 {
                     // Bias is used to match with ids from TestingData.md
-                    Console.WriteLine($"UserID: '{user.ID - Utility.UserIDBias}', ComponentID: '{ownedComponent.ComponentID - Utility.ComponentIDBias}', Quantity: '{ownedComponent.Quantity}'");
+                    Console.WriteLine($"UserID: '{user.ID}', ComponentID: '{ownedComponent.ComponentID}', Quantity: '{ownedComponent.Quantity}'");
 
-                    int[] dbIDs = new int[] { ownedComponent.ComponentID - Utility.ComponentIDBias, ownedComponent.Quantity };
+                    int[] dbIDs = new int[] { ownedComponent.ComponentID, ownedComponent.Quantity };
 
                     Assert.True(OwnedComponentCountOfJacekJaworek.Any(y => y.OrderBy(x => x).SequenceEqual(dbIDs.OrderBy(x => x))));
                 }
@@ -137,7 +138,7 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
                 OwnsComponent componentOfComponentAndUser = await OwnsComponentDP.GetOwnComponentsFromUser(user, FirstComponent);
                 Assert.NotNull(componentOfComponentAndUser);
 
-                Console.WriteLine($"Found: Owner:'{user.ID - Utility.UserIDBias}', ComponentID:'{componentOfComponentAndUser.ComponentID - Utility.ComponentIDBias}', Quantity:'{componentOfComponentAndUser.Quantity}'");
+                Console.WriteLine($"Found: Owner:'{user.ID}', ComponentID:'{componentOfComponentAndUser.ComponentID}', Quantity:'{componentOfComponentAndUser.Quantity}'");
 
             }
             catch (Exception exception)
@@ -153,16 +154,14 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
             {
                 int[] ComponentsIDsFromProject0 = new int[] { 77, 2, 5, 38 };
 
-                int projectID = Utility.ProjectIDBias;
-
-                Project project = await ProjectDP.GetProjectByID(projectID); 
+                Project project = await ProjectDP.GetProjectByID(0); 
                 Assert.NotNull(project);
 
                 IEnumerable<Component> ComponentsOfProject = await ProjectDP.GetAllComponentsFromProject(project);
                 Assert.NotNull(ComponentsOfProject);
                 Assert.NotEmpty(ComponentsOfProject);
 
-                int[] ids = ComponentsOfProject.Select(x => Math.Abs(Utility.ComponentIDBias - x.ID)).ToArray();
+                int[] ids = ComponentsOfProject.Select(x => Math.Abs(x.ID)).ToArray();
 
                 bool isSame = ComponentsIDsFromProject0.SequenceEqual(ids);
                 Assert.True(isSame);
@@ -195,7 +194,7 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
                 Assert.NotNull(purchases);
                 Assert.NotEmpty(purchases);
 
-                int[] purIDS = purchases.Select(x=> Math.Abs(Utility.PurchaseIDBias - x.ID)).ToArray();
+                int[] purIDS = purchases.Select(x=> Math.Abs(x.ID)).ToArray();
                 bool isSame = purIDS.SequenceEqual(purchaseIDS);
                 Assert.True(isSame);
 
@@ -215,11 +214,7 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
         {
             try
             {
-                // DATA DEF
-                int projectID = Utility.ProjectIDBias;
-                //
-
-                Project project = await ProjectDP.GetProjectByID(projectID);
+                Project project = await ProjectDP.GetProjectByID(0);
                 Assert.NotNull(project);
 
                 double projectPrice = await ProjectDP.GetProjectPrice(project);
@@ -239,10 +234,8 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
         {
             try
             {
-                // Data definition
-                int projectID = Utility.ProjectIDBias;
 
-                Project project = await ProjectDP.GetProjectByID(projectID);
+                Project project = await ProjectDP.GetProjectByID(0);
                 Assert.NotNull(project);
 
                 double projectPrice = await ProjectDP.GetProjectPrice(project);
@@ -263,18 +256,17 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
             try
             {
                 // Data definition
-                int purchaseID = Utility.PurchaseIDBias;
                 int[] IDsArray = new int[] { 77, 2, 5, 38, 82, 67, 9 };
                 int[] quantities = new int[] { 1, 1, 2, 1, 2, 2, 2 };
 
-                Purchase purchase = await PurchaseDP.GetPurchaseByID(purchaseID);
+                Purchase purchase = await PurchaseDP.GetPurchaseByID(0);
                 Assert.NotNull(purchase);
 
                 IEnumerable<PurchaseItem> purchaseItems = await PurchaseItemDP.GetAllPurchaseItemsFromPurchase(purchase);
                 Assert.NotNull(purchaseItems);
                 Assert.NotEmpty(purchaseItems);
 
-                int[] idsFromDB = purchaseItems.Select(x => Math.Abs(Utility.ComponentIDBias - x.ComponentID)).ToArray();
+                int[] idsFromDB = purchaseItems.Select(x => Math.Abs(x.ComponentID)).ToArray();
                 int[] quantitiesFromDB = purchaseItems.Select(x => x.Quantity).ToArray();
 
                 bool areIDsOk = idsFromDB.SequenceEqual(IDsArray);
@@ -294,10 +286,8 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
         {
             try
             {
-                // Data definition
-                int userID = Utility.UserIDBias;
 
-                User user = await UserDP.GetUserByID(userID);
+                User user = await UserDP.GetUserByID(0);
                 Assert.NotNull(user);
 
                 IEnumerable<OwnsComponent> freeToUseComponents = await OwnsComponentDP.GetAllFreeToUseComponentsFromUser(user);
@@ -319,10 +309,8 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
         {
             try
             {
-                // Data definition
-                int userID = Utility.UserIDBias;
 
-                User user = await UserDP.GetUserByID(userID);
+                User user = await UserDP.GetUserByID(0);
                 Assert.NotNull(user);
 
                 IEnumerable<OwnsComponent> freeToUseComponents = await OwnsComponentDP.GetAllUsedComponentsFromUser(user);
@@ -344,19 +332,17 @@ namespace ElectroDepotClassLibraryTests.TestsOperations
         {
             try
             {
-                // Data definition
-                int userID = Utility.UserIDBias;
                 int[] IDsArray = new int[] { 77, 2, 5, 38, 82, 67, 9 };
                 int[] quantities = new int[] { 1, 1, 2, 1, 2, 2, 2 };
 
-                User user = await UserDP.GetUserByID(userID);
+                User user = await UserDP.GetUserByID(0);
                 Assert.NotNull(user);
 
                 IEnumerable<OwnsComponent> ownedComponents = await OwnsComponentDP.GetAllOwnsComponentsFromUser(user);
                 Assert.NotNull(ownedComponents);
                 Assert.NotEmpty(ownedComponents);
 
-                int[] idsFromDB = ownedComponents.Select(x => Math.Abs(Utility.ComponentIDBias - x.ComponentID)).ToArray();
+                int[] idsFromDB = ownedComponents.Select(x => Math.Abs(x.ComponentID)).ToArray();
                 int[] quantitiesFromDB = ownedComponents.Select(x => x.Quantity).ToArray();
 
                 bool areIDsOk = idsFromDB.SequenceEqual(IDsArray);

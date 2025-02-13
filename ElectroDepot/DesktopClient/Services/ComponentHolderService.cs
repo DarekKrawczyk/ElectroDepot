@@ -1,6 +1,7 @@
 ﻿using DesktopClient.Containers;
 using DesktopClient.ViewModels;
 using DynamicData;
+using ElectroDepotClassLibrary.Containers;
 using ElectroDepotClassLibrary.Models;
 using ElectroDepotClassLibrary.Stores;
 using System;
@@ -17,38 +18,44 @@ namespace DesktopClient.Services
         private readonly ComponentsPageViewModel _viewModel;
         private readonly ComponentsStore _componentsStore;
         private readonly SuppliersStore _suppliersStore;
-        private readonly ISourceCache<DetailedComponentContainer, int> _components;
+        private readonly ISourceCache<DetailedComponentContainerHolder, int> _components;
 
         public ComponentHolderService(ComponentsPageViewModel viewModel, ComponentsStore componentsStore)
         {
             _viewModel = viewModel;
             _componentsStore = componentsStore;
             _suppliersStore = componentsStore.MainStore.SupplierStore;
-            _components = new SourceCache<DetailedComponentContainer, int>(e => e.ID);
+            _components = new SourceCache<DetailedComponentContainerHolder, int>(e => e.Container.Component.ID);
+
+            _componentsStore.AllComponentsReload += _componentsStore_ComponentsLoadedHandler;
+            _componentsStore.AllComponentsReloadNotNecessary += _componentsStore_ComponentsLoadedHandler;
         }
 
-        public IObservable<IChangeSet<DetailedComponentContainer, int>> EmployeesConnection() => _components.Connect();
-
-        public void LoadData()
+        private void _componentsStore_ComponentsLoadedHandler()
         {
             _components.Clear();
 
-            IEnumerable<OwnsComponent> ownedComponents = _componentsStore.OwnedComponents;
-            IEnumerable<OwnsComponent> unusedComponents = _componentsStore.UnusedComponents;
-            IEnumerable<Component> components = _componentsStore.Components;
+            IEnumerable<DetailedComponentContainer> components = _componentsStore.AllComponents;
+
             IEnumerable<Supplier> suppliers = _suppliersStore.Suppliers;
-            ObservableCollection<SupplierContainer> suppliersCol = new ObservableCollection<SupplierContainer>(suppliers.Select(x=> new SupplierContainer(x)));
+            ObservableCollection<SupplierContainer> suppliersCol = new ObservableCollection<SupplierContainer>(suppliers.Select(x => new SupplierContainer(x)));
 
-
-            for (int i = 0; i < components.Count(); i++)
+            foreach(DetailedComponentContainer componentContainer in components)
             {
-                Component component = components.ElementAt(i);
-                OwnsComponent ownedComponent = ownedComponents.ElementAt(i);
-                OwnsComponent unusedComponent = unusedComponents.ElementAt(i);
-                string manufacturer = component.Manufacturer;
 
-                _components.AddOrUpdate(new DetailedComponentContainer(_viewModel, component, ownedComponent, unusedComponent, suppliersCol));
+                _components.AddOrUpdate(new DetailedComponentContainerHolder(_viewModel, componentContainer, suppliersCol));
             }
+
+            DataLoaded?.Invoke();
+        }
+
+        public IObservable<IChangeSet<DetailedComponentContainerHolder, int>> EmployeesConnection() => _components.Connect();
+
+        public event Action DataLoaded;
+
+        public async Task ReloadComponentsData()
+        {
+            _componentsStore.ReloadAllComponentsData();
         }
     }
 }

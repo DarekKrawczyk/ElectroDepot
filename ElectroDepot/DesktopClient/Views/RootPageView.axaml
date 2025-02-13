@@ -66,36 +66,41 @@
               </StackPanel>
             </Button>
 
-            <Button Classes="default" HorizontalAlignment="Stretch" Command="{Binding NavigatePageCommand}" CommandParameter="Tracking">
+            <!--<Button Classes="default" HorizontalAlignment="Stretch" Command="{Binding NavigatePageCommand}" CommandParameter="Tracking">
               <StackPanel Orientation="Horizontal">
                 <Label Classes="icon" Content="&#xECA4;"></Label>
                 <Label Classes="icontext" Content="Tracking"></Label>
               </StackPanel>
-            </Button>
+            </Button>-->
           </StackPanel>
 
-          <Expander Grid.Row="2" Margin="0 0 0 5" Padding="5 5 5 5" ExpandDirection="Up" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
-            <Expander.Header>
-              <StackPanel Orientation="Horizontal">
-                <Label Classes="icon" Content="&#xE4C2;"></Label>
-                <Label Classes="icontext" Content="Username"></Label>
-              </StackPanel>
-            </Expander.Header>
-            <StackPanel Spacing="5">
-              <Button Classes="default" HorizontalAlignment="Stretch">
-                <StackPanel Orientation="Horizontal">
-                  <Label Classes="icon" Content="&#xE4CC;"></Label>
-                  <Label Classes="icontext" Content="User settings"></Label>
-                </StackPanel>
-              </Button>
-              <Button Classes="default" Command="{Binding NavigateCommand}" CommandParameter="Login" HorizontalAlignment="Stretch">
-                <StackPanel Orientation="Horizontal">
-                  <Label Classes="icon" Content="&#xE42A;"></Label>
-                  <Label Classes="icontext" Content="Sign out"></Label>
-                </StackPanel>
-              </Button>
+          <Button Classes="default" Grid.Row="2" Margin="0 0 0 5" Padding="5 5 5 5"  HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal">
+              <Label Classes="icon" Content="&#xE4C2;"></Label>
+              <Label Classes="icontext" Content="{Binding DatabaseStore.UsersStore.LoggedInUser.Username}"></Label>
             </StackPanel>
-          </Expander>
+            <Button.Flyout> 
+              <Flyout Placement="Top" ShowMode="TransientWithDismissOnPointerMoveAway">
+                <StackPanel Spacing="3" Margin="-10 -8 -10 -10">
+                  <Button Classes="default" HorizontalAlignment="Stretch" 
+                          Command="{Binding NavigatePageCommand}" 
+                          CommandParameter="UserSettings"
+                          Width="232">
+                    <StackPanel Orientation="Horizontal">
+                      <Label Classes="icon" Content="&#xE4CC;"></Label>
+                      <Label Classes="icontext" Content="User settings"></Label>
+                    </StackPanel>
+                  </Button>
+                  <Button Classes="default" Command="{Binding NavigateCommand}" CommandParameter="Login" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal">
+                      <Label Classes="icon" Content="&#xE42A;"></Label>
+                      <Label Classes="icontext" Content="Sign out"></Label>
+                    </StackPanel>
+                  </Button>
+                </StackPanel>
+              </Flyout>
+            </Button.Flyout>
+          </Button>
           
           <!-- Profile --><!--
           <Button Classes="default" Margin="0 0 0 5" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
@@ -126,14 +131,14 @@
 
           <!-- Utility buttons -->
           <StackPanel Orientation="Horizontal" Grid.Row="3" Spacing="5">
-            <Button Classes="default">
+            <Button Classes="default" Command="{Binding NavigatePageCommand}" CommandParameter="Settings">
               <StackPanel Orientation="Horizontal">
                 <Label Classes="icon" Content="&#xE270;"></Label>
               </StackPanel>
             </Button>
-            <UIElements:NightModeButton></UIElements:NightModeButton>
-            <UIElements:HelpButton></UIElements:HelpButton>
-            <UIElements:ReportBugButton></UIElements:ReportBugButton>
+            <UIElements:NightModeButton ToolTip.Tip="This feature is not yet implemented."></UIElements:NightModeButton>
+            <UIElements:HelpButton ToolTip.Tip="Documentation has not been created yet."></UIElements:HelpButton>
+            <UIElements:ReportBugButton Command="{Binding ReportBugCommand}"></UIElements:ReportBugButton>
           </StackPanel>
         </Grid>
 
@@ -144,7 +149,7 @@
               <Grid.Background>
                 <ImageBrush AlignmentY="Top"
                             AlignmentX="Right" 
-                            Source="avares://DesktopClient/Assets/Background_FHD.png"></ImageBrush>
+                            Source="avares://ElectroDepot/Assets/Background_FHD.png"></ImageBrush>
               </Grid.Background>
               <ContentControl Padding="10" Content="{Binding PageViewModel}"/>
             </Grid>

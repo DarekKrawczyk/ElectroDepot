@@ -55,6 +55,13 @@ namespace ElectroDepotClassLibrary.Models
 
         }
 
+        public bool Compare(Component other)
+        {
+            if (ID != other.ID || CategoryID != other.CategoryID || Name != other.Name || Manufacturer != other.Manufacturer || ShortDescription != other.ShortDescription ||
+                LongDescription != other.LongDescription || DatasheetLink != other.DatasheetLink || ByteImage != other.ByteImage) return false;
+            else return true;
+        }
+
         public override string ToString()
         {
             return $"ID: '{ID}', Name: '{Name}', Manufacturer: '{Manufacturer}', CategoryID: '{CategoryID}'";

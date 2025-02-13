@@ -27,7 +27,13 @@ namespace ElectroDepotClassLibrary.Services
         {
             try
             {
-                if(password != confirmPassword)
+                bool serverRunning = await _usersStore.UsersDP.IsServerRunning();
+                if (serverRunning == false)
+                {
+                    return RegistrationStatus.FatalError;
+                }
+
+                if (password != confirmPassword)
                 {
                     return RegistrationStatus.FailurePasswordDontMath;
                 }

@@ -14,7 +14,7 @@
     <FluentTheme/>
     <themes:RangeSliderTheme />
     <StyleInclude Source="avares://AvaloniaProgressRing/Styles/ProgressRing.xaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/AppDefaultStyles.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/AppDefaultStyles.axaml"/>
     <StyleInclude Source="avares://Notification.Avalonia/Themes/Generic.xaml" />
     <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 
@@ -34,46 +34,46 @@
   <Application.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/MinusButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/PlusButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/UploadFileButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/RefreshButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/RevertWideButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/RevertButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/OkButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/GenerateRaportButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/ReportBugButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/SaveButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/NightModeButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/HelpButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/AddButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/SelectButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/CancelButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/ClearButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/DownloadOnlineContentButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/CopyToClipboardButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/UploadContentButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/DeleteButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/EditWideButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/EditButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/PDFButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/FirstPageButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/LastPageButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/NextPageButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/UserInterfaceElements/PreviousPageButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/CustomControls/ImageSelector.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/CustomControls/SupplierNodeButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/CustomControls/ComponentNodeButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/CustomControls/ProjectNodeButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/Templates/MenuButton.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/Templates/General_Use_Menu_Button.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/Templates/Menu_Project_Node.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/Templates/Menu_Bought_Component_Node.axaml' />
-        <ResourceInclude Source='avares://DesktopClient/Templates/Supplier_Node.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/MinusButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/PlusButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/UploadFileButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/RefreshButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/RevertWideButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/RevertButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/OkButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/GenerateRaportButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/ReportBugButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/SaveButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/NightModeButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/HelpButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/AddButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/SelectButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/CancelButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/ClearButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/DownloadOnlineContentButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/CopyToClipboardButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/UploadContentButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/DeleteButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/EditWideButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/EditButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/PDFButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/FirstPageButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/LastPageButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/NextPageButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/PreviousPageButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/CustomControls/ImageSelector.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/CustomControls/SupplierNodeButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/CustomControls/ComponentNodeButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/CustomControls/ProjectNodeButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/Templates/MenuButton.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/Templates/General_Use_Menu_Button.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/Templates/Menu_Project_Node.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/Templates/Menu_Bought_Component_Node.axaml' />
+        <ResourceInclude Source='avares://ElectroDepot/Templates/Supplier_Node.axaml' />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
-    <FontFamily x:Key="Roboto">avares://DesktopClient/Assets#Roboto</FontFamily>
-    <FontFamily x:Key="Phosphor">avares://DesktopClient/Assets/Fonts/Phosphor-Light.ttf#Phosphor-Light</FontFamily>
+    <FontFamily x:Key="Roboto">avares://ElectroDepot/Assets#Roboto</FontFamily>
+    <FontFamily x:Key="Phosphor">avares://ElectroDepot/Assets/Fonts/Phosphor-Light.ttf#Phosphor-Light</FontFamily>
 
     <!-- Primary Purple -->
     <SolidColorBrush x:Key="UIDeepPurple" Color="#6A4C9C" />

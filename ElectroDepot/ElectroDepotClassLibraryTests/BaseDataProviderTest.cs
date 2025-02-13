@@ -1,4 +1,5 @@
 ﻿using ElectroDepotClassLibrary.DataProviders;
+using ElectroDepotClassLibrary.Utility;
 using Xunit.Abstractions;
 
 namespace ElectroDepotClassLibraryTests
@@ -19,15 +20,19 @@ namespace ElectroDepotClassLibraryTests
         public BaseDataProviderTest(ITestOutputHelper output)
         {
             Console = output;
-            ComponentDP = new ComponentDataProvider(Utility.ConnectionURL);
-            CategoryDP = new CategoryDataProvider(Utility.ConnectionURL);
-            UserDP = new UserDataProvider(Utility.ConnectionURL);
-            OwnsComponentDP = new OwnsComponentDataProvider(Utility.ConnectionURL);
-            ProjectDP = new ProjectDataProvider(Utility.ConnectionURL);
-            ProjectComponentDP = new ProjectComponentDataProvider(Utility.ConnectionURL);
-            SupplierDP = new SupplierDataProvider(Utility.ConnectionURL);
-            PurchaseDP = new PurchaseDataProvider(Utility.ConnectionURL);
-            PurchaseItemDP = new PurchaseItemDataProvider(Utility.ConnectionURL);
+
+            ApplicationConfig config = new ApplicationConfig();
+            config.LoadConfig();
+
+            ComponentDP = new ComponentDataProvider(config.ServerConfig.ConnectionURL);
+            CategoryDP = new CategoryDataProvider(config.ServerConfig.ConnectionURL);
+            UserDP = new UserDataProvider(config.ServerConfig.ConnectionURL);
+            OwnsComponentDP = new OwnsComponentDataProvider(config.ServerConfig.ConnectionURL);
+            ProjectDP = new ProjectDataProvider(config.ServerConfig.ConnectionURL);
+            ProjectComponentDP = new ProjectComponentDataProvider(config.ServerConfig.ConnectionURL);
+            SupplierDP = new SupplierDataProvider(config.ServerConfig.ConnectionURL);
+            PurchaseDP = new PurchaseDataProvider(config.ServerConfig.ConnectionURL);
+            PurchaseItemDP = new PurchaseItemDataProvider(config.ServerConfig.ConnectionURL);
         }
     }
 }

@@ -32,11 +32,19 @@ namespace DesktopClient.Services
 
         public DateTimeOffset MaxYear()
         {
+            if(_projects.Items.Count == 0)
+            {
+                return DateTime.Now.Date;
+            }
             return _projects.Items.Max(x=>x.Project.CreatedAt);
         }
 
         public DateTimeOffset MinYear()
         {
+            if (_projects.Items.Count == 0)
+            {
+                return DateTime.Now.Date;
+            }
             return _projects.Items.Min(x => x.Project.CreatedAt);
         }
 

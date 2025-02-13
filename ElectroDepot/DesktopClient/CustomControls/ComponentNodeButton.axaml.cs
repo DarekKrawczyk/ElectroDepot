@@ -12,7 +12,7 @@ public class ComponentNodeButton : Button
     /// ProjectImage StyledProperty definition
     /// </summary>
     public static readonly StyledProperty<Bitmap> ImageProperty =
-        AvaloniaProperty.Register<MenuButton, Bitmap>(nameof(Image), ImageHelper.LoadFromResource(new Uri($"avares://DesktopClient/Assets/Temperature_Sensor_Icon.png")));
+        AvaloniaProperty.Register<MenuButton, Bitmap>(nameof(Image), ImageHelper.LoadFromResource(new Uri($"avares://ElectroDepot/Assets/Temperature_Sensor_Icon.png")));
 
     /// <summary>
     /// Gets or sets the ProjectImage property. This StyledProperty 

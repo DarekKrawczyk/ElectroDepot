@@ -11,11 +11,11 @@
              x:DataType="vm:ComponentsPageViewModel">
 
   <UserControl.Styles>
-    <StyleInclude Source="avares://DesktopClient/Styles/TextBlockStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/LabelDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/TextBoxDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/TextBlockStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/LabelDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/TextBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
   </UserControl.Styles>
 
   <UserControl.Resources>
@@ -52,7 +52,7 @@
           <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="-12 0 -12 0" Background="{DynamicResource SectionGradient}">
             <Grid RowDefinitions="auto, *, auto">
               <!-- Header with filters, selectors, and search -->
-              <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0 5 0 5" ColumnDefinitions="auto auto auto auto auto">
+              <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0 5 0 5" ColumnDefinitions="auto auto auto * auto auto auto auto">
 
                 <!-- Manufacturer -->
                 <Border Grid.Column="0" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
@@ -61,7 +61,7 @@
                       <Label Grid.Column="0" Classes="DefaultLabelLeft">Manufacturer</Label>
                       <UIElements:DeleteButton Grid.Column="1" Command="{Binding ClearSelectedManufacturerCommand}"/>
                     </Grid>
-                    <TextBox Grid.Row="1" Watermark="Manufacturer name" Classes="DefaultTextBox" Text="{Binding SelectedManufacturer}" ></TextBox>
+                    <TextBox Grid.Row="1" Classes="DefaultTextBox" Text="{Binding SelectedManufacturer}" ></TextBox>
                   </Grid>
                 </Border>
 
@@ -83,15 +83,25 @@
                       <Label Grid.Column="0" Classes="DefaultLabelLeft">Search</Label>
                       <UIElements:DeleteButton Grid.Column="1" Command="{Binding ClearSearchBarCommand}"/>
                     </Grid>
-                    <TextBox Classes="DefaultTextBox" Grid.Row="1" Watermark="Name or description" Text="{Binding SearchByNameOrDesc}" />
+                    <TextBox Classes="DefaultTextBox" Grid.Row="1" Text="{Binding SearchByNameOrDesc}" />
                   </Grid>
                 </Border>
 
                 <!-- Clear / Only avaiable -->
                 <Border Grid.Column="3" Margin="5 0 0 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
                   <Grid RowDefinitions="auto auto" Margin="5">
-                    <CheckBox IsChecked="{Binding OnlyAvailableFlag, Mode=TwoWay}" Grid.Row="0" Content="Only available" Margin="5" FontSize="20"/>
-                    <UIElements:ClearButton Grid.Row="1" Command="{Binding ClearAllFiltersAndSorting}"/>
+                    <Label Grid.Row="0" Margin="0 0 0 5" Grid.Column="0" Classes="DefaultLabelLeft" HorizontalAlignment="Left" Height="39">Sorting</Label>
+                    <CheckBox Grid.Row="1" IsChecked="{Binding OnlyAvailableFlag, Mode=TwoWay}" Content="Only available" Margin="5" FontSize="20"/>
+                  </Grid>
+                </Border>
+                
+                <!-- Clear sorting -->
+                <Border Grid.Column="4" Margin="5 0 5 0" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" BorderThickness="1" CornerRadius="5">
+                  <Grid RowDefinitions="auto auto" Margin="5">
+                    <Grid Grid.Row="0" ColumnDefinitions="* auto" Margin="0 0 0 5">
+                      <Label Grid.Column="0" Classes="DefaultLabelNoMin" Height="39">Filters</Label>
+                    </Grid>
+                    <UIElements:ClearButton Grid.Row="1" Command="{Binding ClearAllFiltersAndSortingCommand}"/>
                   </Grid>
                 </Border>
               </Grid>
@@ -99,6 +109,9 @@
               <!-- Components -->
               <DataGrid ItemsSource="{Binding ComponentsCollection}"
                         AutoGenerateColumns="False"
+                        CanUserReorderColumns="False"
+                        CanUserResizeColumns="False"
+                        CanUserSortColumns="False"
                         IsReadOnly="True"
                         x:Name="Comps"
                         Background="White"
@@ -116,15 +129,15 @@
                   <DataGridTemplateColumn Header="Image">
                     <DataGridTemplateColumn.CellTemplate>
                       <DataTemplate>
-                        <Image x:DataType="cont:DetailedComponentContainer" Source="{Binding Image}" Width="106" Height="106" Stretch="UniformToFill" Margin="0"/>
+                        <Image x:DataType="cont:DetailedComponentContainerHolder" Source="{Binding Container.Component.Image}" Width="106" Height="106" Stretch="UniformToFill" Margin="0"/>
                       </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                   </DataGridTemplateColumn>
-                  <DataGridTextColumn Foreground="Black" Header="Name" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Name}" Width="*"/>
-                  <DataGridTextColumn Foreground="Black" Header="Manufacturer" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Manufacturer}" Width="*"/>
-                  <DataGridTextColumn Foreground="Black" Header="Available" x:DataType="cont:DetailedComponentContainer" Binding="{Binding AvailableAmount}" Width="auto"/>
-                  <DataGridTextColumn Foreground="Black" Header="Category" x:DataType="cont:DetailedComponentContainer" Binding="{Binding Category.Name}" Width="*"/>
-                  <DataGridTextColumn Foreground="Black" Header="Description" x:DataType="cont:DetailedComponentContainer" Binding="{Binding ShortDescription}" Width="*"/>
+                  <DataGridTextColumn Foreground="Black" Header="Name" x:DataType="cont:DetailedComponentContainerHolder" Binding="{Binding Container.Component.Name}" Width="*"/>
+                  <DataGridTextColumn Foreground="Black" Header="Manufacturer" x:DataType="cont:DetailedComponentContainerHolder" Binding="{Binding Container.Component.Manufacturer}" Width="*"/>
+                  <DataGridTextColumn Foreground="Black" Header="Available" x:DataType="cont:DetailedComponentContainerHolder" Binding="{Binding Container.Owned.Quantity}" Width="auto"/>
+                  <DataGridTextColumn Foreground="Black" Header="Category" x:DataType="cont:DetailedComponentContainerHolder" Binding="{Binding Container.Component.Category.Name}" Width="*"/>
+                  <DataGridTextColumn Foreground="Black" Header="Description" x:DataType="cont:DetailedComponentContainerHolder" Binding="{Binding Container.Component.ShortDescription}" Width="*"/>
                 </DataGrid.Columns>
                 <DataGrid.Styles>
                   <Style Selector="DataGridCell:current /template/ Grid#FocusVisual">
@@ -133,38 +146,24 @@
                   <Style Selector="DataGridRow">
                     <Setter Property="ContextMenu">
                       <ContextMenu>
-                        <MenuItem Header="Preview" x:DataType="cont:DetailedComponentContainer" Command="{Binding Components_EnterComponentPreviewCommand}">
+                        <MenuItem Header="Preview" x:DataType="cont:DetailedComponentContainerHolder" Command="{Binding Components_EnterComponentPreviewCommand}">
                           <MenuItem.Icon>
                             <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE32E;"></Label>
                           </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Edit" x:DataType="cont:DetailedComponentContainer" Command="{Binding Components_EnterComponentEditCommand}">
+                        <MenuItem Header="Edit" x:DataType="cont:DetailedComponentContainerHolder" Command="{Binding Components_EnterComponentEditCommand}">
                           <MenuItem.Icon>
                             <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE3AE;"></Label>
                           </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Datasheet">
+                        <MenuItem Header="Datasheet" x:DataType="cont:DetailedComponentContainerHolder" Command="{Binding OpenDatasheetCommand}">
                           <MenuItem.Icon>
                             <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE702;"></Label>
                           </MenuItem.Icon>
                         </MenuItem>
-                        <Separator></Separator>
-                        <MenuItem Header="Browse for component" ItemsSource="{Binding Suppliers}" x:DataType="cont:DetailedComponentContainer">
-                          <MenuItem.Icon>
-                            <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE30C;"></Label>
-                          </MenuItem.Icon>
-                          <MenuItem.ItemTemplate>
-                            <DataTemplate>
-                              <Grid ColumnDefinitions="auto 150">
-                                <Image Grid.Column="0" Source="{Binding Supplier.Image}" Width="32" Height="32"></Image>
-                                <Label Grid.Column="1" Content="{Binding Supplier.Name}" HorizontalAlignment="Left" VerticalAlignment="Center"></Label>
-                              </Grid>
-                            </DataTemplate>
-                          </MenuItem.ItemTemplate>
-                        </MenuItem>
                       </ContextMenu>
                     </Setter>
-                    <Setter Property="ToolTip.Tip" Value="Help" />
+                    <!--<Setter Property="ToolTip.Tip" Value="Help" />-->
                   </Style>
                 </DataGrid.Styles>
               </DataGrid>
@@ -183,6 +182,7 @@
                       </ComboBox>
                       <Label Foreground="Black" FontSize="20" VerticalAlignment="Center">of</Label>
                       <Label Foreground="Black" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Content="{Binding TotalItems}">1500</Label>
+                      <UIElements:RefreshButton Command="{Binding RefreshComponentsCommand}"></UIElements:RefreshButton>
                     </StackPanel>
                   </Grid>
 
@@ -191,8 +191,8 @@
                     <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
                       <UIElements:FirstPageButton Command="{Binding FirstPageCommand}"></UIElements:FirstPageButton>
                       <UIElements:PreviousPageButton Command="{Binding PreviousPageCommand}"></UIElements:PreviousPageButton>
-                      <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5">
-                        <TextBlock Width="80" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Center" Text="{Binding CurrentPage}">1</TextBlock>
+                      <Border BorderBrush="Black" Width="80"  BorderThickness="1" CornerRadius="5" VerticalAlignment="Stretch" HorizontalAlignment="Center">
+                        <Label FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{Binding CurrentPage}">87</Label>
                       </Border>
                       <UIElements:NextPageButton Command="{Binding NextPageCommand}"></UIElements:NextPageButton>
                       <UIElements:LastPageButton Command="{Binding LastPageCommand}"></UIElements:LastPageButton>
@@ -282,7 +282,7 @@
                         </Grid>
                       
                         <!-- Text -->
-                        <TextBox Classes="DefaultTextBox"  Grid.Row="1" Margin="5 0 5 5" Text="{Binding Add_ShortDescription}" Watermark="Enter brief description" TextWrapping="Wrap" AcceptsReturn="True">
+                        <TextBox Classes="DefaultTextBox"  Grid.Row="1" Margin="5 0 5 5" Text="{Binding Add_ShortDescription}" TextWrapping="Wrap" AcceptsReturn="True">
                         </TextBox>
                       </Grid>
                     </Border>
@@ -308,7 +308,6 @@
                                  AcceptsReturn="True"
                                  HorizontalAlignment="Stretch"
                                  VerticalAlignment="Stretch" 
-                                 Watermark="Enter description"
                                  Text="{Binding Add_FullDescription}">
                         </TextBox>
                       </Grid>

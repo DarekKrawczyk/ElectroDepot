@@ -13,9 +13,9 @@ public partial class ComponentsPageView : UserControl
     {
         InitializeComponent();
         //HorizontalScrollViewer.PointerWheelChanged += PointerWheelChangedHandler;
-        Comps.LoadingRow += Comps_LoadingRowHandler;
-        PurchasesDataGrid.LoadingRow += Comps_LoadingRowHandler;
-        ProjectsDataGrid.LoadingRow += Comps_LoadingRowHandler;
+        //Comps.LoadingRow += Comps_LoadingRowHandler;
+        //PurchasesDataGrid.LoadingRow += Comps_LoadingRowHandler;
+        //ProjectsDataGrid.LoadingRow += Comps_LoadingRowHandler;
     }
 
     private void Comps_LoadingRowHandler(object? sender, DataGridRowEventArgs e)

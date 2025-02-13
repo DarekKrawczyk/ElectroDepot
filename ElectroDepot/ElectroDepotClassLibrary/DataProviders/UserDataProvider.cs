@@ -34,6 +34,29 @@ namespace ElectroDepotClassLibrary.DataProviders
             }
         }
 
+        public async Task<bool> IsServerRunning()
+        {
+            try
+            {
+                string url = UserEndpoints.GetServerStatus();
+                var response = await HTTPClient.GetAsync(url);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public async Task<User> GetUserByUsername(string name)
         {
             try

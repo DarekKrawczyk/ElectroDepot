@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DesktopClient.Navigation;
 using DesktopClient.Services;
 using DesktopClient.ViewModels;
 using ElectroDepotClassLibrary.Containers;
@@ -127,7 +128,7 @@ namespace DesktopClient.Containers
         [RelayCommand]
         public void PreviewComponent()
         {
-
+            _viewModel.NavigatePage("Components", NavParam.Create(NavOperation.Preview, PurchaseItem.Component));
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)

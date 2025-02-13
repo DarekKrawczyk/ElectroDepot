@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ElectroDepotClassLibrary.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -45,6 +46,19 @@ namespace DesktopClient.Services
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = url,
+                    UseShellExecute = true
+                });
+            }
+        }
+
+        public static void NavigateTo(string website)
+        {
+            if (string.IsNullOrEmpty(website)) return;
+            else
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = website,
                     UseShellExecute = true
                 });
             }

@@ -147,18 +147,18 @@ namespace DesktopClient.ViewModels
 
         private void ClearPreviewData()
         {
-            Preview_PreviewedComponent = new DetailedComponentContainer(Components_SelectedComponent);
-            Preview_Image = Preview_PreviewedComponent.Image;
-            Preview_NameField = Preview_PreviewedComponent.Name;
-            Preview_ManufacturerField = Preview_PreviewedComponent.Manufacturer;
-            Preview_CategoryField = Preview_PreviewedComponent.Category.Name;
+            Preview_PreviewedComponent = new DetailedComponentContainerHolder((DetailedComponentContainerHolder)Components_SelectedComponent);
+            Preview_Image = Preview_PreviewedComponent.Container.Component.Image;
+            Preview_NameField = Preview_PreviewedComponent.Container.Component.Name;
+            Preview_ManufacturerField = Preview_PreviewedComponent.Container.Component.Manufacturer;
+            Preview_CategoryField = Preview_PreviewedComponent.Container.Component.Category.Name;
             if(Preview_CategoryField != string.Empty)
             {
                 Preview_CategoryComboBoxItem = Preview_CategoryField;
             }
-            Preview_DatasheetField = Preview_PreviewedComponent.DatasheetURL;
-            Preview_AboutField = Preview_PreviewedComponent.ShortDescription;
-            Preview_DescriptionField = Preview_PreviewedComponent.LongDescription;
+            Preview_DatasheetField = Preview_PreviewedComponent.Container.Component.DatasheetLink;
+            Preview_AboutField = Preview_PreviewedComponent.Container.Component.ShortDescription;
+            Preview_DescriptionField = Preview_PreviewedComponent.Container.Component.LongDescription;
             if(Preview_DatasheetField != null && Preview_DatasheetField != string.Empty)
             {
                 Preview_CanDisplayDatasheet = true;
@@ -241,7 +241,7 @@ namespace DesktopClient.ViewModels
 
         #region Components tab
         [ObservableProperty]
-        private DetailedComponentContainer _components_SelectedComponent;
+        private DetailedComponentContainerHolder _components_SelectedComponent;
 
         #endregion
 
@@ -397,10 +397,16 @@ namespace DesktopClient.ViewModels
         #endregion
 
         #region Preview Tab
-        [ObservableProperty]
-        private DetailedComponentContainer _preview_PreviewedComponent;
+        [RelayCommand]
+        public void RefreshComponents()
+        {
+            _componentsService.ReloadComponentsData();  
+        }
 
-        partial void OnPreview_PreviewedComponentChanged(DetailedComponentContainer value)
+        [ObservableProperty]
+        private DetailedComponentContainerHolder _preview_PreviewedComponent;
+
+        partial void OnPreview_PreviewedComponentChanged(DetailedComponentContainerHolder value)
         {
             Console.WriteLine();
         }
@@ -419,13 +425,13 @@ namespace DesktopClient.ViewModels
         private bool WasEditFormChanged()
         {
             if (Components_SelectedComponent == null) return false;
-            bool nameChanged = Preview_NameField != Components_SelectedComponent.Name;
-            bool manufacturerChanged = Preview_ManufacturerField != Components_SelectedComponent.Manufacturer;
-            bool categoryChanged = (Preview_CategoryField != Components_SelectedComponent.Category.Name) || (Preview_CategoryComboBoxItem != Components_SelectedComponent.Category.Name);
-            bool datasheetChanged = Preview_DatasheetField != Components_SelectedComponent.DatasheetURL;
-            bool imageChanged = Components_SelectedComponent.Component.ByteImage != ImageConverterUtility.BitmapToBytes(Preview_Image);
-            bool aboutChanged = Preview_AboutField != Components_SelectedComponent.ShortDescription;
-            bool descriptionChanged = Preview_DescriptionField != Components_SelectedComponent.LongDescription;
+            bool nameChanged = Preview_NameField != Components_SelectedComponent.Container.Component.Name;
+            bool manufacturerChanged = Preview_ManufacturerField != Components_SelectedComponent.Container.Component.Manufacturer;
+            bool categoryChanged = (Preview_CategoryField != Components_SelectedComponent.Container.Component.Category.Name) || (Preview_CategoryComboBoxItem != Components_SelectedComponent.Container.Component.Category.Name);
+            bool datasheetChanged = Preview_DatasheetField != Components_SelectedComponent.Container.Component.DatasheetLink;
+            bool imageChanged = Components_SelectedComponent.Container.Component.ByteImage != ImageConverterUtility.BitmapToBytes(Preview_Image);
+            bool aboutChanged = Preview_AboutField != Components_SelectedComponent.Container.Component.ShortDescription;
+            bool descriptionChanged = Preview_DescriptionField != Components_SelectedComponent.Container.Component.LongDescription;
 
             bool ifAny = (nameChanged || manufacturerChanged || categoryChanged || datasheetChanged || aboutChanged || descriptionChanged);
             return ifAny;
@@ -480,7 +486,7 @@ namespace DesktopClient.ViewModels
 
         partial void OnPreview_NameFieldChanged(string value)
         {
-            Preview_PreviewedComponent.Name = value;
+            Preview_PreviewedComponent.Container.Component.Name = value;
         }
 
         [ObservableProperty]
@@ -498,12 +504,12 @@ namespace DesktopClient.ViewModels
         [RelayCommand(CanExecute = nameof(Preview_CanNameClear))]
         public void Preview_NameClear()
         {
-            Preview_NameField = Components_SelectedComponent.Name;
+            Preview_NameField = Components_SelectedComponent.Container.Component.Name;
         }
 
         public bool Preview_CanNameClear()
         {
-            if (Components_SelectedComponent == null || Preview_NameField == Components_SelectedComponent.Name) return false;
+            if (Components_SelectedComponent == null || Preview_NameField == Components_SelectedComponent.Container.Component.Name) return false;
             else return true;
         }
 
@@ -542,7 +548,7 @@ namespace DesktopClient.ViewModels
 
         partial void OnPreview_ManufacturerFieldChanged(string value)
         {
-            Preview_PreviewedComponent.Manufacturer = value;
+            Preview_PreviewedComponent.Container.Component.Manufacturer = value;
         }
 
         [ObservableProperty]
@@ -560,12 +566,12 @@ namespace DesktopClient.ViewModels
         [RelayCommand(CanExecute = nameof(Preview_CanManufacturerClear))]
         public void Preview_ManufacturerClear()
         {
-            Preview_ManufacturerField = Components_SelectedComponent.Manufacturer;
+            Preview_ManufacturerField = Components_SelectedComponent.Container.Component.Manufacturer;
         }
 
         public bool Preview_CanManufacturerClear()
         {
-            if (Components_SelectedComponent == null || Preview_ManufacturerField == Components_SelectedComponent.Manufacturer) return false;
+            if (Components_SelectedComponent == null || Preview_ManufacturerField == Components_SelectedComponent.Container.Component.Manufacturer) return false;
             else return true;
         }
 
@@ -606,7 +612,7 @@ namespace DesktopClient.ViewModels
 
         partial void OnPreview_CategoryFieldChanged(string value)
         {
-            Preview_PreviewedComponent.Category = DatabaseStore.CategorieStore.Categories.FirstOrDefault(x => x.Name == value);
+            Preview_PreviewedComponent.Container.Component.Category = DatabaseStore.CategorieStore.Categories.FirstOrDefault(x => x.Name == value);
         }
 
         [ObservableProperty]
@@ -624,21 +630,21 @@ namespace DesktopClient.ViewModels
         [RelayCommand(CanExecute = nameof(Preview_CanCategoryClear))]
         public void Preview_CategoryClear()
         {
-            Preview_PreviewedComponent.Category = Components_SelectedComponent.Category;
-            Preview_CategoryComboBoxItem = Preview_PreviewedComponent.Category.Name;
+            Preview_PreviewedComponent.Container.Component.Category = Components_SelectedComponent.Container.Component.Category;
+            Preview_CategoryComboBoxItem = Preview_PreviewedComponent.Container.Component.Category.Name;
         }
 
         public bool Preview_CanCategoryClear()
         {
-            if (Components_SelectedComponent != null && Components_SelectedComponent.Category.Name != Preview_CategoryComboBoxItem) return true;
+            if (Components_SelectedComponent != null && Components_SelectedComponent.Container.Component.Category.Name != Preview_CategoryComboBoxItem) return true;
             else return false;
         }
 
         [RelayCommand]
         public void Preview_CategoryEditingSaveChanges()
         {
-            Preview_PreviewedComponent.Category = DatabaseStore.CategorieStore.Categories.FirstOrDefault(x => x.Name == Preview_CategoryComboBoxItem);
-            Preview_CategoryField = Preview_PreviewedComponent.Category.Name;
+            Preview_PreviewedComponent.Container.Component.Category = DatabaseStore.CategorieStore.Categories.FirstOrDefault(x => x.Name == Preview_CategoryComboBoxItem);
+            Preview_CategoryField = Preview_PreviewedComponent.Container.Component.Category.Name;
             Preview_CategoryEditing = false;
             Preview_CategoryNotEditing = true;
         }
@@ -665,7 +671,7 @@ namespace DesktopClient.ViewModels
 
         partial void OnPreview_AboutFieldChanged(string value)
         {
-            Preview_PreviewedComponent.ShortDescription = value;
+            Preview_PreviewedComponent.Container.Component.ShortDescription = value;
         }
 
         [ObservableProperty]
@@ -683,12 +689,12 @@ namespace DesktopClient.ViewModels
         [RelayCommand(CanExecute = nameof(Preview_CanAboutClear))]
         public void Preview_AboutClear()
         {
-            Preview_AboutField = Components_SelectedComponent.Component.ShortDescription;
+            Preview_AboutField = Components_SelectedComponent.Container.Component.ShortDescription;
         }
 
         public bool Preview_CanAboutClear()
         {
-            if (Components_SelectedComponent != null && Preview_AboutField != Components_SelectedComponent.Component.ShortDescription) return true;
+            if (Components_SelectedComponent != null && Preview_AboutField != Components_SelectedComponent.Container.Component.ShortDescription) return true;
             else return false;
         }
 
@@ -726,7 +732,7 @@ namespace DesktopClient.ViewModels
 
         partial void OnPreview_DescriptionFieldChanged(string value)
         {
-            Preview_PreviewedComponent.LongDescription = value;
+            Preview_PreviewedComponent.Container.Component.LongDescription = value;
         }
 
         [ObservableProperty]
@@ -750,12 +756,12 @@ namespace DesktopClient.ViewModels
         [RelayCommand(CanExecute = nameof(Preview_CanDescriptionRevert))]
         public void Preview_DescriptionRevert()
         {
-            Preview_DescriptionField = Components_SelectedComponent.Component.LongDescription;
+            Preview_DescriptionField = Components_SelectedComponent.Container.Component.LongDescription;
         }
 
         public bool Preview_CanDescriptionRevert()
         {
-            if (Components_SelectedComponent != null && Components_SelectedComponent.Component.LongDescription != Preview_DescriptionField) return true;
+            if (Components_SelectedComponent != null && Components_SelectedComponent.Container.Component.LongDescription != Preview_DescriptionField) return true;
             else return false;
         }
 
@@ -789,7 +795,7 @@ namespace DesktopClient.ViewModels
         {
             Preview_DatasheetIsValid();
             //Preview_CanDisplayDatasheet = true;
-            Preview_PreviewedComponent.DatasheetURL = value;
+            Preview_PreviewedComponent.Container.Component.DatasheetLink = value;
             //Preview_DatasheetDisplayCommand.NotifyCanExecuteChanged();
         }
 
@@ -809,7 +815,7 @@ namespace DesktopClient.ViewModels
         [RelayCommand(CanExecute = nameof(Preview_CanDatasheetRevert))]
         public void Preview_DatasheetRevert()
         {
-            Preview_DatasheetField = Components_SelectedComponent.DatasheetURL;
+            Preview_DatasheetField = Components_SelectedComponent.Container.Component.DatasheetLink;
         }
 
         private bool _isDatasheetDiplayable;
@@ -817,7 +823,7 @@ namespace DesktopClient.ViewModels
 
         public bool Preview_CanDatasheetRevert()
         {
-            if (Components_SelectedComponent == null || Preview_DatasheetField == Components_SelectedComponent.DatasheetURL) return false;
+            if (Components_SelectedComponent == null || Preview_DatasheetField == Components_SelectedComponent.Container.Component.DatasheetLink) return false;
             else return true;
         }
 
@@ -903,7 +909,7 @@ namespace DesktopClient.ViewModels
 
         partial void OnPreview_ImageChanged(Bitmap value)
         {
-            Preview_PreviewedComponent.Image = value;
+            Preview_PreviewedComponent.Container.Component.Image = value;
         }
 
         [ObservableProperty]
@@ -935,12 +941,12 @@ namespace DesktopClient.ViewModels
         [RelayCommand(CanExecute = nameof(Preview_CanClearImage))]
         public void Preview_ClearImage()
         {
-            Preview_Image = Components_SelectedComponent.Image;
+            Preview_Image = Components_SelectedComponent.Container.Component.Image;
         }
 
         public bool Preview_CanClearImage()
         {
-            if (Preview_PreviewedComponent != null && Preview_PreviewedComponent.Component.ByteImage != ImageConverterUtility.BitmapToBytes(Preview_Image)) return true;
+            if (Preview_PreviewedComponent != null && Preview_PreviewedComponent.Container.Component.ByteImage != ImageConverterUtility.BitmapToBytes(Preview_Image)) return true;
             else return false;  
         }
         #endregion
@@ -1012,7 +1018,7 @@ namespace DesktopClient.ViewModels
 
             try
             {
-                Component result = await DatabaseStore.ComponentStore.UpdateComponent(Preview_PreviewedComponent.Component);
+                Component result = await DatabaseStore.ComponentStore.UpdateComponent(Preview_PreviewedComponent.Container.Component);
 
                 if (result != null)
                 {
@@ -1096,8 +1102,8 @@ namespace DesktopClient.ViewModels
         public List<DetailedItemProjectContainer> SelectedComponentsProjectSource { get; set; }
         private readonly ComponentHolderService _componentsService;
         private readonly ISubject<PageRequest> _pager;
-        private readonly ReadOnlyObservableCollection<DetailedComponentContainer> _components;
-        public ReadOnlyObservableCollection<DetailedComponentContainer> ComponentsCollection => _components;
+        private readonly ReadOnlyObservableCollection<DetailedComponentContainerHolder> _components;
+        public ReadOnlyObservableCollection<DetailedComponentContainerHolder> ComponentsCollection => _components;
         #endregion
 
         #region Previous page commands
@@ -1251,7 +1257,7 @@ namespace DesktopClient.ViewModels
         #region Observable for data source
         public ObservableCollection<string> Manufacturers { get; set; }
         public ObservableCollection<string> Categories { get; set; }
-        public ObservableCollection<SupplierContainer> Suppliers { get; set; } = new ObservableCollection<SupplierContainer>() { new SupplierContainer(new Supplier(0, "XD", "XD", null)) };
+        public ObservableCollection<SupplierContainer> Suppliers { get; set; }
         public ObservableCollection<ImageContainer> PredefinedImages { get; set; }
 
         //public DataGridCollectionView Components { get; set; }
@@ -1263,18 +1269,24 @@ namespace DesktopClient.ViewModels
         private bool _previewEnabled = false;
 
         [ObservableProperty]
-        private DetailedComponentContainer _selectedComponent;
+        private DetailedComponentContainerHolder _selectedComponent;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ClearSearchBarCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ClearAllFiltersAndSortingCommand))]
         private string _searchByNameOrDesc = string.Empty;
 
         [ObservableProperty]
         private bool _onlyAvailableFlag;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ClearSelectedManufacturerCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ClearAllFiltersAndSortingCommand))]
         private string _selectedManufacturer;
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ClearSelectedCategoryCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ClearAllFiltersAndSortingCommand))]
         private string _selectedCategory;
 
         private bool _hasUserInteractedWithName;
@@ -1287,6 +1299,8 @@ namespace DesktopClient.ViewModels
         #region Add component tab
         [ObservableProperty]
         private bool _add_CanAdd = false;
+
+        private NavParam navParam;
 
         protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -1473,12 +1487,6 @@ namespace DesktopClient.ViewModels
         [RelayCommand]
         private async void Add_AddComponent()
         {
-            if (DatabaseStore.ComponentStore.Components.FirstOrDefault(x => x.Name == Add_ComponentName) != null)
-            {
-                string buttonResult = await MsBoxService.DisplayMessageBox("Component with that name already exists!", Icon.Error);
-                return;
-            }
-            // TODO: implement
             Add_CanAdd = false;
 
             try
@@ -1500,6 +1508,7 @@ namespace DesktopClient.ViewModels
                     string dialogResult = await MsBoxService.DisplayMessageBox("Components added successfully! Do you want to add another component?", Icon.Question);
 
                     Add_ClearComponent();
+                    _componentsService.ReloadComponentsData();
                     if (dialogResult == "No")
                     {
                         NavigateTab(ComponentTab.Components);
@@ -1624,9 +1633,9 @@ namespace DesktopClient.ViewModels
         {
             bool result = false;
             // TODO: include FullDescription and DatasheetLink in future
-            if(Modify_ComponentName != SelectedComponent.Name || Modify_ComponentManufacturer != SelectedComponent.Manufacturer ||
-               Modify_ComponentShortDescription != SelectedComponent.ShortDescription  || Modify_ComponentFullDescription != SelectedComponent.ShortDescription || 
-               Modify_ComponentCategory != SelectedComponent.Category.Name)
+            if(Modify_ComponentName != SelectedComponent.Container.Component.Name || Modify_ComponentManufacturer != SelectedComponent.Container.Component.Manufacturer ||
+               Modify_ComponentShortDescription != SelectedComponent.Container.Component.ShortDescription  || Modify_ComponentFullDescription != SelectedComponent.Container.Component.ShortDescription || 
+               Modify_ComponentCategory != SelectedComponent.Container.Component.Category.Name)
             {
                 result = true;
             }
@@ -1639,7 +1648,7 @@ namespace DesktopClient.ViewModels
         [RelayCommand]
         private void Preview_CopyToClipboard()
         {
-            ClipboardManager.SetText(SelectedComponent.DatasheetURL);
+            ClipboardManager.SetText(SelectedComponent.Container.Component.DatasheetLink);
         }
 
         [RelayCommand]
@@ -1647,7 +1656,7 @@ namespace DesktopClient.ViewModels
         {
             Process.Start(new ProcessStartInfo
             {
-                FileName = SelectedComponent.DatasheetURL,
+                FileName = SelectedComponent.Container.Component.DatasheetLink,
                 UseShellExecute = true
             });
         }
@@ -1657,7 +1666,7 @@ namespace DesktopClient.ViewModels
             RefreshSelectedComponentsProjectSource();
             RefreshSelectedComponentsPurchasesSource();
             
-            if(SelectedComponent.DatasheetURL == null || SelectedComponent.DatasheetURL == string.Empty)
+            if(SelectedComponent.Container.Component.DatasheetLink == null || SelectedComponent.Container.Component.DatasheetLink == string.Empty)
             {
                 Preview_CanPreview = false;
             }
@@ -1667,7 +1676,7 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        partial void OnSelectedComponentChanged(DetailedComponentContainer value)
+        partial void OnSelectedComponentChanged(DetailedComponentContainerHolder value)
         {
             if(value == null)
             {
@@ -1679,32 +1688,47 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanClearSelectedManufacturer))]
         public void ClearSelectedManufacturer()
         {
             SelectedManufacturer = null;
         }
 
-        [RelayCommand]
+        private bool CanClearSelectedManufacturer()
+        {
+            return SelectedManufacturer != null && SelectedManufacturer != string.Empty;
+        }
+
+        [RelayCommand(CanExecute = nameof(CanClearSelectedCategory))]
         public void ClearSelectedCategory()
         {
             SelectedCategory = null;
         }
 
-        [RelayCommand]
+        private bool CanClearSelectedCategory()
+        {
+            return SelectedCategory != null ;
+        }
+
+
+        [RelayCommand(CanExecute = nameof(CanClearSearchBar))]
         public void ClearSearchBar()
         {
             SearchByNameOrDesc = null;
         }
 
+        private bool CanClearSearchBar()
+        {
+            return SearchByNameOrDesc != null && SearchByNameOrDesc != string.Empty;
+        }
 
         private void Modify_ClearDataToDefault()
         {
-            Modify_ComponentName = SelectedComponent.Name;
-            Modify_ComponentCategory = SelectedComponent.Category.Name;
-            Modify_ComponentManufacturer = SelectedComponent.Manufacturer;
-            Modify_ComponentShortDescription = SelectedComponent.ShortDescription;
-            Modify_ComponentFullDescription = SelectedComponent.LongDescription;
+            Modify_ComponentName = SelectedComponent.Container.Component.Name;
+            Modify_ComponentCategory = SelectedComponent.Container.Component.Category.Name;
+            Modify_ComponentManufacturer = SelectedComponent.Container.Component.Manufacturer;
+            Modify_ComponentShortDescription = SelectedComponent.Container.Component.ShortDescription;
+            Modify_ComponentFullDescription = SelectedComponent.Container.Component.LongDescription;
             Modify_ComponentDatasheetLink = string.Empty; //TODO: fix!
         }
         partial void OnSearchByNameOrDescChanged(string value)
@@ -1732,7 +1756,7 @@ namespace DesktopClient.ViewModels
             Console.WriteLine($"{value}");
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanClearAllFiltersAndSorting))]
         public void ClearAllFiltersAndSorting()
         {
             SelectedCategory = null;
@@ -1743,6 +1767,16 @@ namespace DesktopClient.ViewModels
             Console.WriteLine();
         }
 
+        private bool CanClearAllFiltersAndSorting()
+        {
+            bool manufacturer = CanClearSelectedManufacturer();
+            bool category = CanClearSelectedCategory();
+            bool search = CanClearSearchBar();
+
+            bool result = manufacturer || category || search;
+            return result;
+        }
+
         [ObservableProperty]
         private int _totalItems;
 
@@ -1751,9 +1785,18 @@ namespace DesktopClient.ViewModels
         [NotifyCanExecuteChangedFor(nameof(LastPageCommand))]
         [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
         [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
-        private int _currentPage;
+        private int _currentPage = 1;
+
+        partial void OnCurrentPageChanged(int oldValue, int newValue)
+        {
+            Console.WriteLine();
+        }
 
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(LastPageCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PreviousPageCommand))]
+        [NotifyCanExecuteChangedFor(nameof(NextPageCommand))]
+        [NotifyCanExecuteChangedFor(nameof(FirstPageCommand))]
         private int _totalPages;
 
         private void PagingUpdate(IPageResponse response)
@@ -1764,33 +1807,33 @@ namespace DesktopClient.ViewModels
         }
 
         #endregion
-        private static Func<DetailedComponentContainer, bool> BuildFilter(string searchText)
+        private static Func<DetailedComponentContainerHolder, bool> BuildFilter(string searchText)
         {
             if (string.IsNullOrEmpty(searchText)) return trade => true;
-            return t => t.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
-                        t.ShortDescription.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
-                        t.LongDescription.Contains(searchText, StringComparison.InvariantCultureIgnoreCase);
+            return t => t.Container.Component.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                        t.Container.Component.ShortDescription.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                        t.Container.Component.LongDescription.Contains(searchText, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        private static Func<DetailedComponentContainer, bool> AvailableFilterPredicate(bool available)
+        private static Func<DetailedComponentContainerHolder, bool> AvailableFilterPredicate(bool available)
         {
             if (available == false) return x => true;
-            return x => x.AvailableAmount > 0;
+            return x => x.Container.Owned.Quantity> 0;
         }
 
-        private static Func<DetailedComponentContainer, bool> ManufacturerFilterPredicate(string manufacturer)
+        private static Func<DetailedComponentContainerHolder, bool> ManufacturerFilterPredicate(string manufacturer)
         {
             if (string.IsNullOrEmpty(manufacturer)) return trade => true;
-            return t => t.Manufacturer.Contains(manufacturer, StringComparison.InvariantCultureIgnoreCase);
+            return t => t.Container.Component.Manufacturer.Contains(manufacturer, StringComparison.InvariantCultureIgnoreCase);
         }
-        private static Func<DetailedComponentContainer, bool> CategoryFilterPredicate(string category)
+        private static Func<DetailedComponentContainerHolder, bool> CategoryFilterPredicate(string category)
         {
             if (string.IsNullOrEmpty(category)) return trade => true;
-            return t => t.Category.Name.Contains(category, StringComparison.InvariantCultureIgnoreCase);
+            return t => t.Container.Component.Category.Name.Contains(category, StringComparison.InvariantCultureIgnoreCase);
         }
 
         #region Constructor
-        public ComponentsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService) : base(defaultRootPageViewModel, databaseStore, msgBoxService)
+        public ComponentsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService, ApplicationConfig appConfig) : base(defaultRootPageViewModel, databaseStore, msgBoxService, appConfig)
         {
             _componentsService = new ComponentHolderService(this, DatabaseStore.ComponentStore);
 
@@ -1814,14 +1857,14 @@ namespace DesktopClient.ViewModels
                 .Filter(availableFilter)
                 .Filter(manufacturerFilter)
                 .Filter(categoryFilter)
-                .Sort(SortExpressionComparer<DetailedComponentContainer>.Ascending(e => e.ID))
+                .Sort(SortExpressionComparer<DetailedComponentContainerHolder>.Descending(e => e.Container.Component.ID))
                 .Page(_pager)
                 .Do(change => PagingUpdate(change.Response))
                 .ObserveOn(Scheduler.CurrentThread) // Marshals to the current thread (often used for UI updates)
                 .Bind(out _components)
                 .Subscribe();
 
-            _componentsService.LoadData();
+            _componentsService.ReloadComponentsData();
 
             PredefinedImages = new ObservableCollection<ImageContainer>();
 
@@ -1830,19 +1873,21 @@ namespace DesktopClient.ViewModels
             PurchasesForSelected = new DataGridCollectionView(SelectedComponentsPurchasesSource);
             ProjectsForSelected = new DataGridCollectionView(SelectedComponentsProjectSource);
 
-            DatabaseStore.PurchaseStore.Load();
+            DatabaseStore.PurchaseStore.ReloadPurchasesData();
 
             Manufacturers = new ObservableCollection<string>() { };
-            DatabaseStore.ComponentStore.Load();
-            DatabaseStore.ComponentStore.ComponentsLoaded += ComponentStore_ComponentsLoadedHandler; ;
+            //DatabaseStore.ComponentStore.ReloadComponentsData();
+            //DatabaseStore.ComponentStore.ComponentsLoaded += ComponentStore_ComponentsLoadedHandler;
 
             Categories = new ObservableCollection<string>() { };
-            DatabaseStore.CategorieStore.Load();
+            DatabaseStore.CategorieStore.ReloadCategoriesData();
             DatabaseStore.CategorieStore.CategoriesLoaded += HandleCategoriesLoaded;
+            DatabaseStore.CategorieStore.CategoriesReloadNotNecessary += HandleCategoriesLoaded;
 
             Suppliers = new ObservableCollection<SupplierContainer>();
             DatabaseStore.SupplierStore.SuppliersLoaded += SuppliersLoadedHandler;
-            DatabaseStore.SupplierStore.Load();
+            DatabaseStore.SupplierStore.SuppliersReloadNotNecessary += SuppliersLoadedHandler;
+            DatabaseStore.SupplierStore.ReloadSuppliersData();
 
             IEnumerable<PredefinedImage> imagesFromDB = DatabaseStore.PredefinedImagesStore.Images;
             foreach (PredefinedImage image in imagesFromDB)
@@ -1851,29 +1896,18 @@ namespace DesktopClient.ViewModels
             }
             CurrentAddPredefinedImage = PredefinedImages[0].Image;
 
+            _pager.OnNext(new PageRequest(FirstPageIndex, SelectedPageSize));
+
             Evaluate_AddTabVisibilty();
         }
 
-        private void ComponentStore_ComponentsLoadedHandler()
+        private async void ComponentStore_ComponentsLoadedHandler()
         {
-            _componentsService.LoadData();
+            _componentsService.ReloadComponentsData();
         }
         #endregion
 
-        //private void CurrentChangedHandler(object? sender, EventArgs e)
-        //{
-        //    if(Components.CurrentItem is null)
-        //    {
-        //        // Unselected
-        //        SelectedComponent = null;
-        //    }
-        //    else
-        //    {
-        //        SelectedComponent = Components.CurrentItem as DetailedComponentContainer;
-        //    }
-        //}
-
-        private void SuppliersLoadedHandler()
+        private async void SuppliersLoadedHandler()
         {
             Suppliers.Clear();
             foreach (Supplier supplier in DatabaseStore.SupplierStore.Suppliers)
@@ -1882,7 +1916,7 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        private void HandleCategoriesLoaded()
+        private async void HandleCategoriesLoaded()
         {
             Categories.Clear();
             IEnumerable<Category> categories = DatabaseStore.CategorieStore.Categories;
@@ -1896,13 +1930,21 @@ namespace DesktopClient.ViewModels
         {
             // TODO: Implement sobe better and faster way with buffor. For now this will work
             // Request data for selected component
-            IEnumerable<ProjectComponent> componentsPurchaseItem = await DatabaseStore.ProjectStore.ProjectComponentDP.GetAllProjectComponentsOfComponents(Components_SelectedComponent.Component);
-            
+            IEnumerable<ProjectComponent> componentsPurchaseItem = await DatabaseStore.ProjectStore.ProjectComponentDP.GetAllProjectComponentsOfComponents(Components_SelectedComponent.Container.Component);
+
             SelectedComponentsProjectSource.Clear();
             foreach(ProjectComponent component in componentsPurchaseItem)
             {
                 Project proj = DatabaseStore.ProjectStore.Projects.FirstOrDefault(x=>x.ID == component.ProjectID);
-                SelectedComponentsProjectSource.Add(new DetailedItemProjectContainer(proj, component));
+
+                if(proj == null)
+                {
+                    continue;
+                }
+                else if(proj.UserID == DatabaseStore.UsersStore.LoggedInUser.ID)
+                {
+                    SelectedComponentsProjectSource.Add(new DetailedItemProjectContainer(this, proj, component));
+                }
             }
             ProjectsForSelected.Refresh();
         }
@@ -1911,14 +1953,22 @@ namespace DesktopClient.ViewModels
         {
             // TODO: Implement sobe better and faster way with buffor. For now this will work
             // Request data for selected component
-            IEnumerable<PurchaseItem> componentsPurchaseItems = await DatabaseStore.PurchaseStore.PurchaseItemDP.GetPurchaseItemsFromComponent(Components_SelectedComponent.Component);
+            IEnumerable<PurchaseItem> componentsPurchaseItems = await DatabaseStore.PurchaseStore.PurchaseItemDP.GetPurchaseItemsFromComponent(Components_SelectedComponent.Container.Component);
 
             SelectedComponentsPurchasesSource.Clear();
             foreach (PurchaseItem purchaseItem in componentsPurchaseItems)
             {
-                Purchase purchase = DatabaseStore.PurchaseStore.Purchases.FirstOrDefault(x => x.ID == purchaseItem.PurchaseID);
-                Supplier supplier = DatabaseStore.SupplierStore.Suppliers.FirstOrDefault(x=>x.ID == purchase.SupplierID);
-                SelectedComponentsPurchasesSource.Add(new DetailedItemPurchaseContainer(purchase, purchaseItem, supplier));
+                Purchase purchase = await DatabaseStore.PurchaseStore.PurchaseDP.GetPurchaseByID(purchaseItem.PurchaseID);
+                Supplier supplier = await DatabaseStore.SupplierStore.SupplierDP.GetSupplierByID(purchase.SupplierID);
+
+                if (purchase == null)
+                {
+                    continue;
+                }
+                else if(purchase.UserID == DatabaseStore.UsersStore.LoggedInUser.ID)
+                {
+                    SelectedComponentsPurchasesSource.Add(new DetailedItemPurchaseContainer(this, purchase, purchaseItem, supplier));
+                }
             }
             PurchasesForSelected.Refresh();
         }
@@ -1931,10 +1981,21 @@ namespace DesktopClient.ViewModels
                     NavigateTab(ComponentTab.Add);
                     break;
                 case NavOperation.Preview:
+                    navParam = navigationParameter;
+                    SearchByNameOrDesc = (navigationParameter.Payload as Component).Name;
+                    _componentsService.ReloadComponentsData();
+                    _componentsService.DataLoaded += _componentsService_DataLoaded;
                     break;
                 default:
                     break;
             }
+        }
+
+        private void _componentsService_DataLoaded()
+        {
+            Components_SelectedComponent = ComponentsCollection.First(x => x.Container.Component.ID == (navParam.Payload as Component).ID);
+            _componentsService.DataLoaded -= _componentsService_DataLoaded;
+            NavigateTab(ComponentTab.Preview);
         }
 
         //public override void Dispose()
