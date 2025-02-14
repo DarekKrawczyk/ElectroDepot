@@ -31,6 +31,16 @@ namespace ElectroDepotClassLibrary.Models
             ByteImage = image;
         }
 
+        public bool Compate(Supplier other)
+        {
+            if(other == null) return false;
+            else if(ID != other.ID || Name != other.Name || Website != other.Website)
+            {
+                return false;
+            }
+            return true;    
+        }
+
         public override string ToString()
         {
             return $"ID: '{ID}', Name: '{Name}', Website: '{Website}'";

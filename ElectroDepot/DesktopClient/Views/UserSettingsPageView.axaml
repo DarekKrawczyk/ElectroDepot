@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:DesktopClient.ViewModels"
+             x:Class="DesktopClient.Views.UserSettingsPageView"
+             x:DataType="vm:UserSettingsPageViewModel">
+  <Grid ColumnDefinitions="40* 60*">
+    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="0" Background="{DynamicResource SectionGradient}">
+      <Grid RowDefinitions="auto *" Margin="10">
+        <StackPanel Orientation="Horizontal">
+          <Label Classes="icon" FontSize="36" Foreground="White" Content="&#xE4C6;"></Label>
+          <Label Classes="DefaultLabelRightNoMin" FontSize="30" Foreground="White" Grid.Row="0">Users profile</Label>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Spacing="10" VerticalAlignment="" Margin="0 50 0 0">
+          <Grid ColumnDefinitions="40* 60*" RowDefinitions="auto auto auto">
+            
+            <Label Classes="DefaultLabelRightNoMin" FontSize="28" Foreground="White" Grid.Column="0" Grid.Row="0" Margin="5">Name:</Label>
+            <Border Grid.Column="1" Grid.Row="0" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Margin="5">
+              <TextBlock HorizontalAlignment="Left" FontSize="28" Padding="5 0 0 0" VerticalAlignment="Center" Text="{Binding DatabaseStore.UsersStore.LoggedInUser.Name}">Administrator</TextBlock>
+            </Border>
+            
+            <Label Classes="DefaultLabelRightNoMin" FontSize="28" Foreground="White" Grid.Row="1" Margin="5" Grid.Column="0">Username:</Label>
+            <Border Grid.Column="1" Grid.Row="1"  CornerRadius="5" BorderBrush="Black" Margin="5" BorderThickness="1">
+              <TextBlock HorizontalAlignment="Left" FontSize="28" Padding="5 0 0 0" VerticalAlignment="Center" Text="{Binding DatabaseStore.UsersStore.LoggedInUser.Username}">admin</TextBlock>
+            </Border>
+
+            <Label Classes="DefaultLabelRightNoMin" FontSize="28" Foreground="White" Margin="5" Grid.Column="0" Grid.Row="2">E-mail:</Label>
+            <Border Grid.Column="1" Grid.Row="2" CornerRadius="5" BorderBrush="Black" Margin="5" BorderThickness="1">
+              <TextBlock HorizontalAlignment="Left" FontSize="28" Padding="5 0 5 0" VerticalAlignment="Center" Text="{Binding DatabaseStore.UsersStore.LoggedInUser.Email}">admin@gmail.com</TextBlock>
+            </Border>
+          </Grid>
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

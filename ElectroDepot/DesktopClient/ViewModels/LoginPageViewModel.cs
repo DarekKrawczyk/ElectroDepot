@@ -15,12 +15,13 @@ using Avalonia.Data;
 using Avalonia.Notification;
 using ElectroDepotClassLibrary.Models;
 using System.Threading;
+using ElectroDepotClassLibrary.Utility;
 
 namespace DesktopClient.ViewModels
 {
     public partial class LoginPageViewModel : WindowNavigatorViewModel
     {
-        private readonly SecureStorageHelperService _secureStorageService;
+        private readonly ApplicationConfig _secureStorageService;
 
         [ObservableProperty]
         private bool _rememberMe = true;
@@ -74,7 +75,7 @@ namespace DesktopClient.ViewModels
                 case LoggingStatus.Success:
                     if(RememberMe == true)
                     {
-                        _secureStorageService.SaveCredentials(DatabaseStore.UsersStore.LoggedInUser);
+                        _secureStorageService.UserConfig.SaveCredentials(DatabaseStore.UsersStore.LoggedInUser);
                     }
                     //string buttonResult = await MsBoxService.DisplayMessageBox("Login successfull", Icon.Success);
                     Navigate("Root");
@@ -134,18 +135,18 @@ namespace DesktopClient.ViewModels
             await AfterLoginAction(status);
         }
 
-        public LoginPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService, bool forgetUser) : base(windowViewModel, databaseStore, messageBoxService)
+        public LoginPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService, ApplicationConfig appConfig, bool forgetUser) : base(windowViewModel, databaseStore, messageBoxService)
         {
-            _secureStorageService = new SecureStorageHelperService();
+            _secureStorageService = appConfig;
             if(forgetUser == true)
             {
-                _secureStorageService.DeleteCredentials();
+                _secureStorageService.UserConfig.DeleteCredentials();
             }
         }
 
         public async Task TryAutoLogin()
         {
-            User savedUser = _secureStorageService.LoadCredentials();
+            User savedUser = _secureStorageService.UserConfig.LoadCredentials();
 
             if (savedUser == null)
             {

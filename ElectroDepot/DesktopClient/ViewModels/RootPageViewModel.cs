@@ -4,9 +4,11 @@ using CommunityToolkit.Mvvm.Input;
 using DesktopClient.Navigation;
 using DesktopClient.Services;
 using ElectroDepotClassLibrary.Stores;
+using ElectroDepotClassLibrary.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +19,8 @@ namespace DesktopClient.ViewModels
     {
         [ObservableProperty]
         private BaseViewModel _pageViewModel;
+
+        private readonly ApplicationConfig _appConfig;
 
         public BaseViewModel PageView
         {
@@ -31,9 +35,10 @@ namespace DesktopClient.ViewModels
         }
 
 
-        public RootPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(windowViewModel, databaseStore, messageBoxService)
+        public RootPageViewModel(MainWindowViewModel windowViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService, ApplicationConfig appConfig) : base(windowViewModel, databaseStore, messageBoxService)
         {
             DatabaseStore.PredefinedImagesStore.Load();
+            _appConfig = appConfig;
             NavigatePage("Home");
         }
 
@@ -42,23 +47,31 @@ namespace DesktopClient.ViewModels
             RootNavigatorViewModel destinationViewModel;
             if (destination == "Home")
             {
-                destinationViewModel = new HomePageViewModel(this, DatabaseStore, MsBoxService);
+                destinationViewModel = new HomePageViewModel(this, DatabaseStore, MsBoxService, _appConfig);
             }
             else if (destination == "Components")
             {
-                destinationViewModel = new ComponentsPageViewModel(this, DatabaseStore, MsBoxService);
+                destinationViewModel = new ComponentsPageViewModel(this, DatabaseStore, MsBoxService, _appConfig);
             }
             else if (destination == "Projects")
             {
-                destinationViewModel = new ProjectsPageViewModel(this, DatabaseStore, MsBoxService);
+                destinationViewModel = new ProjectsPageViewModel(this, DatabaseStore, MsBoxService, _appConfig);
             }
             else if (destination == "Purchases")
             {
-                destinationViewModel = new PurchasesPageViewModel(this, DatabaseStore, MsBoxService);
+                destinationViewModel = new PurchasesPageViewModel(this, DatabaseStore, MsBoxService, _appConfig);
             }
             else if (destination == "Tracking")
             {
-                destinationViewModel = new MonitoringPageViewModel(this, DatabaseStore, MsBoxService);
+                destinationViewModel = new MonitoringPageViewModel(this, DatabaseStore, MsBoxService, _appConfig);
+            }
+            else if (destination == "Settings")
+            {
+                destinationViewModel = new SettingsPageViewModel(this, DatabaseStore, MsBoxService, _appConfig);
+            }
+            else if (destination == "UserSettings")
+            {
+                destinationViewModel = new UserSettingsPageViewModel(this, DatabaseStore, MsBoxService, _appConfig);
             }
             else
             {
@@ -72,6 +85,16 @@ namespace DesktopClient.ViewModels
         {
             RootNavigatorViewModel destinationViewModel = GetViewModel(destination);
             PageViewModel = destinationViewModel;
+        }
+
+        [RelayCommand]
+        public void ReportBug()
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "mailto:darek9krawczyk@hotmail.com",
+                UseShellExecute = true
+            });
         }
 
         public void NavigatePage(string destination, NavParam navParam = null)

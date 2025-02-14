@@ -15,7 +15,7 @@
   <Grid RowDefinitions="auto 10 *" Background="Transparent">
 
     <!-- First row - "Hellow text etc.." -->
-    <Grid Grid.Row="0" ColumnDefinitions="30* 10 70*">
+    <Grid Grid.Row="0">
       <StackPanel Grid.Column="0" Spacing="10" Margin="30">
         <Label Foreground="Black" FontSize="22" Content="{Binding CurrentDate}"></Label>
         <Label Foreground="Black" FontSize="42" Content="{Binding UserName}"></Label>
@@ -195,7 +195,7 @@
                     <Label Classes="icon" FontSize="22" Foreground="{DynamicResource PltSilver}" Content="&#xE03E;"></Label>
                   </StackPanel>
                 </StackPanel>
-                <Button Grid.Column="1" Classes="CreateNewProjectNodeButton" HorizontalAlignment="Right" Command="{Binding NavigateProjectsAddCommand}">
+                <Button Grid.Column="1" Classes="CreateNewProjectNodeButton" HorizontalAlignment="Right" Command="{Binding NavigatePurchasesAddCommand}">
                   <StackPanel>
                     <Label Classes="CreateNewProjectIcon" Content="&#xEDF6;"></Label>
                     <StackPanel>

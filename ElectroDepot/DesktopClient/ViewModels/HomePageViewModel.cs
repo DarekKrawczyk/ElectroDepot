@@ -23,6 +23,8 @@ using ElectroDepotClassLibrary.Containers.NodeContainers;
 using DesktopClient.Containers.ButtonsContainers;
 using System.Globalization;
 using DesktopClient.Services;
+using System.Threading.Tasks;
+using ElectroDepotClassLibrary.Utility;
 
 namespace DesktopClient.ViewModels
 {
@@ -63,9 +65,9 @@ namespace DesktopClient.ViewModels
         public ObservableCollection<ToolAppButtonContainer> Tools { get; set; } = new ObservableCollection<ToolAppButtonContainer>()
         {
             //new ToolAppContainer("KiCad", null, "D:\\KiCAD\\bin\\kicad.exe"), TODO: 
-            new ToolAppButtonContainer(new ToolAppContainer("EEVBlog",  ImageHelper.LoadFromResource(new Uri($"avares://DesktopClient/Assets/Icons/Tools/eevblog.png")), "https://www.eevblog.com/")),
-            new ToolAppButtonContainer(new ToolAppContainer("EEStack",  ImageHelper.LoadFromResource(new Uri($"avares://DesktopClient/Assets/Icons/Tools/eestack.png")), "https://electronics.stackexchange.com/")),
-            new ToolAppButtonContainer(new ToolAppContainer("GitHub",  ImageHelper.LoadFromResource(new Uri($"avares://DesktopClient/Assets/Icons/Tools/github.png")), "https://github.com/")),
+            new ToolAppButtonContainer(new ToolAppContainer("EEVBlog",  ImageHelper.LoadFromResource(new Uri($"avares://ElectroDepot/Assets/Icons/Tools/eevblog.png")), "https://www.eevblog.com/")),
+            new ToolAppButtonContainer(new ToolAppContainer("EEStack",  ImageHelper.LoadFromResource(new Uri($"avares://ElectroDepot/Assets/Icons/Tools/eestack.png")), "https://electronics.stackexchange.com/")),
+            new ToolAppButtonContainer(new ToolAppContainer("GitHub",  ImageHelper.LoadFromResource(new Uri($"avares://ElectroDepot/Assets/Icons/Tools/github.png")), "https://github.com/")),
         };
         public ObservableCollection<SupplierContainer> Suppliers { get; set; }
         public ObservableCollection<ComponentContainer> Components { get; set; }
@@ -78,7 +80,7 @@ namespace DesktopClient.ViewModels
         public ObservableCollection<ISeries> Series { get; set; } = new();
 
         [Obsolete("DO NOT USE THIS! THIS IS JUST FOR AVALONIA DESIGNER!")]
-        public HomePageViewModel(RootPageViewModel defaultRootPageViewModel, MessageBoxService msgBoxService) : base(defaultRootPageViewModel, null, null)
+        public HomePageViewModel(RootPageViewModel defaultRootPageViewModel, MessageBoxService msgBoxService) : base(defaultRootPageViewModel, null, null, null)
         {
             if (Design.IsDesignMode)
             {
@@ -89,15 +91,16 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        public HomePageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(defaultRootPageViewModel, databaseStore, messageBoxService)
+        public HomePageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService, ApplicationConfig appConfig) : base(defaultRootPageViewModel, databaseStore, messageBoxService, appConfig)
         {
             Suppliers = new ObservableCollection<SupplierContainer>();
             DatabaseStore.SupplierStore.SuppliersLoaded += SuppliersLoadedHandler;
-            DatabaseStore.SupplierStore.Load();
+            DatabaseStore.SupplierStore.SuppliersReloadNotNecessary += SuppliersLoadedHandler;
+            DatabaseStore.SupplierStore.ReloadSuppliersData();
 
             Components = new ObservableCollection<ComponentContainer>();
             DatabaseStore.ComponentStore.ComponentsLoaded += ComponentsLoadedHandler;
-            DatabaseStore.ComponentStore.Load();
+            DatabaseStore.ComponentStore.ReloadComponentsData();
 
             Projects = new ObservableCollection<ProjectNodeButtonContainer>();
             DatabaseStore.ProjectStore.ProjectsLoaded += ProjectsLoadedHandler;
@@ -111,12 +114,12 @@ namespace DesktopClient.ViewModels
             UserName = $"Welcome, {UsersName}!";
         }
 
-        private void PurchaseStore_DetailedPurchaseContainersLoadedHandler_SupplierChart()
+        private async void PurchaseStore_DetailedPurchaseContainersLoadedHandler_SupplierChart()
         {
             AdjustSeries();
         }
 
-        private void AdjustSeries()
+        private async void AdjustSeries()
         {
             var groupedBySupplier = Purchases.GroupBy(x => x.Node.Supplier);
             var result = groupedBySupplier.Select(x => new
@@ -157,21 +160,24 @@ namespace DesktopClient.ViewModels
         }
 
 
-        private void PurchaseStore_DetailedPurchaseContainersLoadedHandler()
+        private async void PurchaseStore_DetailedPurchaseContainersLoadedHandler()
         {
             Purchases.Clear();
-            foreach(DetailedPurchaseContainer purchase in DatabaseStore.PurchaseStore.DetailedPurchaseContainers)
+            IEnumerable<DetailedPurchaseContainer> purchasesFromDB = DatabaseStore.PurchaseStore.DetailedPurchaseContainers.OrderByDescending(x=>x.PurchaseDate);
+            foreach (DetailedPurchaseContainer purchase in purchasesFromDB)
             {
                 Purchases.Add(new PurchaseNodeButtonContainer(this, purchase));
             }
         }
 
-        private void ProjectsLoadedHandler()
+        private async void ProjectsLoadedHandler()
         {
             Projects.Clear();
-            foreach(Project project in DatabaseStore.ProjectStore.Projects)
+            List<Project> projectsFromDB = DatabaseStore.ProjectStore.Projects.OrderByDescending(x=>x.CreatedAt).ToList();
+            foreach (Project project in projectsFromDB)
             {
-                Projects.Add(new ProjectNodeButtonContainer(this, project));
+                IEnumerable<Component> sd = await DatabaseStore.ProjectStore.ProjectDP.GetAllComponentsFromProject(project);
+                Projects.Add(new ProjectNodeButtonContainer(this, project, sd.Count()));
             }
         }
 
@@ -189,7 +195,7 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        private void SuppliersLoadedHandler()
+        private async void SuppliersLoadedHandler()
         {
             Suppliers.Clear();
             foreach(Supplier supplier in DatabaseStore.SupplierStore.Suppliers)

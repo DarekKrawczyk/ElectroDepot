@@ -12,16 +12,16 @@
              x:DataType="vm:ProjectsPageViewModel">
 
   <UserControl.Styles>
-    <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/LabelDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/TextBoxDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/LabelDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/TextBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
   </UserControl.Styles>
 
   <Grid>
     <DockPanel>
       <TabControl SelectedIndex="{Binding SelectedTab}">
-        <TabItem Header="Collection" IsEnabled="{Binding Add_IsProjectsTabEnabled}">
+        <TabItem Header="Projects" IsEnabled="{Binding Add_IsProjectsTabEnabled}">
           <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="-12 0 -12 0" Background="{DynamicResource SectionGradient}">
             <Grid RowDefinitions="auto, *, auto">
               <!-- Header with filters, selectors, and search -->
@@ -131,8 +131,8 @@
                       </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                   </DataGridTemplateColumn>
-                  <DataGridTextColumn Foreground="Black" Header="Name" x:DataType="cont:ProjectContainerHolder" Binding="{Binding Project.Name}" Width="auto"/>
-                  <DataGridTextColumn Foreground="Black" Header="Creation date" x:DataType="cont:ProjectContainerHolder" Binding="{Binding CreateAtDate}" Width="auto"/>
+                  <DataGridTextColumn Foreground="Black" Header="Name" x:DataType="cont:ProjectContainerHolder" Binding="{Binding Project.Name}" Width="*"/>
+                  <DataGridTextColumn Foreground="Black" Header="Created" x:DataType="cont:ProjectContainerHolder" Binding="{Binding CreateAtDate}" Width="*"/>
                   <DataGridTextColumn Foreground="Black" Header="Description" x:DataType="cont:ProjectContainerHolder" Binding="{Binding Project.Description}" Width="*"/>
                 </DataGrid.Columns>
                 <DataGrid.Styles>
@@ -181,8 +181,8 @@
                     <StackPanel Orientation="Horizontal" Margin="5" Spacing="5">
                       <UIElements:FirstPageButton Command="{Binding FirstPageCommand}"></UIElements:FirstPageButton>
                       <UIElements:PreviousPageButton Command="{Binding PreviousPageCommand}"></UIElements:PreviousPageButton>
-                      <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5">
-                        <TextBlock Width="80" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" TextAlignment="Center" Text="{Binding CurrentPage}">1</TextBlock>
+                      <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Width="80">
+                        <Label FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{Binding CurrentPage}">1</Label>
                       </Border>
                       <UIElements:NextPageButton Command="{Binding NextPageCommand}"></UIElements:NextPageButton>
                       <UIElements:LastPageButton Command="{Binding LastPageCommand}"></UIElements:LastPageButton>
@@ -312,21 +312,23 @@
                 <!-- Top panel -->
                 <Grid Grid.Row="0" RowDefinitions="*" Margin="0 5 5 0" VerticalAlignment="Stretch">
                   <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="0">
-                    <Grid RowDefinitions="auto 54 *">
+                    <Grid RowDefinitions="auto auto 54 *">
                       <!-- Items -->
                       <StackPanel Grid.Row="0" Spacing="20" Orientation="Horizontal" Margin="5">
                         <StackPanel Orientation="Horizontal">
                           <Label Classes="icon" Foreground="Black" Content="&#xE610;"></Label>
                           <Label Classes="icontext" FontSize="28" Foreground="Black" Content="Components"></Label>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
                           <Label Classes="icontext" FontSize="18" Foreground="{DynamicResource PltDarkGray}" Content="Used in project"></Label>
                           <Label Classes="icon" FontSize="22" Foreground="{DynamicResource PltDarkGray}" Content="&#xE03E;"></Label>
                         </StackPanel>
                       </StackPanel>
-                    
+
+                      <Separator Margin="5" Grid.Row="1"></Separator>
+                      
                       <!-- Fitlers -->
-                      <Grid Grid.Row="1" ColumnDefinitions="50* 50*">
+                      <Grid Grid.Row="2" ColumnDefinitions="50* 50*">
                         <!-- Name -->
                         <Grid Grid.Column="0" Margin="0 0 0 5">
                               <Grid ColumnDefinitions="* * auto" Margin="5">
@@ -354,7 +356,7 @@
                       </Grid>
 
                       <!-- Project's components -->
-                      <Grid Grid.Row="2" RowDefinitions="auto *">
+                      <Grid Grid.Row="3" RowDefinitions="auto *">
                           <DataGrid Grid.Row="1" 
                                     Margin="0 0 0 10"
                                     CanUserReorderColumns="True"
@@ -415,29 +417,31 @@
                 <!-- Bottom panel -->
                 <Grid Grid.Row="1" RowDefinitions="*" Margin="0 5 5 5">
                   <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="0">
-                    <Grid RowDefinitions="auto 54 * auto">
+                    <Grid RowDefinitions="auto auto 54 * auto">
                       <!-- Items -->
                       <StackPanel Grid.Row="0" Spacing="20" Orientation="Horizontal" Margin="5">
                         <StackPanel Orientation="Horizontal">
                           <Label Classes="icon" Foreground="Black" Content="&#xE610;"></Label>
                           <Label Classes="icontext" FontSize="28" Foreground="Black" Content="Components"></Label>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                          <Label Classes="icontext" FontSize="18" Foreground="{DynamicResource PltDarkGray}" Content="Avaiable"></Label>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                          <Label Classes="icontext" FontSize="18" Foreground="{DynamicResource PltDarkGray}" Content="Your purchased components"></Label>
                           <Label Classes="icon" FontSize="22" Foreground="{DynamicResource PltDarkGray}" Content="&#xE03E;"></Label>
                         </StackPanel>
                       </StackPanel>
+
+                      <Separator Grid.Row="1" Margin="5"></Separator>
                       
                       <!-- Fitlers -->
-                      <Grid Grid.Row="1" ColumnDefinitions="50* 50*">
+                      <Grid Grid.Row="2" ColumnDefinitions="50* 50*">
                         <!-- Name -->
                         <Grid Grid.Column="0" Margin="0 0 0 5">
                               <!-- Label and buttons -->
                               <Grid ColumnDefinitions="* * auto" Margin="5">
                                 <Label Classes="DefaultLabelNoMin" Grid.Column="0" >Name</Label>
-                                <TextBox FontSize="20" Grid.Column="1" Margin="0" Text="{Binding Add_AvailableComponentsNameFilter}">
+                                <TextBox FontSize="20" Grid.Column="1" Margin="0 0 5 0" Text="{Binding Add_AvailableComponentsNameFilter}">
                                 </TextBox>
-                                <StackPanel HorizontalAlignment="Right" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 0 5 0">
+                                <StackPanel HorizontalAlignment="Right" Grid.Column="2" Orientation="Horizontal" Spacing="5">
                                   <UIElements:DeleteButton Command="{Binding Add_ClearAvailableComponentsNameFilterCommand}"></UIElements:DeleteButton>
                                 </StackPanel>
                             </Grid>
@@ -448,9 +452,9 @@
                               <!-- Label and buttons -->
                               <Grid ColumnDefinitions="* * auto" Margin="5">
                                 <Label Classes="DefaultLabelNoMin" Grid.Column="0" >Manufacturer</Label>
-                                <TextBox FontSize="20" Grid.Column="1" Margin="0" Text="{Binding Add_AvailableComponentsManufacturerFilter}">
+                                <TextBox FontSize="20" Grid.Column="1" Margin="0 0 5 0" Text="{Binding Add_AvailableComponentsManufacturerFilter}">
                                 </TextBox>
-                                <StackPanel HorizontalAlignment="Right" Grid.Column="2" Orientation="Horizontal" Spacing="5" Margin="5 0 5 0">
+                                <StackPanel HorizontalAlignment="Right" Grid.Column="2" Orientation="Horizontal" Spacing="5">
                                   <UIElements:DeleteButton Command="{Binding Add_ClearAvailableComponentsManufacturerFilterCommand}"></UIElements:DeleteButton>
                                 </StackPanel>
                               </Grid>
@@ -458,7 +462,7 @@
                       </Grid>
 
                       <!-- Avaiable components -->
-                        <DataGrid Grid.Row="2" 
+                        <DataGrid Grid.Row="3" 
                                   Margin="0 0 0 5" 
                                   Background="White" 
                                   GridLinesVisibility="All" 
@@ -649,21 +653,23 @@
                 <!-- Top panel -->
                 <Grid Grid.Row="0" RowDefinitions="*" Margin="0 5 5 5" VerticalAlignment="Stretch">
                   <Border CornerRadius="5" BorderThickness="1" BorderBrush="Black" Background="{DynamicResource PltWhiteMilk}" Margin="0">
-                    <Grid RowDefinitions="auto 54 *">
+                    <Grid RowDefinitions="auto auto 54 *">
                       <!-- Items -->
                       <StackPanel Grid.Row="0" Spacing="20" Orientation="Horizontal" Margin="5">
                         <StackPanel Orientation="Horizontal">
                           <Label Classes="icon" Foreground="Black" Content="&#xE610;"></Label>
                           <Label Classes="icontext" FontSize="28" Foreground="Black" Content="Components"></Label>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
                           <Label Classes="icontext" FontSize="18" Foreground="{DynamicResource PltDarkGray}" Content="Used in project"></Label>
                           <Label Classes="icon" FontSize="22" Foreground="{DynamicResource PltDarkGray}" Content="&#xE03E;"></Label>
                         </StackPanel>
                       </StackPanel>
 
+                      <Separator Grid.Row="1" Margin="5"></Separator>
+                      
                       <!-- Fitlers -->
-                      <Grid Grid.Row="1" ColumnDefinitions="50* 50*">
+                      <Grid Grid.Row="2" ColumnDefinitions="50* 50*">
                         <!-- Name -->
                         <Grid Grid.Column="0" Margin="0 0 0 5">
                           <Grid ColumnDefinitions="* * auto" Margin="5">
@@ -689,11 +695,10 @@
                           </Grid>
                         </Grid>
                       </Grid>
-
+                      
                       <!-- Project's components -->
-                      <Grid Grid.Row="2" RowDefinitions="auto *">
+                      <Grid Grid.Row="3" RowDefinitions="auto *">
                         <DataGrid Grid.Row="1"
-                                  Margin="0 0 0 10"
                                   CanUserReorderColumns="True"
                                   CanUserResizeColumns="False"
                                   CanUserSortColumns="False"

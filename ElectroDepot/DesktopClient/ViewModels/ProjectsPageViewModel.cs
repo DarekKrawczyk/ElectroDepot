@@ -376,8 +376,8 @@ namespace DesktopClient.ViewModels
         [RelayCommand(CanExecute = nameof(Projects_CanClearAllFilters))]
         public void Projects_ClearAllFilters()
         {
-            FirstPage();
-            SelectedPageSizeIndex = 0;
+            //FirstPage();
+            //SelectedPageSizeIndex = 0;
 
             Projects_DateFromFilter = Projects_DateMinYear;
             Projects_DateToFilter = Projects_DateMaxYear;
@@ -395,13 +395,13 @@ namespace DesktopClient.ViewModels
 
         private bool Projects_CanClearAllFilters()
         {
-            bool pagingChanged = WasPagingChanged();
+            //bool pagingChanged = WasPagingChanged();
             bool dateChanged = Projects_CanClearDateFromFilter() || Projects_CanClearDateToFilter();
             bool nameFilterChaned = Projects_CanClearNameFilter();
             bool descFilterChaned = Projects_CanClearDescFilter();
             bool sortingChanged = Projects_CanClearSelectedSorting();
 
-            bool result = pagingChanged || dateChanged || nameFilterChaned || descFilterChaned || sortingChanged;
+            bool result = dateChanged || nameFilterChaned || descFilterChaned || sortingChanged;
             return result;
         }
         #region Data source
@@ -1239,7 +1239,7 @@ namespace DesktopClient.ViewModels
             {
                 ProjectPurchaseComponentHolder newProjectComponent = new ProjectPurchaseComponentHolder(this, avaiableComponent);
                 ProjectComponentsSource.Add(newProjectComponent);
-                avaiableComponent.RegisterProjectsComponent(newProjectComponent);
+               // avaiableComponent.RegisterProjectsComponent(newProjectComponent);
 
                 newProjectComponent.Used++;
                 //component.Used++;
@@ -1285,11 +1285,13 @@ namespace DesktopClient.ViewModels
         {
            // RefreshProjectsDataView();
         }
+        private NavParam navParam;
+
         [ObservableProperty]
         private int _collection_Rows;
         public List<ProjectPurchaseComponentHolder> ProjectComponentsSource { get; set; }
         public DataGridCollectionView ProjectComponents { get; set; }
-        public ProjectsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(defaultRootPageViewModel, databaseStore, messageBoxService)
+        public ProjectsPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService, ApplicationConfig appConfig) : base(defaultRootPageViewModel, databaseStore, messageBoxService, appConfig)
         {
             #region Projects tab pagination
             _projectsService = new ProjectHolderService(this, DatabaseStore.ProjectStore);
@@ -1322,12 +1324,13 @@ namespace DesktopClient.ViewModels
 
             _projectsService.DataLoaded += _projectsService_DataLoadedHandler;
 
+
             _projectsService.LoadData();
             #endregion
             _defaultImage = ImageConverterUtility.BytesToBitmap(File.ReadAllBytes("D:\\Repo\\ElectronDepot\\ElectroDepot\\DesktopClient\\Assets\\DefaultProjectImage.png"));
             Add_CurrentAddImage = _defaultImage;
 
-            DatabaseStore.CategorieStore.Load();
+            DatabaseStore.CategorieStore.ReloadCategoriesData();
 
             #region Add tab - Projects components
             ProjectComponentsSource = new List<ProjectPurchaseComponentHolder>();
@@ -1440,12 +1443,20 @@ namespace DesktopClient.ViewModels
             });
 
             DatabaseStore.ComponentStore.ComponentsLoaded += ComponentStore_ComponentsLoadedHandler;
-            DatabaseStore.ComponentStore.Load();
+            DatabaseStore.ComponentStore.ComponentsReloadNotNecessary += ComponentStore_ComponentsLoadedHandler;
+            DatabaseStore.ComponentStore.ReloadComponentsData();
 
             Evaluate_AddTabVisibilty();
         }
 
-        private void _projectsService_DataLoadedHandler()
+        private void NavigationGoToPreviewHandler()
+        {
+            ProjectsCollection_SelectedItem = ProjectsCollection.First(x=>x.Project.ID == (navParam.Payload as Project).ID);
+            _projectsService.DataLoaded -= NavigationGoToPreviewHandler;
+            NavigateTab(ComponentTab.Preview);
+        }
+
+        private async void _projectsService_DataLoadedHandler()
         {
             Projects_DateMaxYear = _projectsService.MaxYear();
             Projects_DateMinYear = _projectsService.MinYear();
@@ -1453,12 +1464,12 @@ namespace DesktopClient.ViewModels
             Projects_DateToFilter = Projects_DateMaxYear;
         }
 
-        private void ProjectComponents_PropertyChangedHandler(object? sender, PropertyChangedEventArgs e)
+        private async void ProjectComponents_PropertyChangedHandler(object? sender, PropertyChangedEventArgs e)
         {
             OnPropertyChanged(nameof(ProjectComponentsSource));
         }
 
-        private void ComponentStore_ComponentsLoadedHandler()
+        private async void ComponentStore_ComponentsLoadedHandler()
         {
             PurchasedComponentsSource.Clear();
             IEnumerable<OwnsComponent> unusedComponentsFromDB = DatabaseStore.ComponentStore.UnusedComponents;
@@ -1517,6 +1528,9 @@ namespace DesktopClient.ViewModels
                     NavigateTab(ComponentTab.Add);
                     break;
                 case NavOperation.Preview:
+                    navParam = navigationParameter;
+                    Projects_NameFilter = (navigationParameter.Payload as Project).Name;
+                    _projectsService.DataLoaded += NavigationGoToPreviewHandler;
                     break;
                 default:
                     break;

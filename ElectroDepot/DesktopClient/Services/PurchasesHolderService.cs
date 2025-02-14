@@ -34,23 +34,44 @@ namespace DesktopClient.Services
 
         public IObservable<IChangeSet<DetailedPurchaseContainerHolder, int>> EmployeesConnection() => _purchases.Connect();
 
+        public DetailedPurchaseContainerHolder FindItem(Purchase purchase)
+        {
+            return _purchases.Items.FirstOrDefault(x=>x.Container.Purchase.ID == purchase.ID);
+        }
+
         public double MaxPrice()
         {
+            if (_purchases.Items.Count == 0)
+            {
+                return 1;
+            }
             return _purchases.Items.Max(x=>x.Container.TotalPrice);
         }
 
         public double MinPrice()
         {
+            if (_purchases.Items.Count == 0)
+            {
+                return 0;
+            }
             return _purchases.Items.Min(x => x.Container.TotalPrice);
         }
 
         public DateTime MaxYear()
         {
+            if (_purchases.Items.Count == 0)
+            {
+                return DateTime.Now;
+            }
             return _purchases.Items.Max(x => x.Container.PurchaseDate);
         }
 
         public DateTime MinYear()
         {
+            if (_purchases.Items.Count == 0)
+            {
+                return DateTime.Now;
+            }
             return _purchases.Items.Min(x => x.Container.PurchaseDate);
         }
 
@@ -59,7 +80,8 @@ namespace DesktopClient.Services
             _purchases.Clear();
 
             IEnumerable<Purchase> purchasesFromDB = await _purchasesStore.PurchaseDP.GetAllPurchasesFromUser(_purchasesStore.MainStore.UsersStore.LoggedInUser);
-            foreach (Purchase purchase in purchasesFromDB)
+            List<Purchase> sortedPurchases = purchasesFromDB.OrderByDescending(x=>x.PurchaseDate).ToList();
+            foreach (Purchase purchase in sortedPurchases)
             {
                 Supplier supplier = await _purchasesStore.MainStore.SupplierStore.SupplierDP.GetSupplierByID(purchase.SupplierID);
                 IEnumerable<PurchaseItem> purchaseItemsFromDB = await _purchasesStore.PurchaseItemDP.GetAllPurchaseItemsFromPurchase(purchase);

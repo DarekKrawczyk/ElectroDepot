@@ -7,7 +7,7 @@ namespace ElectroDepotClassLibrary.Models
         public int ID { get; }
         public int UserID { get; }
         public int ComponentID { get; }
-        public int Quantity { get; }
+        public int Quantity { get; set; }
         public OwnsComponent(int id, int userID, int componentID, int quantity)
         {
             ID = id;

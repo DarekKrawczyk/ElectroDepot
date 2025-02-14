@@ -44,6 +44,12 @@ namespace ElectroDepotClassLibrary.Services
                 User fromDB = null;
                 _loggedUser = null;
 
+                bool serverRuning = await _usersStore.UsersDP.IsServerRunning();
+                if (serverRuning == false)
+                {
+                    return LoggingStatus.FatalError;
+                }
+
                 fromDB = await _usersStore.UsersDP.GetUserByUsername(username);
                 if(fromDB == null)
                 {
@@ -71,6 +77,12 @@ namespace ElectroDepotClassLibrary.Services
             {
                 User fromDB = null;
                 _loggedUser = null;
+
+                bool serverRuning = await _usersStore.UsersDP.IsServerRunning();
+                if (serverRuning == false)
+                {
+                    return LoggingStatus.FatalError;
+                }
 
                 fromDB = await _usersStore.UsersDP.GetUserByUsername(username);
                 if (fromDB == null)

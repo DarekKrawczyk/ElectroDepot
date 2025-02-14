@@ -205,6 +205,18 @@ namespace DesktopClient.ViewModels
                         .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
                         .Queue();
                     break;
+                case RegistrationStatus.FatalError:
+                    SigningUp = false;
+                    Manager
+                        .CreateMessage()
+                        .Animates(true)
+                        .Background("#333")
+                        .Accent("#E63946")
+                        .HasBadge("Error")
+                        .HasMessage("Server is not responding.")
+                        .Dismiss().WithDelay(TimeSpan.FromSeconds(3))
+                        .Queue();
+                    break;
                 default:
                     //ClearText();
                     break;

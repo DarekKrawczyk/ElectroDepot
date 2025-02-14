@@ -31,6 +31,8 @@ using Avalonia.Media.Imaging;
 using DesktopClient.Utils;
 using System.Threading.Tasks;
 using DynamicData.PLinq;
+using System.Numerics;
+using System.Threading;
 
 namespace DesktopClient.ViewModels
 {
@@ -1080,6 +1082,12 @@ namespace DesktopClient.ViewModels
                 
                 bool result = await DatabaseStore.PurchaseStore.InsertNewPurchase(purchaseToAdd, purchaseItemToAdd);
 
+                foreach(PurchaseItem item in purchaseItemToAdd)
+                {
+                    OwnsComponent ownsComponent = new OwnsComponent(id: 0, userID: DatabaseStore.UsersStore.LoggedInUser.ID, componentID: item.ComponentID, quantity: item.Quantity);
+                    OwnsComponent ownsComponentFromDB = await DatabaseStore.ComponentStore.OwnsComponentDP.CreateOwnComponent(ownsComponent);
+                }
+
                 if (result == true)
                 {
                     string buttonResult = await MsBoxService.DisplayMessageBox("Purchase added successfully! Do you want to add another purchase?", Icon.Success);
@@ -1250,9 +1258,9 @@ namespace DesktopClient.ViewModels
             if (string.IsNullOrEmpty(category)) return trade => true;
             return t => t.CategoryName.Contains(category, StringComparison.InvariantCultureIgnoreCase);
         }
-
+        private NavParam navParam;
         public ObservableCollection<string> SupplierSource { get; set; }
-        public PurchasesPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService) : base(defaultRootPageViewModel, databaseStore, messageBoxService)
+        public PurchasesPageViewModel(RootPageViewModel defaultRootPageViewModel, DatabaseStore databaseStore, MessageBoxService messageBoxService, ApplicationConfig appConfig) : base(defaultRootPageViewModel, databaseStore, messageBoxService, appConfig)
         {
             _purchasesService = new PurchaseHolderService(this, DatabaseStore.PurchaseStore);
             _previewComponentsHolderService = new PurchaseComponentsHolderService(this, DatabaseStore.PurchaseStore);
@@ -1279,8 +1287,8 @@ namespace DesktopClient.ViewModels
             var sort = SortParameters.WhenValueChanged(t => t.SelectedItem)
                 .Select(prop => prop.Comparer);
 
-            var sortExpression = this.WhenValueChanged(t => t.Purchases_SelectedSorting)
-                .Select(SortData);
+            //var sortExpression = this.WhenValueChanged(t => t.Purchases_SelectedSorting)
+            //    .Select(SortData);
 
             //var availableFilter = this.WhenValueChanged(t => t.OnlyAvailableFlag)
             //    .Select(AvailableFilterPredicate);
@@ -1298,9 +1306,9 @@ namespace DesktopClient.ViewModels
                 .Filter(fromDateFilter)
                 .Filter(toDateFilter)
                 //.Filter(categoryFilter)
-                //.Sort(SortExpressionComparer<DetailedPurchaseContainerHolder>.Ascending(e => e.Container.TotalPrice))
+                .Sort(SortExpressionComparer<DetailedPurchaseContainerHolder>.Descending(e => e.Container.PurchaseDate))
                 //.Sort(sort, SortOptimisations.ComparesImmutableValuesOnly)
-                .Sort(sortExpression)
+                //.Sort(sortExpression)
                 .Page(_pager)
                 .Do(change => PagingUpdate(change.Response))
                 .ObserveOn(Scheduler.CurrentThread) // Marshals to the current thread (often used for UI updates)
@@ -1320,7 +1328,7 @@ namespace DesktopClient.ViewModels
             _previewComponentsHolderService.EmployeesConnection()
                 .Filter(preview_namefilter)
                 .Filter(preview_categoryfilter)
-                .Sort(SortExpressionComparer<PurchaseItemComponentContainerHolder>.Ascending(e => e.PurchaseItem.ComponentID))
+                .Sort(SortExpressionComparer<PurchaseItemComponentContainerHolder>.Descending(e => e.PurchaseItem.Name))
                 //.Sort(sort, SortOptimisations.ComparesImmutableValuesOnly)
                 .Page(_preview_pager)
                 .Do(change => Preview_PagingUpdate(change.Response))
@@ -1383,7 +1391,7 @@ namespace DesktopClient.ViewModels
 
             Categories = new ObservableCollection<string>();
             DatabaseStore.CategorieStore.CategoriesLoaded += CategorieStore_CategoriesLoadedHandler;
-            DatabaseStore.CategorieStore.Load();
+            DatabaseStore.CategorieStore.ReloadCategoriesData();
 
             AllComponentsSource = new List<ComponentWithCategoryContainerHolder>();
             AllComponents = new DataGridCollectionView(AllComponentsSource);
@@ -1433,30 +1441,41 @@ namespace DesktopClient.ViewModels
             DatabaseStore.PurchaseStore.PurchaseItemsContainersLoaded += PurchaseStore_PurchaseItemsContainersLoadedHandler;
 
             DatabaseStore.SupplierStore.SuppliersLoaded += SupplierStore_SuppliersLoadedHandler;
-            DatabaseStore.SupplierStore.Load();
+            DatabaseStore.SupplierStore.SuppliersReloadNotNecessary += SupplierStore_SuppliersLoadedHandler;
+            DatabaseStore.SupplierStore.ReloadSuppliersData();
 
             Add_ClearTotalPrice();
 
             Evaluate_AddTabVisibilty();
         }
 
-        private void _previewComponentsHolderService_DataLoadedHandler()
+        private async void _previewComponentsHolderService_DataLoadedHandler()
         {
             //throw new NotImplementedException();
         }
 
-        private void CategorieStore_CategoriesLoadedHandler()
+        private async void CategorieStore_CategoriesLoadedHandler()
         {
             Categories.Clear();
             Categories.AddRange(DatabaseStore.CategorieStore.Categories.Select(x => x.Name));
         }
 
-        private void PurchasesService_DataLoadedHandler()
+        private async void PurchasesService_DataLoadedHandler()
         {
             Purchases_MaxPrice = _purchasesService.MaxPrice();
             Purchases_SelectedHighPrice = Purchases_MaxPrice;
-            Purchases_MinPrice = _purchasesService.MinPrice();
-            Purchases_SelectedLowPrice = Purchases_MinPrice;
+
+            if(_purchasesService.MaxPrice() == _purchasesService.MinPrice())
+            {
+                // Invalid Arrange rectangle exception workaround
+                Purchases_MinPrice = _purchasesService.MinPrice() - 1;
+                Purchases_SelectedLowPrice = Purchases_MinPrice;
+            }
+            else
+            {
+                Purchases_MinPrice = _purchasesService.MinPrice();
+                Purchases_SelectedLowPrice = Purchases_MinPrice;
+            }
 
             Purchases_DateMaxYear = _purchasesService.MaxYear();
             Purchases_DateMinYear = _purchasesService.MinYear();
@@ -1494,7 +1513,7 @@ namespace DesktopClient.ViewModels
             Evaluate_AddTabVisibilty();
         }
 
-        private void ComponentStore_ComponentsFromSystemLoadedHandler()
+        private async void ComponentStore_ComponentsFromSystemLoadedHandler()
         {
             AllComponentsSource.Clear();
             IEnumerable<ComponentWithCategoryContainer> comp = DatabaseStore.ComponentStore.ComponentsFromSystem;
@@ -1505,7 +1524,7 @@ namespace DesktopClient.ViewModels
             AllComponents.Refresh();
         }
 
-        private void PurchaseStore_PurchaseItemsContainersLoadedHandler()
+        private async void PurchaseStore_PurchaseItemsContainersLoadedHandler()
         {
             ProjectItems.Clear();
             ProjectItems.AddRange(DatabaseStore.PurchaseStore.PurchaseItemsContainers);
@@ -1513,7 +1532,7 @@ namespace DesktopClient.ViewModels
 
         }
 
-        private void SupplierStore_SuppliersLoadedHandler()
+        private async void SupplierStore_SuppliersLoadedHandler()
         {
             SupplierSource.Clear();
             IEnumerable<Supplier> suppliersFromDB = DatabaseStore.SupplierStore.Suppliers;
@@ -1537,6 +1556,20 @@ namespace DesktopClient.ViewModels
             }
         }
 
+        private void NavigationGoToPreviewHandler()
+        {
+            try
+            {
+                PurchasesCollectionSelectedItem = _purchasesService.FindItem((navParam.Payload as Purchase));
+            }
+            catch(Exception exception)
+            {
+
+            }
+            _purchasesService.DataLoaded -= NavigationGoToPreviewHandler;
+            NavigateTab(PurchasesTab.Preview);
+        }
+
         public void InterpreteNavigationParameter(NavParam navigationParameter)
         {
             switch (navigationParameter.Operation)
@@ -1545,6 +1578,8 @@ namespace DesktopClient.ViewModels
                     NavigateTab(PurchasesTab.Add);
                     break;
                 case NavOperation.Preview:
+                    navParam = navigationParameter;
+                    _purchasesService.DataLoaded += NavigationGoToPreviewHandler;
                     break;
                 default:
                     break;

@@ -16,7 +16,7 @@ public class ProjectNodeButton : Button
         set { SetValue(ProjectNameProperty, value); }
     }
 
-    public static readonly StyledProperty<Bitmap> ProjectImageProperty = AvaloniaProperty.Register<MenuButton, Bitmap>(nameof(ProjectImage), ImageHelper.LoadFromResource(new Uri($"avares://DesktopClient/Assets/TempProjectImage.png")));
+    public static readonly StyledProperty<Bitmap> ProjectImageProperty = AvaloniaProperty.Register<MenuButton, Bitmap>(nameof(ProjectImage), ImageHelper.LoadFromResource(new Uri($"avares://ElectroDepot/Assets/TempProjectImage.png")));
 
     public Bitmap ProjectImage
     {

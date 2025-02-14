@@ -28,7 +28,7 @@ public class MenuButton : TemplatedControl
     /// ProjectImage StyledProperty definition
     /// </summary>
     public static readonly StyledProperty<Bitmap> IconProperty =
-        AvaloniaProperty.Register<MenuButton, Bitmap>(nameof(Icon), ImageHelper.LoadFromResource(new Uri($"avares://DesktopClient/Assets/Components_icon.png")));
+        AvaloniaProperty.Register<MenuButton, Bitmap>(nameof(Icon), ImageHelper.LoadFromResource(new Uri($"avares://ElectroDepot/Assets/Components_icon.png")));
 
     /// <summary>
     /// Gets or sets the ProjectImage property. This StyledProperty 

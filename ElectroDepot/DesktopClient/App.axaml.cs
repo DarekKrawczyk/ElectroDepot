@@ -8,15 +8,20 @@ using DesktopClient.ViewModels;
 using DesktopClient.Views;
 using ElectroDepotClassLibrary.DataProviders;
 using ElectroDepotClassLibrary.Stores;
+using ElectroDepotClassLibrary.Utility;
 
 namespace DesktopClient
 {
     public partial class App : Application
     {
-        public string ConnectionURL { get { return "https://localhost:7146/"; } }
+        ApplicationConfig appConfig = new ApplicationConfig();
+        public string ConnectionURL { get { return appConfig.ServerConfig.ConnectionURL; } }
         private DatabaseStore _databaseStore;
+
         public override void Initialize()
         {
+            appConfig.LoadConfig();
+
             SupplierDataProvider supplierDataProvider = new SupplierDataProvider(ConnectionURL);
             ComponentDataProvider componentDataProvider = new ComponentDataProvider(ConnectionURL);
             CategoryDataProvider categoryDataProvider = new CategoryDataProvider(ConnectionURL);
@@ -57,10 +62,13 @@ namespace DesktopClient
 
                 //_databaseStore.UsersStore.UserLogin("username", "password"); // While using  async on this method, windows doesn't show up!
 
-                //Navigator navigator = new Navigator(_databaseStore);
-                MainWindowViewModel windowViewModel = new MainWindowViewModel(null, _databaseStore, _msgService);
+                //ApplicationConfig appConfig = new ApplicationConfig();
+                
 
-                LoginPageViewModel home = new LoginPageViewModel(windowViewModel, _databaseStore, _msgService, false);
+                //Navigator navigator = new Navigator(_databaseStore);
+                MainWindowViewModel windowViewModel = new MainWindowViewModel(null, _databaseStore, _msgService, appConfig);
+
+                LoginPageViewModel home = new LoginPageViewModel(windowViewModel, _databaseStore, _msgService, appConfig, false);
                 //HomePageViewModel home = new HomePageViewModel(null, _databaseStore, _msgService);
                 //RootPageViewModel root = new RootPageViewModel(windowViewModel, _databaseStore, _msgService);
                 //home.Root = root;

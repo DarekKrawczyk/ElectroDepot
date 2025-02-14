@@ -31,7 +31,7 @@ namespace ElectroDepotClassLibrary.Stores
             _purchaseItemsContainers = new List<PurchaseItemContainer>();
         }
 
-        public async Task Load()
+        private async Task Load()
         {
             _purchases.Clear();
 
@@ -43,6 +43,35 @@ namespace ElectroDepotClassLibrary.Stores
             _purchases.AddRange(purchasesFromDB);
 
             PurchasesLoaded?.Invoke();
+        }
+
+        public async Task ReloadPurchasesData()
+        {
+            bool reloadRequired = false;
+            IEnumerable<Purchase> purchasesFromDB = await _purchaseDataProvider.GetAllPurchasesFromUser(MainStore.UsersStore.LoggedInUser);
+            foreach (Purchase purchase in purchasesFromDB)
+            {
+                purchase.Supplier = await MainStore.SupplierStore.SupplierDP.GetSupplierByID(purchase.SupplierID);
+            }
+
+            if(purchasesFromDB.Count() == _purchases.Count)
+            {
+                for(int i = 0; i <  purchasesFromDB.Count(); i++)
+                {
+                    if(purchasesFromDB.ElementAt(i).ID != _purchases[i].ID)
+                    {
+                        reloadRequired = true;
+                    }
+                }
+            }
+
+            if(reloadRequired == true)
+            {
+                _purchases.Clear();
+                _purchases.AddRange(purchasesFromDB);
+
+                PurchasesLoaded?.Invoke();
+            }
         }
 
         public async Task GetPurchaseItemContainerFromPurchase(Purchase purchase)

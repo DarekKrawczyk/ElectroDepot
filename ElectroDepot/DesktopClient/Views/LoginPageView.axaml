@@ -11,10 +11,10 @@
              x:DataType="vm:LoginPageViewModel">
 
   <UserControl.Styles>
-    <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/LabelDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/TextBoxDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/LabelDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/TextBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
   </UserControl.Styles>
 
   <Border>
@@ -27,7 +27,7 @@
             <Grid.Background>
               <ImageBrush AlignmentY="Center"
                           AlignmentX="Center"
-                          Source="avares://DesktopClient/Assets/Visual/ElectroDepotLogo.png"
+                          Source="avares://ElectroDepot/Assets/Visual/ElectroDepotLogo.png"
                           Stretch="UniformToFill">
                 
               </ImageBrush>

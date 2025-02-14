@@ -16,18 +16,18 @@
              x:Class="DesktopClient.Views.PurchasesPageView">
 
   <UserControl.Styles>
-    <StyleInclude Source="avares://DesktopClient/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/LabelDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/TextBoxDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://DesktopClient/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/LabelDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/TextBoxDefaultOverrideStyle.axaml"/>
+    <StyleInclude Source="avares://ElectroDepot/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
   </UserControl.Styles>
 
-  <Grid ColumnDefinitions="0, *, 0" x:Name="MainGrid">
+  <Grid ColumnDefinitions="0 * 0" x:Name="MainGrid">
     <DockPanel Grid.Column="1">
       <TabControl TabStripPlacement="Top" SelectedIndex="{Binding SelectedTab}">
         <TabItem Header="Purchases" IsEnabled="{Binding Add_IsPurchasesTabEnabled}">
           <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="-12 0 -12 0" Background="{DynamicResource SectionGradient}">
-            <Grid RowDefinitions="auto, *, auto">
+            <Grid RowDefinitions="auto * auto">
               <!-- Header with filters, selectors, and search -->
               <Grid Grid.Row="0" VerticalAlignment="Center" Margin="0 5 0 5" ColumnDefinitions="auto auto * auto auto">
 
@@ -208,15 +208,16 @@
                           </MenuItem.Icon>
                         </MenuItem>
                         <!-- Supplier store button -->
-                        <MenuItem Header="Suppliers store" x:DataType="spccont:DetailedPurchaseContainerHolder">
+                        <MenuItem Header="Suppliers store"
+                                  x:DataType="spccont:DetailedPurchaseContainerHolder" Command="{Binding OpenSupplierStoreCommand}">
                           <MenuItem.Icon>
                             <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE470;"></Label>
                           </MenuItem.Icon>
                         </MenuItem>
                         <!-- Open cart button -->
-                        <MenuItem Header="Open cart">
+                        <MenuItem Header="Open cart" IsEnabled="False">
                           <MenuItem.Icon>
-                            <Label Classes="icon" FontSize="26" Foreground="Black" Content="&#xE964;"></Label>
+                            <Label Classes="icon" FontSize="26" Foreground="Black" IsEnabled="False" Content="&#xE964;"></Label>
                           </MenuItem.Icon>
                         </MenuItem>
                       </ContextMenu>

@@ -67,6 +67,12 @@ namespace Server.Controllers
             return Ok(await _context.Users.Select(x=>x.ToDTO()).ToListAsync());
         }
 
+        [HttpGet("ServerStatus")]
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetServerStatus()
+        {
+            return Ok("Running");
+        }
+
         /// <summary>
         /// GET: ElectroDepot/Users/GetUserByID/{id}
         /// </summary>

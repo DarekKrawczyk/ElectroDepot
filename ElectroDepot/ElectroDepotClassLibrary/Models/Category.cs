@@ -31,10 +31,13 @@ namespace ElectroDepotClassLibrary.Models
 
         public Category(Category other)
         {
-            this.ID = other.ID;
-            this.Name = other.Name;
-            this.Description = other.Description;
-            this.ByteImage = other.ByteImage;
+            if(other != null)
+            {
+                this.ID = other.ID;
+                this.Name = other.Name;
+                this.Description = other.Description;
+                this.ByteImage = other.ByteImage;
+            }
         }
 
         public override string ToString()

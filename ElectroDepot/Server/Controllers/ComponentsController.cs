@@ -35,13 +35,6 @@ namespace Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            Component? existingComponent = await _context.Components.FirstOrDefaultAsync(u => u.Name == component.Name);
-
-            if (existingComponent != null)
-            {
-                return Conflict(new { title = "Conflict", status = 409, message = "Component with this name already exists." });
-            }
-
             Component newComponent = component.ToModel();
             newComponent.ImageURI = ISS.InsertComponentImage(component.Image);
 

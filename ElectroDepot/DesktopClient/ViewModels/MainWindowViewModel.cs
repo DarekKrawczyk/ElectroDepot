@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using DesktopClient.Navigation;
 using DesktopClient.Services;
 using ElectroDepotClassLibrary.Stores;
+using ElectroDepotClassLibrary.Utility;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading;
@@ -14,6 +15,8 @@ namespace DesktopClient.ViewModels
     {
         [ObservableProperty]
         protected BaseViewModel _windowViewModel;
+
+        private readonly ApplicationConfig _appConfig;
 
         public BaseViewModel View
         {
@@ -27,9 +30,10 @@ namespace DesktopClient.ViewModels
             }
         }
 
-        public MainWindowViewModel(WindowNavigatorViewModel entryViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService) : base(databaseStore, msgBoxService)
+        public MainWindowViewModel(WindowNavigatorViewModel entryViewModel, DatabaseStore databaseStore, MessageBoxService msgBoxService, ApplicationConfig appConfig) : base(databaseStore, msgBoxService)
         {
             _windowViewModel = entryViewModel;
+            _appConfig = appConfig;
         }
 
         [RelayCommand]
@@ -38,11 +42,11 @@ namespace DesktopClient.ViewModels
             WindowNavigatorViewModel destinationViewModel;
             if (destination == "Login")
             {
-                destinationViewModel = new LoginPageViewModel(this, DatabaseStore, MsBoxService, true);
+                destinationViewModel = new LoginPageViewModel(this, DatabaseStore, MsBoxService, _appConfig, true);
             }
             else if (destination == "Root")
             {
-                destinationViewModel = new RootPageViewModel(this, DatabaseStore, MsBoxService);
+                destinationViewModel = new RootPageViewModel(this, DatabaseStore, MsBoxService, _appConfig);
             }
             else if (destination == "Register")
             {

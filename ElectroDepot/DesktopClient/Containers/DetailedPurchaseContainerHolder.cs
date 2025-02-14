@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DesktopClient.Navigation;
+using DesktopClient.Services;
 using DesktopClient.ViewModels;
 using ElectroDepotClassLibrary.Containers;
 using System;
@@ -26,6 +27,12 @@ namespace DesktopClient.Containers
         public async Task PreviewPurchase()
         {
             await _viewModel.NavigateTab(PurchasesTab.Preview);
+        }
+
+        [RelayCommand]
+        public async Task OpenSupplierStore(string componentName)
+        {
+            WebsiteNavigationService.NavigateTo(_purchaseContainer.Supplier.Website);
         }
     }
 }
