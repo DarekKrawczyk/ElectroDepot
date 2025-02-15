@@ -27,7 +27,8 @@ public static class SingleUserTestingDataSeeder
         {
             List<User> users = new List<User>
             {
-                new User { Username = "darikra", Password = "AQAAAAIAAYagAAAAEA2lwymUiArgx0/bwiQEU85o0l1KusTazhFkiNvE48/Vr7EB8I26gkOyKQZvCuobeA==", Email = "dariusz@gmail.com", Name = "Dariusz" },
+                // Password 'admin123'
+                new User { Username = "Administrator", Password = "AQAAAAIAAYagAAAAELHVeAroaaRtW3+U5ucNcws+bWr6NFwk+Of3LeBU5tG3HSzctxU8wWRcyPNnfMbY0g==", Email = "admin@gmail.com", Name = "Administrator" },
             };
 
             context.Users.AddRange(users);
@@ -77,7 +78,7 @@ public static class SingleUserTestingDataSeeder
             context.Suppliers.AddRange(suppliers);
             await context.SaveChangesAsync();
 
-            ImageStorageService ISS = new ImageStorageService(AppDomain.CurrentDomain.BaseDirectory);
+            ImageStorageService ISS = ImageStorageService.CreateService();
             ISS.Initialize();
 
             List<Component> components = new List<Component>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <ComponentRef Id="MainAppShortcut"></ComponentRef>
+    </ComponentGroup>
+
+    <DirectoryRef Id="INSTALLFOLDER" FileSource="..\DesktopClient\bin\$(var.Configuration)\net8.0\$(var.Platform)\publish\">
+      <Component Id="MainAppShortcut" Guid="{30E5CAB5-B594-45A4-B31D-F9F1274DD973}">
+        <Shortcut Id="MainAppShortcut"
+                  Name="ElectroDepot"
+                  Target="[INSTALLFOLDER]ElectroDepot.exe"
+                  Directory="InstallProgramMenuFolder"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="ED.Icon"></Shortcut>
+
+        <RegistryValue Id="RegShortcutKey" Root="HKCU" Key="SOFTWARE\ElectroDepot" Name="Shortcut" Value="1" Type="integer" KeyPath="yes"> 
+          
+        </RegistryValue>
+        
+        <!-- Remove Shortcut -->
+        <RemoveFolder Id="RemoveStartMenu" Directory="InstallProgramMenuFolder" On="uninstall"/>
+      </Component>
+    </DirectoryRef>
+    
+  </Fragment>
+  
+</Wix>

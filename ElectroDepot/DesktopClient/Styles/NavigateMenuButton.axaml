@@ -1,8 +1,0 @@
-<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="clr-namespace:DesktopClient.Templates">
-  <Design.PreviewWith>
-      <controls:MenuButton/>
-  </Design.PreviewWith>
-
-</Styles>

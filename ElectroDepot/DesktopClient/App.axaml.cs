@@ -14,7 +14,7 @@ namespace DesktopClient
 {
     public partial class App : Application
     {
-        ApplicationConfig appConfig = new ApplicationConfig();
+        ApplicationConfig appConfig = ApplicationConfig.Create();
         public string ConnectionURL { get { return appConfig.ServerConfig.ConnectionURL; } }
         private DatabaseStore _databaseStore;
 

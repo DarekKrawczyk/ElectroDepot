@@ -16,7 +16,7 @@ namespace ElectroDepotClassLibraryTests
         public DatabaseStore DatabaseStore { get; }
         public BaseDBStoreTestset(ITestOutputHelper console)
         {
-            ApplicationConfig config = new ApplicationConfig();
+            ApplicationConfig config = ApplicationConfig.Create();
             config.LoadConfig();
 
             SupplierDataProvider supplierDataProvider = new SupplierDataProvider(config.ServerConfig.ConnectionURL);

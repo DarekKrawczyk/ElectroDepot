@@ -25,21 +25,22 @@ namespace Server
 
             var app = builder.Build();
 
-
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var services = scope.ServiceProvider;
-            //    try
-            //    {
-            //        var context = services.GetRequiredService<DatabaseContext>();
-            //        await SingleUserTestingDataSeeder.SeedDataAsync(context);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine($"Error seeding data: {ex.Message}");
-            //    }
-            //}
-
+            if(args.Length > 0 && args[0] == "seed")
+            {
+                using (var scope = app.Services.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+                    try
+                    {
+                        var context = services.GetRequiredService<DatabaseContext>();
+                        await SingleUserTestingDataSeeder.SeedDataAsync(context);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error seeding data: {ex.Message}");
+                    }
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

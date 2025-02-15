@@ -1,10 +1,18 @@
-﻿using System.Drawing;
+﻿using ElectroDepotClassLibrary.DTOs;
+using ElectroDepotClassLibrary.Models;
+using System.Drawing;
 using System.Drawing.Imaging;
+using System.Text.Json;
 
 namespace ElectroDepotClassLibrary.Services
 {
     public class ImageStorageService
     {
+        private class ServerConfig
+        {
+            public string StoragePath { get; set; }
+        }
+
         private string _path;
         private string RootFolder = "ImageStorage";
         private string UsersFolder = "Users";
@@ -13,9 +21,88 @@ namespace ElectroDepotClassLibrary.Services
         private string FullProjectFolder { get { return _path + RootFolder + "\\" + ProjectsFolder + "\\"; } }
         private string FullComponentsFolder { get { return _path + RootFolder + "\\" + ComponentsFolder + "\\"; } }
         private string FullUsersFolder { get { return _path + RootFolder + "\\" + UsersFolder + "\\"; } }
-        public ImageStorageService(string path)
+
+        public string DefaultConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)) + "\\ElectroDepotServer\\";
+        public string ConfigFilePath
         {
-            _path = path;
+            get
+            {
+                return DefaultConfigPath + "server_config.json";
+            }
+        }
+        private static ImageStorageService _selfInstance;
+        private ImageStorageService() { }
+
+        public static ImageStorageService CreateService()
+        {
+            if(_selfInstance == null)
+            {
+                _selfInstance = new ImageStorageService();
+            }
+            return _selfInstance;
+        }
+
+        public void Initialize()
+        {
+            InitializeConfig();
+            InitializeFolders();
+        }
+
+        public void DeleteAllImages()
+        {
+            try
+            {
+                if (Directory.Exists(_path))
+                {
+                    Directory.Delete(_path, true);
+                    Console.WriteLine("Directory deleted successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Directory does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        private void InitializeConfig()
+        {
+            User savedUser = null;
+            if (!File.Exists(ConfigFilePath))
+            {
+                Directory.CreateDirectory(DefaultConfigPath);
+
+                if (!File.Exists(ConfigFilePath))
+                {
+                    using (File.Create(ConfigFilePath)) { }
+                }
+
+                ServerConfig settings = new ServerConfig()
+                {
+                    StoragePath = $"{DefaultConfigPath}"
+                };
+
+                string jsonCreate = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+
+                File.WriteAllText(ConfigFilePath, jsonCreate);
+
+            }
+
+            JsonSerializerOptions options = new JsonSerializerOptions();
+            options.PropertyNameCaseInsensitive = true;
+
+            var json = File.ReadAllText(ConfigFilePath);
+            ServerConfig savedConfig = JsonSerializer.Deserialize<ServerConfig>(json, options);
+
+            _path = savedConfig.StoragePath;
+
+            if (!Directory.Exists(savedConfig.StoragePath))
+            {
+                throw new Exception($"Image storage folder does not exist! Please check server config file at {DefaultConfigPath}");
+            }
         }
 
         public string InsertProjectImage(byte[] image)
@@ -137,7 +224,7 @@ namespace ElectroDepotClassLibrary.Services
             return $"{guid.ToString()}";
         }
 
-        public void Initialize()
+        private void InitializeFolders()
         {
             if (Directory.Exists(_path))
             {
@@ -153,6 +240,11 @@ namespace ElectroDepotClassLibrary.Services
                     if (!Directory.Exists(_path + RootFolder + "\\" + ProjectsFolder))
                     {
                         Directory.CreateDirectory(_path + RootFolder + "\\" + ProjectsFolder);
+                    }
+
+                    if (!Directory.Exists(_path + RootFolder + "\\" + ComponentsFolder))
+                    {
+                        Directory.CreateDirectory(_path + RootFolder + "\\" + ComponentsFolder);
                     }
                 }
             }
