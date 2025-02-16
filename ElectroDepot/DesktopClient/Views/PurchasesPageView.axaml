@@ -19,7 +19,6 @@
     <StyleInclude Source="avares://ElectroDepot/Styles/ComboBoxDefaultOverrideStyle.axaml"/>
     <StyleInclude Source="avares://ElectroDepot/Styles/LabelDefaultOverrideStyle.axaml"/>
     <StyleInclude Source="avares://ElectroDepot/Styles/TextBoxDefaultOverrideStyle.axaml"/>
-    <StyleInclude Source="avares://ElectroDepot/Styles/ToggleButtonDefaultOverrideStyle.axaml"/>
   </UserControl.Styles>
 
   <Grid ColumnDefinitions="0 * 0" x:Name="MainGrid">

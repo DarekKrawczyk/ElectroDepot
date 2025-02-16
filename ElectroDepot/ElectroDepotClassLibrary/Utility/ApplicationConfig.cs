@@ -26,23 +26,31 @@ namespace ElectroDepotClassLibrary.Utility
 
         public string DefaultConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)) + "\\ElectroDepot\\";
 
-        public ApplicationConfig()
+        private static ApplicationConfig _selfInstance;
+
+        private ApplicationConfig()
         {
             serverConfig = new ServerConfig(DefaultConfigPath + "server.json");
             userConfig = new UserConfig(DefaultConfigPath + "user.json");
+        }
+
+        public static ApplicationConfig Create()
+        {
+            if (_selfInstance == null)
+            {
+                _selfInstance = new ApplicationConfig();
+            }
+            return _selfInstance;
         }
 
         public void LoadConfig()
         {
             if (!Directory.Exists(DefaultConfigPath))
             {
-                throw new Exception("Config file not found");
+                Directory.CreateDirectory(DefaultConfigPath);
             }
-            else
-            {
-                serverConfig.LoadCredentials();
-                userConfig.LoadCredentials();
-            }
+            serverConfig.LoadCredentials();
+            userConfig.LoadCredentials();
         }
 
         public void SaveConfig()
@@ -84,7 +92,20 @@ namespace ElectroDepotClassLibrary.Utility
         public ServerData LoadCredentials()
         {
             ServerData savedServerData = null;
-            if (!File.Exists(_configPath)) return savedServerData;
+            if (!File.Exists(_configPath))
+            {
+                using (File.Create(_configPath)) { }
+
+                ServerData settings = new ServerData()
+                {
+                    IP = "localhost",
+                    Port = "7146"
+                };
+
+                string jsonCreate = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+
+                File.WriteAllText(_configPath, jsonCreate);
+            }
 
             JsonSerializerOptions options = new JsonSerializerOptions();
             options.PropertyNameCaseInsensitive = true;
@@ -131,14 +152,27 @@ namespace ElectroDepotClassLibrary.Utility
         public User LoadCredentials()
         {
             User savedUser = null;
-            if (!File.Exists(_configPath)) return savedUser;
+            if (!File.Exists(_configPath))
+            {
+                using (File.Create(_configPath)) { }
+
+                UserData settings = new UserData()
+                {
+                    Username = "",
+                    Password = ""
+                };
+
+                string jsonCreate = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
+
+                File.WriteAllText(_configPath, jsonCreate);
+            }
 
             JsonSerializerOptions options = new JsonSerializerOptions();
             options.PropertyNameCaseInsensitive = true;
 
             var json = File.ReadAllText(_configPath);
             UserData deserializedUser = JsonSerializer.Deserialize<UserData>(json, options);
-            if (deserializedUser != null)
+            if (deserializedUser != null && (deserializedUser.Username != "" && deserializedUser.Password != ""))
             {
                 savedUser = new User(0, deserializedUser.Username, "email", deserializedUser.Password, "name");
             }

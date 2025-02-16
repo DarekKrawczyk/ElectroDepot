@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+	<String Id="Manufacturer">Dariusz Krawczyk</String>
+	<String Id="Description">ElectroDepot</String>
+	<String Id="Name_x86">ElectroDepot (32bit)</String>
+	<String Id="Name_x64">ElectroDepot (64bit)</String>
+	<String Id="Name">ElectroDepot</String>
+	<String Id="Keywords">Components,Storage,DOTNET,App</String>
+	<String Id="Comments">ElectroDepot</String>
+	<String Id="Language">1033</String>
+  
+  <String Id="InstallFolderName">ElectroDepot</String>
+  
+  <String Id="YOURLOCID">Your localized string</String>
+</WixLocalization>

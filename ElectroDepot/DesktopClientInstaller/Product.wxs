@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <?if $(var.Platform)=x64?>
+    <?define ProductCode = "{50744265-02AC-4761-ADFA-54FEB88F4785}"?>
+    <?define ProductInstallerName = !(loc.Name_x64)?>
+  <?else?>
+    <?define ProductCode = "{A755C029-6783-4DF4-97A0-CC6E1D760D4E}"?>
+    <?define ProductInstallerName = !(loc.Name_x86)?>
+  <?endif?>
+
+  <Product Id="*" 
+           Name="$(var.ProductInstallerName)" 
+           Language="!(loc.Language)" 
+           Version="$(var.BuildVersion)" 
+           Manufacturer="!(loc.Manufacturer)" 
+           UpgradeCode="08a58826-8d85-4538-b843-07f19277cd02">
+		
+    <Package InstallerVersion="200" 
+             Compressed="yes" 
+             InstallScope="perMachine"
+             Manufacturer="!(loc.Manufacturer)"
+             Description="!(loc.Description)"
+             Keywords="!(loc.Keywords)"
+             Comments="!(loc.Comments)"
+             Languages="!(loc.Language)"/>
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    
+		<MediaTemplate EmbedCab="yes"/>
+
+    <Icon Id="ED.Icon" SourceFile="$(var.SolutionDir)\DesktopClient\Assets\Visual\ElectroDepotIconBig.ico"/>
+    <Property Id="ARPPRODUCTICON">ED.Icon</Property>
+    <Property Id="ARPURLINFOABOUT">https://github.com/DarekKrawczyk/ElectroDepot</Property>
+
+    <UIRef Id="WixUI_Minimal"/>
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.SolutionDir)\DesktopClientInstaller\Assets\Background.bmp"/>
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.SolutionDir)\DesktopClientInstaller\Assets\Banner.bmp"/>
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)\DesktopClientInstaller\Assets\License.rtf"/>
+    
+		<Feature Id="ProductFeature" Title="ElectroDepot Installer" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="PublishedComponents" />
+		</Feature>
+	</Product>
+
+</Wix>

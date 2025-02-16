@@ -21,7 +21,7 @@ namespace ElectroDepotClassLibraryTests
         {
             Console = output;
 
-            ApplicationConfig config = new ApplicationConfig();
+            ApplicationConfig config = ApplicationConfig.Create();
             config.LoadConfig();
 
             ComponentDP = new ComponentDataProvider(config.ServerConfig.ConnectionURL);

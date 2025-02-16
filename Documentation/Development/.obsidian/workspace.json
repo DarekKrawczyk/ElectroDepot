@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "5fca1cd226f08dc3",
+        "id": "f3a480ef90e81852",
         "type": "tabs",
         "children": [
           {
-            "id": "5d73a1e0e24a4111",
+            "id": "4026d331557b9c4a",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -169,15 +169,16 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "5d73a1e0e24a4111",
+  "active": "4026d331557b9c4a",
   "lastOpenFiles": [
+    "Change theme color.md",
+    "DesktopClient/TODO.md",
     "Excalidraw/Drawing 2025-02-07 01.04.02.excalidraw.md",
     "Excalidraw/Drawing 2025-02-07 00.47.13.excalidraw.md",
     "DesktopClient/UI Refactoring/Projects collection layout.md",
     "DesktopClient/UI Refactoring/Projects add tab refactoring.md",
     "Pasted Image 20250207010446_784.png",
     "DesktopClient/UI Refactoring/Edit tab refactoring.md",
-    "DesktopClient/TODO.md",
     "DesktopClient/DesktopClient.md",
     "Server.md",
     "Projects Preview",

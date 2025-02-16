@@ -18,7 +18,7 @@ namespace Server.Controllers
         public ComponentsController(DatabaseContext context)
         {
             _context = context;
-            ISS = new ImageStorageService(AppDomain.CurrentDomain.BaseDirectory);
+            ISS = ImageStorageService.CreateService();
             ISS.Initialize();
         }
         #region Create

@@ -17,7 +17,7 @@ namespace ElectroDepotClassLibraryTests.ImageStorageTests
         private ImageStorageService imageStorageService;
         public StorageTest()
         {
-            imageStorageService = new ImageStorageService(AppDomain.CurrentDomain.BaseDirectory);
+            imageStorageService = ImageStorageService.CreateService();
             imageStorageService.Initialize();
         }
 

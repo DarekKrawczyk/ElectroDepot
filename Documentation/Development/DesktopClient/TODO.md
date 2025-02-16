@@ -45,20 +45,23 @@
 	- [x] 'Preview/Edit' tab ✅ 2025-02-14
 		- [x] Suppliers are not displayed. ✅ 2025-02-14
 		- [x] Display only such 'Projects' and 'Purchases' that are related to 'User'. ✅ 2025-02-14
-- [ ] Projects:
-	- [ ] 'Projects' tab
+- [x] Projects: ✅ 2025-02-15
+	- [x] 'Projects' tab ✅ 2025-02-15
 		- [x] 'Name', 'Created' and 'Description' columns should be spreaded evenly. ✅ 2025-02-14
 		- [x] Change 'Creating date' to 'Created' ✅ 2025-02-14
 		- [x] While projects data is loading 'Clear' button is marked as clickable. Make it so be default this button is disabled, but upon first loaded data, it is enabled. Same with 'Purchases' tab collection ✅ 2025-02-14
-	- [ ] 'Add' tab
+	- [x] 'Add' tab ✅ 2025-02-15
 		- [x] 'Avaiable' Components should have more implicit name like 'User's avaiable components' ✅ 2025-02-14
 - [ ] Overall
-	- [ ] Change basic color of selection etc..
+	- [x] Change basic color of selection [[Change theme color]] ✅ 2025-02-15
 - [ ] Create Installer
-	- [ ] Windows
+	- [x] Windows ✅ 2025-02-15
+		- [x] What about config files in users directory? It is managed by DesktopClient ✅ 2025-02-15
 	- [ ] Linux?
 	- [ ] Mac?
 - [ ] Server
 	- [ ] Dataseeders
 		- [ ] Default dataset should contain only Components/Categories/Suppliers tables.
 		- [ ] Excel based DataSeeder in necessary.
+- [ ] CI/CD
+	- [ ] Implement Pipeline for DesktopClient via github actions.

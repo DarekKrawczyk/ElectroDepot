@@ -11,7 +11,13 @@
   </Application.DataTemplates>
 
   <Application.Styles>
-    <FluentTheme/>
+    <FluentTheme>
+      <FluentTheme.Palettes>
+        <ColorPaletteResources x:Key="Light" Accent="#ff2a70a2" AltHigh="White" AltLow="White" AltMedium="White" AltMediumHigh="White" AltMediumLow="White" BaseHigh="Black" BaseLow="#ffcccccc" BaseMedium="#ff898989" BaseMediumHigh="#ff5d5d5d" BaseMediumLow="#ff737373" ChromeAltLow="#ff5d5d5d" ChromeBlackHigh="Black" ChromeBlackLow="#ffcccccc" ChromeBlackMedium="#ff5d5d5d" ChromeBlackMediumLow="#ff898989" ChromeDisabledHigh="#ffcccccc" ChromeDisabledLow="#ff898989" ChromeGray="#ff737373" ChromeHigh="#ffcccccc" ChromeLow="#ffececec" ChromeMedium="#ffe6e6e6" ChromeMediumLow="#ffececec" ChromeWhite="White" ListLow="#ffe6e6e6" ListMedium="#ffcccccc" RegionColor="White" />
+        <ColorPaletteResources x:Key="Dark" Accent="#ff2a70a2" AltHigh="Black" AltLow="Black" AltMedium="Black" AltMediumHigh="Black" AltMediumLow="Black" BaseHigh="White" BaseLow="#ff333333" BaseMedium="#ff9a9a9a" BaseMediumHigh="#ffb4b4b4" BaseMediumLow="#ff676767" ChromeAltLow="#ffb4b4b4" ChromeBlackHigh="Black" ChromeBlackLow="#ffb4b4b4" ChromeBlackMedium="Black" ChromeBlackMediumLow="Black" ChromeDisabledHigh="#ff333333" ChromeDisabledLow="#ff9a9a9a" ChromeGray="Gray" ChromeHigh="Gray" ChromeLow="#ff151515" ChromeMedium="#ff1d1d1d" ChromeMediumLow="#ff2c2c2c" ChromeWhite="White" ListLow="#ff1d1d1d" ListMedium="#ff333333" RegionColor="Black" />
+      </FluentTheme.Palettes>
+    </FluentTheme>
+
     <themes:RangeSliderTheme />
     <StyleInclude Source="avares://AvaloniaProgressRing/Styles/ProgressRing.xaml"/>
     <StyleInclude Source="avares://ElectroDepot/Styles/AppDefaultStyles.axaml"/>
@@ -63,13 +69,6 @@
         <ResourceInclude Source='avares://ElectroDepot/UserInterfaceElements/PreviousPageButton.axaml' />
         <ResourceInclude Source='avares://ElectroDepot/CustomControls/ImageSelector.axaml' />
         <ResourceInclude Source='avares://ElectroDepot/CustomControls/SupplierNodeButton.axaml' />
-        <ResourceInclude Source='avares://ElectroDepot/CustomControls/ComponentNodeButton.axaml' />
-        <ResourceInclude Source='avares://ElectroDepot/CustomControls/ProjectNodeButton.axaml' />
-        <ResourceInclude Source='avares://ElectroDepot/Templates/MenuButton.axaml' />
-        <ResourceInclude Source='avares://ElectroDepot/Templates/General_Use_Menu_Button.axaml' />
-        <ResourceInclude Source='avares://ElectroDepot/Templates/Menu_Project_Node.axaml' />
-        <ResourceInclude Source='avares://ElectroDepot/Templates/Menu_Bought_Component_Node.axaml' />
-        <ResourceInclude Source='avares://ElectroDepot/Templates/Supplier_Node.axaml' />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
     <FontFamily x:Key="Roboto">avares://ElectroDepot/Assets#Roboto</FontFamily>

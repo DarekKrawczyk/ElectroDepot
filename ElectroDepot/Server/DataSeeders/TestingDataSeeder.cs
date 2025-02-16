@@ -286,8 +286,9 @@ public static class TestingDataSeeder
             context.PurchaseItems.AddRange(purchaseItems);
             await context.SaveChangesAsync();
 
-            ImageStorageService ISS = new ImageStorageService(AppDomain.CurrentDomain.BaseDirectory);
+            ImageStorageService ISS = ImageStorageService.CreateService();
             ISS.Initialize();
+            ISS.DeleteAllImages();
 
             byte[] image = File.ReadAllBytes("D:\\Repo\\ElectronDepot\\ElectroDepot\\ElectroDepotClassLibraryTests\\Assets\\image2.png");
             List<string> imageIDS = new List<string>();
