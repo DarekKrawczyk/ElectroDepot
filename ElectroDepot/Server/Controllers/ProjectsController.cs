@@ -10,16 +10,10 @@ namespace Server.Controllers
 {
     [Route("ElectroDepot/[controller]")]
     [ApiController]
-    public class ProjectsController : ControllerBase
+    public class ProjectsController : CustomControllerBase
     {
-        private readonly DatabaseContext _context;
-        private readonly ImageStorageService ISS;
-
-        public ProjectsController(DatabaseContext context)
+        public ProjectsController(DatabaseContext context) : base(context)
         {
-            _context = context;
-            ISS = ImageStorageService.CreateService();
-            ISS.Initialize();
         }
         #region Create
         /// <summary>
@@ -30,14 +24,14 @@ namespace Server.Controllers
         [HttpPost("Create")]
         public async Task<ActionResult<ProjectDTO>> CreateProject(CreateProjectDTO project)
         {
-            Project newProject = project.ToProject(ISS);
+            Project newProject = project.ToProject(_imageStorageService);
 
             newProject.CreatedAt = DateTime.Now;
 
             _context.Projects.Add(newProject);
             await _context.SaveChangesAsync();
 
-            return Ok(newProject.ToProjectDTO(ISS));
+            return Ok(newProject.ToProjectDTO(_imageStorageService));
         }
         #endregion
         #region Read
@@ -48,7 +42,7 @@ namespace Server.Controllers
         [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<ProjectDTO>>> GetAllProjects()
         {
-            return await _context.Projects.Select(x => x.ToProjectDTO(ISS)).ToListAsync();
+            return await _context.Projects.Select(x => x.ToProjectDTO(_imageStorageService)).ToListAsync();
         }
 
         /// <summary>
@@ -66,7 +60,7 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            return await _context.Projects.Where(x => x.UserID == ID).Select(x => x.ToProjectDTO(ISS)).ToListAsync();
+            return await _context.Projects.Where(x => x.UserID == ID).Select(x => x.ToProjectDTO(_imageStorageService)).ToListAsync();
         }
 
         [HttpGet("GetProjectOfProjectComponent/{ProjectComponentID}")]
@@ -81,7 +75,7 @@ namespace Server.Controllers
 
             Project? project = await _context.Projects.Where(x => x.ProjectID == pc.ProjectID).FirstOrDefaultAsync();
 
-            return Ok(project.ToProjectDTO(ISS));
+            return Ok(project.ToProjectDTO(_imageStorageService));
         }
 
         /// <summary>
@@ -99,7 +93,7 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            return project.ToProjectDTO(ISS);
+            return project.ToProjectDTO(_imageStorageService);
         }
 
         /// <summary>
@@ -117,7 +111,7 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            byte[] image = ISS.RetrieveProjectImage(project.ImageURI);
+            byte[] image = _imageStorageService.RetrieveProjectImage(project.ImageURI);
 
             return Ok(image);
         }
@@ -207,7 +201,7 @@ namespace Server.Controllers
                                                                           ShortDescription = components.ShortDescription,
                                                                           LongDescription = components.LongDescription
                                                                       }).ToListAsync();
-                return Ok(componentsFromProject.Select(x=>x.ToDTOWithImage(ISS)));
+                return Ok(componentsFromProject.Select(x=>x.ToDTOWithImage(_imageStorageService)));
             }
             catch (Exception exception)
             {
@@ -239,7 +233,7 @@ namespace Server.Controllers
                 await _context.SaveChangesAsync();
                 try
                 {
-                    ISS.UpdateProjectImage(project.ImageURI, projectDTO.Image);
+                    _imageStorageService.UpdateProjectImage(project.ImageURI, projectDTO.Image);
                 }
                 catch (Exception exception)
                 {
@@ -258,7 +252,7 @@ namespace Server.Controllers
                 }
             }
 
-            return Ok(project.ToProjectDTO(ISS));
+            return Ok(project.ToProjectDTO(_imageStorageService));
         }
         #endregion
         #region Delete
@@ -278,7 +272,7 @@ namespace Server.Controllers
 
             try
             {
-                ISS.RemoveProjectImage(imageURI);
+                _imageStorageService.RemoveProjectImage(imageURI);
             }
             catch (Exception exception)
             {

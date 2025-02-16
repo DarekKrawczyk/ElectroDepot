@@ -55,13 +55,19 @@
 - [ ] Overall
 	- [x] Change basic color of selection [[Change theme color]] ✅ 2025-02-15
 - [ ] Create Installer
-	- [x] Windows ✅ 2025-02-15
-		- [x] What about config files in users directory? It is managed by DesktopClient ✅ 2025-02-15
-	- [ ] Linux?
-	- [ ] Mac?
+	- [x] Desktop ✅ 2025-02-16
+		- [x] Windows ✅ 2025-02-15
+			- [x] What about config files in users directory? It is managed by DesktopClient ✅ 2025-02-15
+		- [x] Linux? ✅ 2025-02-16
+		- [x] Mac? ✅ 2025-02-16
+	- [ ] Server
+		- [ ] Windows
 - [ ] Server
 	- [ ] Dataseeders
 		- [ ] Default dataset should contain only Components/Categories/Suppliers tables.
 		- [ ] Excel based DataSeeder in necessary.
+		- [x] So i have refactored seeders a bit but. In case of Inline seeders 'Those defined in code' lets not touch them because refactoring them will take a lot of manual labor. It is better to focus on excel seeders, and in those seeders provide accurate Components-with-proper-image etc.. ✅ 2025-02-16
 - [ ] CI/CD
 	- [ ] Implement Pipeline for DesktopClient via github actions.
+
+![[Pasted image 20250217013707.png]]

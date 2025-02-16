@@ -1,37 +1,59 @@
-﻿using ElectroDepotClassLibrary.DTOs;
-using ElectroDepotClassLibrary.Models;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Text.Json;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using System.IO.Compression;
+using System.Text;
 
 namespace ElectroDepotClassLibrary.Services
 {
     public class ImageStorageService
     {
-        private class ServerConfig
-        {
-            public string StoragePath { get; set; }
-        }
-
         private string _path;
         private string RootFolder = "ImageStorage";
         private string UsersFolder = "Users";
         private string ProjectsFolder = "Projects";
         private string ComponentsFolder = "Components";
-        private string FullProjectFolder { get { return _path + RootFolder + "\\" + ProjectsFolder + "\\"; } }
-        private string FullComponentsFolder { get { return _path + RootFolder + "\\" + ComponentsFolder + "\\"; } }
-        private string FullUsersFolder { get { return _path + RootFolder + "\\" + UsersFolder + "\\"; } }
-
-        public string DefaultConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)) + "\\ElectroDepotServer\\";
-        public string ConfigFilePath
+        private string FullRootFolder
         {
             get
             {
-                return DefaultConfigPath + "server_config.json";
+                return Path.Combine(new string[] { _path, RootFolder });
             }
         }
+        private string FullProjectFolder 
+        { 
+            get 
+            { 
+                //return _path + "\\" + RootFolder + "\\" + ProjectsFolder + "\\";
+                return Path.Combine(new string[] { _path, RootFolder, ProjectsFolder });
+            } 
+        }
+        private string FullComponentsFolder 
+        { 
+            get 
+            { 
+                return Path.Combine(new string[] { _path, RootFolder, ComponentsFolder });
+            } 
+        }
+        private string FullUsersFolder 
+        { 
+            get 
+            { 
+                return Path.Combine(new string[] { _path, RootFolder, UsersFolder });
+            } 
+        }
+
         private static ImageStorageService _selfInstance;
         private ImageStorageService() { }
+
+        private bool _requiresSeeding = true;
+
+        public bool RequiresSeeding
+        {
+            get
+            {
+                return _requiresSeeding;
+            }
+        }
 
         public static ImageStorageService CreateService()
         {
@@ -42,9 +64,9 @@ namespace ElectroDepotClassLibrary.Services
             return _selfInstance;
         }
 
-        public void Initialize()
+        public void Initialize(string storagePath)
         {
-            InitializeConfig();
+            _path = storagePath;
             InitializeFolders();
         }
 
@@ -52,9 +74,9 @@ namespace ElectroDepotClassLibrary.Services
         {
             try
             {
-                if (Directory.Exists(_path))
+                if (Directory.Exists(FullRootFolder))
                 {
-                    Directory.Delete(_path, true);
+                    Directory.Delete(FullRootFolder, true);
                     Console.WriteLine("Directory deleted successfully.");
                 }
                 else
@@ -65,43 +87,6 @@ namespace ElectroDepotClassLibrary.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        private void InitializeConfig()
-        {
-            User savedUser = null;
-            if (!File.Exists(ConfigFilePath))
-            {
-                Directory.CreateDirectory(DefaultConfigPath);
-
-                if (!File.Exists(ConfigFilePath))
-                {
-                    using (File.Create(ConfigFilePath)) { }
-                }
-
-                ServerConfig settings = new ServerConfig()
-                {
-                    StoragePath = $"{DefaultConfigPath}"
-                };
-
-                string jsonCreate = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
-
-                File.WriteAllText(ConfigFilePath, jsonCreate);
-
-            }
-
-            JsonSerializerOptions options = new JsonSerializerOptions();
-            options.PropertyNameCaseInsensitive = true;
-
-            var json = File.ReadAllText(ConfigFilePath);
-            ServerConfig savedConfig = JsonSerializer.Deserialize<ServerConfig>(json, options);
-
-            _path = savedConfig.StoragePath;
-
-            if (!Directory.Exists(savedConfig.StoragePath))
-            {
-                throw new Exception($"Image storage folder does not exist! Please check server config file at {DefaultConfigPath}");
             }
         }
 
@@ -125,8 +110,9 @@ namespace ElectroDepotClassLibrary.Services
             using (MemoryStream ms = new MemoryStream(imageByteArray))
             {
                 string imageName = GenerateNameForImage(FullProjectFolder);
-                Image image = Image.FromStream(ms);
-                image.Save(folder + imageName + "." + ImageFormat.Png.ToString().ToLower(), ImageFormat.Png);
+                Image image = Image.Load(ms);
+                //var image = ; //, "." + ImageFormat.Png.ToString().ToLower()
+                image.Save(Path.Combine(folder, imageName), new PngEncoder());
                 return imageName;
             }
         }
@@ -150,14 +136,15 @@ namespace ElectroDepotClassLibrary.Services
         {
             using (MemoryStream ms = new MemoryStream(imageByteArray))
             {
-                string fullPath = folder + imageName + ".png";
+                //string fullPath = folder + imageName + ".png";
+                string fullPath = Path.Combine(folder, imageName);
 
                 // Remove current
                 RemoveImage(folder, imageName);
 
                 // Replace it with new
-                Image image = Image.FromStream(ms);
-                image.Save(fullPath, ImageFormat.Png);
+                Image image = Image.Load(ms);
+                image.Save(fullPath, new PngEncoder());
             }
         }
 
@@ -178,7 +165,8 @@ namespace ElectroDepotClassLibrary.Services
 
         private byte[] RetrieveImage(string folder, string imageName)
         {
-            string fullPath = folder + imageName + ".png";
+            //string fullPath = folder + imageName + ".png";
+            string fullPath = Path.Combine(folder, imageName);
             if (File.Exists(fullPath))
             {
                 return File.ReadAllBytes(fullPath);
@@ -201,7 +189,8 @@ namespace ElectroDepotClassLibrary.Services
 
         public void RemoveImage(string folder, string imageName)
         {
-            string fullPath = folder + imageName + ".png";
+            //string fullPath = folder + imageName + ".png";
+            string fullPath = Path.Combine(folder, imageName);
             if (File.Exists(fullPath))
             {
                 File.Delete(fullPath);
@@ -226,26 +215,68 @@ namespace ElectroDepotClassLibrary.Services
 
         private void InitializeFolders()
         {
+            bool rootFolderExists = true;
+            bool componentsFolderExists = true;
+            bool projectsFolderExists = true;
+            bool usersFolderExists = true;
+
             if (Directory.Exists(_path))
             {
-                if (!Directory.Exists(_path + RootFolder))
+                rootFolderExists = Directory.Exists(FullRootFolder);
+                if (rootFolderExists == false)
                 {
-                    // Create it
-                    Directory.CreateDirectory(_path + RootFolder);
-                    if (!Directory.Exists(_path + RootFolder + "\\" + UsersFolder))
-                    {
-                        Directory.CreateDirectory(_path + RootFolder + "\\" + UsersFolder);
-                    }
+                    Directory.CreateDirectory(FullRootFolder);
+                }
 
-                    if (!Directory.Exists(_path + RootFolder + "\\" + ProjectsFolder))
-                    {
-                        Directory.CreateDirectory(_path + RootFolder + "\\" + ProjectsFolder);
-                    }
+                componentsFolderExists = Directory.Exists(FullComponentsFolder);
+                if (componentsFolderExists == false)
+                {
+                    Directory.CreateDirectory(FullComponentsFolder);
+                }
 
-                    if (!Directory.Exists(_path + RootFolder + "\\" + ComponentsFolder))
-                    {
-                        Directory.CreateDirectory(_path + RootFolder + "\\" + ComponentsFolder);
-                    }
+                projectsFolderExists = Directory.Exists(FullProjectFolder);
+                if (projectsFolderExists == false)
+                {
+                    Directory.CreateDirectory(FullProjectFolder);
+                }
+
+                usersFolderExists = Directory.Exists(FullUsersFolder);
+                if (usersFolderExists == false)
+                {
+                    Directory.CreateDirectory(FullUsersFolder);
+                }
+            }
+            else
+            {
+                throw new Exception($"Folder '{_path}' provided in config file doesn't exsit!");
+            }
+
+            _requiresSeeding = rootFolderExists == false || componentsFolderExists == false || projectsFolderExists == false || usersFolderExists == false;
+
+            if(_requiresSeeding == true)
+            {
+                // create backup to zip and dump content
+                DateTime time = DateTime.Now;
+                StringBuilder sb = new StringBuilder();
+                sb.Append("ImagesServiceBackup-");
+                sb.Append(time.Day);
+                sb.Append("-");
+                sb.Append(time.Month);
+                sb.Append("-");
+                sb.Append(time.Year);
+                sb.Append("-");
+                sb.Append(time.Hour);
+                sb.Append("-");
+                sb.Append(time.Minute);
+                sb.Append("-");
+                sb.Append(time.Second);
+                sb.Append(".zip");
+
+                string path = Path.Combine(_path, sb.ToString());
+
+                if (!File.Exists(path))
+                {
+                    ZipFile.CreateFromDirectory(FullRootFolder, path);
                 }
             }
         }

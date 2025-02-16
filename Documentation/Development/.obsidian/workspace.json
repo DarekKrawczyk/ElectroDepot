@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "DesktopClient/TODO.md",
+                "file": "Improvement road-map.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "TODO"
+              "title": "Improvement road-map"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "DesktopClient/TODO.md",
+                "file": "Improvement road-map.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for TODO"
+              "title": "Backlinks for Improvement road-map"
             }
           },
           {
@@ -172,15 +172,21 @@
   "active": "4026d331557b9c4a",
   "lastOpenFiles": [
     "Change theme color.md",
+    "Improvement road-map.md",
+    "Pasted image 20250217195305.png",
+    "Server.md",
+    "DesktopClient/DesktopClient.md",
     "DesktopClient/TODO.md",
+    "Server/Bugfixes.md",
+    "Server/How to run Docker.md",
+    "Pasted Image 20250207010446_784.png",
+    "Pasted image 20250217013707.png",
+    "Server",
     "Excalidraw/Drawing 2025-02-07 01.04.02.excalidraw.md",
     "Excalidraw/Drawing 2025-02-07 00.47.13.excalidraw.md",
     "DesktopClient/UI Refactoring/Projects collection layout.md",
     "DesktopClient/UI Refactoring/Projects add tab refactoring.md",
-    "Pasted Image 20250207010446_784.png",
     "DesktopClient/UI Refactoring/Edit tab refactoring.md",
-    "DesktopClient/DesktopClient.md",
-    "Server.md",
     "Projects Preview",
     "Excalidraw",
     "DesktopClient/UI Refactoring",

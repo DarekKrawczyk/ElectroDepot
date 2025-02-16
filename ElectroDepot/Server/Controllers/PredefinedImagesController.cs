@@ -8,13 +8,10 @@ namespace Server.Controllers
 {
     [Route("ElectroDepot/[controller]")]
     [ApiController]
-    public class PredefinedImagesController : ControllerBase
+    public class PredefinedImagesController : CustomControllerBase
     {
-        private readonly DatabaseContext _context;
-
-        public PredefinedImagesController(DatabaseContext context)
+        public PredefinedImagesController(DatabaseContext context) : base(context)
         {
-            _context = context;
         }
 
         /// <summary>

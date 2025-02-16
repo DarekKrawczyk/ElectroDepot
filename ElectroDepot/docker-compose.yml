@@ -1,0 +1,38 @@
+services:
+  server:
+    image: "darekkrawczyk/electrodepot-apiserver:latest"
+    container_name: "electrodepot-apiserver"
+    build:
+      context: .
+      dockerfile: Server/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      - mssqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - apivolume:/home/app/Services
+    networks:
+    - productnetwork
+    restart: on-failure
+
+  mssqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: "mssqlserver"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Password123"
+    ports:
+      - "1433:1433" 
+    volumes:
+      - sqlvolume:/var/opt/mssql
+    networks:
+      - productnetwork
+      
+networks:
+  productnetwork:
+volumes:
+  sqlvolume:
+  apivolume:  
