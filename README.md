@@ -149,7 +149,7 @@ If you experience issues logging into the server, it may indicate an **invalid s
 1. Close **ElectroDepot**.
 2. Navigate to `%appdata%` on your **Windows** machine.
 3. Locate and open the following file:
-``` json
+```
 AppData\Roaming\ElectroDepot\server.json
 ```
 4. The file should look like this:
