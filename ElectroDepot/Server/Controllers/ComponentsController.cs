@@ -10,16 +10,10 @@ namespace Server.Controllers
 {
     [Route("ElectroDepot/[controller]")]
     [ApiController]
-    public class ComponentsController : ControllerBase
+    public class ComponentsController : CustomControllerBase
     {
-        private readonly DatabaseContext _context;
-        private readonly ImageStorageService ISS;
-
-        public ComponentsController(DatabaseContext context)
+        public ComponentsController(DatabaseContext context) : base(context)
         {
-            _context = context;
-            ISS = ImageStorageService.CreateService();
-            ISS.Initialize();
         }
         #region Create
         /// <summary>
@@ -36,7 +30,7 @@ namespace Server.Controllers
             }
 
             Component newComponent = component.ToModel();
-            newComponent.ImageURI = ISS.InsertComponentImage(component.Image);
+            newComponent.ImageURI = _imageStorageService.InsertComponentImage(component.Image);
 
             _context.Components.Add(newComponent);
             await _context.SaveChangesAsync();
@@ -53,7 +47,7 @@ namespace Server.Controllers
         [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<ComponentDTO>>> GetComponents()
         {
-            return Ok(await _context.Components.Select(x=>x.ToDTOWithImage(ISS)).ToListAsync());
+            return Ok(await _context.Components.Select(x=>x.ToDTOWithImage(_imageStorageService)).ToListAsync());
         }
 
         [HttpGet("GetImageOfComponent/{ComponentID}")]
@@ -69,7 +63,7 @@ namespace Server.Controllers
                     return NotFound();
                 }
 
-                image = ISS.RetrieveComponentImage(component.ImageURI);
+                image = _imageStorageService.RetrieveComponentImage(component.ImageURI);
             }
             catch(Exception ex)
             {
@@ -111,7 +105,7 @@ namespace Server.Controllers
                 return NotFound();
             }
 
-            return component.ToDTOWithImage(ISS);
+            return component.ToDTOWithImage(_imageStorageService);
         }
 
         /// <summary>
@@ -227,7 +221,7 @@ namespace Server.Controllers
                                                                     LongDescription = component.LongDescription,
                                                                     ImageURI = component.ImageURI,
                                                                 }).ToListAsync();
-                return Ok(usersComponents.Select(x => x.ToDTOWithImage(ISS)));
+                return Ok(usersComponents.Select(x => x.ToDTOWithImage(_imageStorageService)));
             }
             catch (Exception ex)
             {

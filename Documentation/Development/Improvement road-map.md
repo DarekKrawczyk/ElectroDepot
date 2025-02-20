@@ -1,0 +1,48 @@
+- Home
+	- Hovering over pie-chart that has price that cannot be displayed as a number between 0,00 and 0,99 results a string like 0,989535
+	- Black labels on pie-chart doesn't look appealing
+	- When Projects/Charts/Purchases section in home tab are empty they should displayed some default value like "Currently there are not projects".
+	- If project name in home tab exceeds some length, the box that it is displayed into gives strange visual results. Same thing happen with purchases. Therefore there should be better way te display such information.
+	- Labels like "Projects" and "Recent" should be aligned like they are in projects section.
+	- Suppliers don't fit into section they are stored at home page.
+- Components
+	- Images should be displayed with some margin.
+	- Maybe text details should be displayed like on Digi Key, aligned to upper-left part of box.
+	- Available values becomes negative once component is used in some project. Apparently it doesn't take into account amount of bought components.
+	- Description field is obsolete. There should be some 'Details' column with some stacked information about IC.
+	- When 'Components' collection is empty, there should be some default label or even enty id Data Grid that says that collection is empty. Because for now you can't tell if components are loading or there aren't any.
+	- 'Search in suppliers' functionality could be added to Context Menu of row of Data Grid. This feature could be used in other places.
+	- Add section could be implemented like other 'Add' sections, 'Delete' button enabled only if changes were applied to field.
+	- Fix this annoying visual bug when switching between Collection->Preview (exists in Projects/Purchases as well)
+	- Implement sorting (It is buggy so it doesn't work for Projects and Purchases as well).
+	- When components are loading there should be some sort of indicator like spinning wheel, till all of the components are not loaded.
+	- Maybe categorizes should have default images assigned to them and upon creating of component the default picture of this category should be assigned to component (with possibility to edit of course).
+- Projects:
+	- Same as Components.
+	- Date is buggy. User should not be allowed to use 'From' date that is greater than 'To' date.
+	- There are multiple instances of the same item in 'Components Your purchased components' section.
+	- After modification of the Project and navigating to Project collection tab. Project is not changed. Maybe there should be call to update Projects Collection?
+	- There should be possibility to edit Projects components collection. Because for now it isn't possible because of implementation issues.
+	- It should be possible to update not only basic data of project but also fields like Image. For now backed doesn't provide such functionalities.
+- Purchases:
+	- Same as Components and Projects
+	- Clear button is enabled while purchases are loading.
+	- Components in 'Add' tab should be sorted by added date.
+	- Category filter filter items in combo-box are not visible.
+	- Implement Import tab.
+	- Implement raport generation (same for projects)
+	- Implement Open cart functionality (opens supplier website with cart of purchase)
+- Suppliers
+	- Create tab or some form of dialogbox to enable adding supplier. You can use this https://github.com/AvaloniaUtils/DialogHost.Avalonia
+- Categories
+	- There should be a way to add categories. I might use DialogHost.
+- Visual changes
+	- After using 'Docker Desktop' application i found it very pleasing to look at. Maybe I can implement something similarly looking in ElectroDepot?
+	- Enable fullscreen option.
+	- Adjust used images so they no longer slide once changes are applied to app resolution.
+- Data seeding
+	- It should be possible to implement some sort of data seeders that are based on excel file. This can be useful because with right abstraction. This code could be used to implement "Import" functionality (Components/Purchases)
+	- There should be some giant initial database setup for basic Components/Categories that is loaded oppon server initialization.
+- Server
+	- Procedure of configuration file handling, as well as image service loading should be re implemented,  because for now it works but it is messy.
+	- ImageStorageService should be re implemented or used with Dependency Injection because it is calling new constructor every time it is call by ANY endpoint!

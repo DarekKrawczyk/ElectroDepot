@@ -9,13 +9,10 @@ namespace Server.Controllers
 {
     [Route("ElectroDepot/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class CategoriesController : CustomControllerBase
     {
-        private readonly DatabaseContext _context;
-
-        public CategoriesController(DatabaseContext context)
+        public CategoriesController(DatabaseContext context) : base(context)
         {
-            _context = context;
         }
 
         #region Create

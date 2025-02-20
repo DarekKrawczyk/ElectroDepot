@@ -2,10 +2,11 @@
 using Server.Context;
 using Microsoft.EntityFrameworkCore;
 using ElectroDepotClassLibrary.Services;
+using Server.Services;
 
 public static class SingleUserTestingDataSeeder
 {
-    public static async Task SeedDataAsync(DatabaseContext context)
+    public static async Task SeedDataAsync(DatabaseContext context, ServerConfigService serverConfigService)
     {
         await context.ProjectComponents.ExecuteDeleteAsync();
         await context.PurchaseItems.ExecuteDeleteAsync();
@@ -23,23 +24,21 @@ public static class SingleUserTestingDataSeeder
 
         await context.SaveChangesAsync();
 
-        if (true)
-        {
-            List<User> users = new List<User>
+        List<User> users = new List<User>
             {
                 // Password 'admin123'
                 new User { Username = "Administrator", Password = "AQAAAAIAAYagAAAAELHVeAroaaRtW3+U5ucNcws+bWr6NFwk+Of3LeBU5tG3HSzctxU8wWRcyPNnfMbY0g==", Email = "admin@gmail.com", Name = "Administrator" },
             };
 
-            context.Users.AddRange(users);
-            await context.SaveChangesAsync();
+        context.Users.AddRange(users);
+        await context.SaveChangesAsync();
 
-            string fullPath = "D:\\Repo\\ElectronDepot\\ElectroDepot\\Server\\Assests\\";
-            string categoriesFullPath = fullPath + "Categories\\";
-            string predefinedTableFullPath = fullPath + "PredefinedImages\\";
-            string defaultComponentPath = predefinedTableFullPath + "1.png";
+        string fullPath = "D:\\Repo\\ElectronDepot\\ElectroDepot\\Server\\Assests\\";
+        string categoriesFullPath = fullPath + "Categories\\";
+        string predefinedTableFullPath = fullPath + "PredefinedImages\\";
+        string defaultComponentPath = predefinedTableFullPath + "1.png";
 
-            List<Category> categories = new List<Category>
+        List<Category> categories = new List<Category>
             {
                 new Category { Name = "Czujnik ciśnienia", Description = "Mierzy ciśnienie", Image = File.ReadAllBytes(categoriesFullPath + "Pressure.png")},
                 new Category { Name = "Czujnik czystości powietrza", Description = "Mierzy poziom czystości powietrza", Image = File.ReadAllBytes(categoriesFullPath + "AirQuality.png") },
@@ -60,11 +59,11 @@ public static class SingleUserTestingDataSeeder
                 new Category { Name = "Mikrokontroler", Description = "Programowo sterowany układ elektroniczny", Image = File.ReadAllBytes(categoriesFullPath + "Microcontroller.png") }
             };
 
-            context.Categories.AddRange(categories);
-            await context.SaveChangesAsync();
+        context.Categories.AddRange(categories);
+        await context.SaveChangesAsync();
 
-            // Seed Suppliers
-            List<Supplier> suppliers = new List<Supplier>
+        // Seed Suppliers
+        List<Supplier> suppliers = new List<Supplier>
             {
                 new Supplier { Name = "Other", Website = "https://www.google.com/", Image = File.ReadAllBytes(fullPath + "OtherIcon.png") },
                 new Supplier { Name = "DigiKey", Website = "https://www.digikey.pl/", Image = File.ReadAllBytes(fullPath + "DigiKeyIcon.png") },
@@ -75,13 +74,13 @@ public static class SingleUserTestingDataSeeder
                 new Supplier { Name = "Allegro", Website = "https://allegro.pl/", Image = File.ReadAllBytes(fullPath + "AllegroIcon.png") },
                 new Supplier { Name = "AliExpress", Website = "https://pl.aliexpress.com/", Image = File.ReadAllBytes(fullPath + "AliexpressIcon.png") },
             };
-            context.Suppliers.AddRange(suppliers);
-            await context.SaveChangesAsync();
+        context.Suppliers.AddRange(suppliers);
+        await context.SaveChangesAsync();
 
-            ImageStorageService ISS = ImageStorageService.CreateService();
-            ISS.Initialize();
+        ImageStorageService ISS = ImageStorageService.CreateService();
+        ISS.Initialize(serverConfigService.ConfigFilePath);
 
-            List<Component> components = new List<Component>
+        List<Component> components = new List<Component>
             {
                 // Czujniki ciśnienia
                 new Component
@@ -289,7 +288,7 @@ public static class SingleUserTestingDataSeeder
                     ShortDescription = "Carbon dioxide (CO2) sensor",
                     LongDescription = "High-precision CO2 sensor ideal for indoor air quality monitoring.",
                     ImageURI = ISS.InsertComponentImage(File.ReadAllBytes(defaultComponentPath)),
-                    DatasheetLink = "", 
+                    DatasheetLink = "",
                     CategoryID = categories[4].CategoryID
                 },
                 new Component
@@ -967,10 +966,10 @@ public static class SingleUserTestingDataSeeder
                     CategoryID = categories[16].CategoryID
                 },
             };
-            context.Components.AddRange(components);
-            await context.SaveChangesAsync();
+        context.Components.AddRange(components);
+        await context.SaveChangesAsync();
 
-            List<Purchase> purchases = new List<Purchase>
+        List<Purchase> purchases = new List<Purchase>
             {
                 new Purchase { UserID = users[0].UserID, SupplierID = suppliers[0].SupplierID, PurchasedDate = new DateTime(2024, 10, 14, 0, 0, 0), TotalPrice = 150.50 },
                 new Purchase { UserID = users[0].UserID, SupplierID = suppliers[1].SupplierID, PurchasedDate = new DateTime(2024, 10, 15, 0, 0, 0), TotalPrice = 320.75 },
@@ -989,10 +988,10 @@ public static class SingleUserTestingDataSeeder
                 new Purchase { UserID = users[0].UserID, SupplierID = suppliers[1].SupplierID, PurchasedDate = new DateTime(2024, 10, 23, 0, 0, 0), TotalPrice = 210.50 },
                 new Purchase { UserID = users[0].UserID, SupplierID = suppliers[2].SupplierID, PurchasedDate = new DateTime(2024, 10, 23, 0, 0, 0), TotalPrice = 210.50 }
             };
-            context.Purchases.AddRange(purchases);
-            await context.SaveChangesAsync();
+        context.Purchases.AddRange(purchases);
+        await context.SaveChangesAsync();
 
-            List<PurchaseItem> purchaseItems = new List<PurchaseItem>
+        List<PurchaseItem> purchaseItems = new List<PurchaseItem>
             {
                 new PurchaseItem { PurchaseID = purchases[0].PurchaseID, ComponentID = components[77].ComponentID, Quantity = 1, PricePerUnit = 8.50 },
                 new PurchaseItem { PurchaseID = purchases[0].PurchaseID, ComponentID = components[2].ComponentID, Quantity = 1, PricePerUnit = 7.50 },
@@ -1048,17 +1047,17 @@ public static class SingleUserTestingDataSeeder
                 new PurchaseItem { PurchaseID = purchases[9].PurchaseID, ComponentID = components[45].ComponentID, Quantity = 1, PricePerUnit = 5.50 },
                 new PurchaseItem { PurchaseID = purchases[9].PurchaseID, ComponentID = components[46].ComponentID, Quantity = 1, PricePerUnit = 14.50 }
             };
-            context.PurchaseItems.AddRange(purchaseItems);
-            await context.SaveChangesAsync();
+        context.PurchaseItems.AddRange(purchaseItems);
+        await context.SaveChangesAsync();
 
-            byte[] image = File.ReadAllBytes("D:\\Repo\\ElectronDepot\\ElectroDepot\\ElectroDepotClassLibraryTests\\Assets\\image2.png");
-            List<string> imageIDS = new List<string>();
-            for (int i = 0; i < 14; i++)
-            {
-                imageIDS.Add(ISS.InsertProjectImage(image));
-            }
+        byte[] image = File.ReadAllBytes("D:\\Repo\\ElectronDepot\\ElectroDepot\\ElectroDepotClassLibraryTests\\Assets\\image2.png");
+        List<string> imageIDS = new List<string>();
+        for (int i = 0; i < 14; i++)
+        {
+            imageIDS.Add(ISS.InsertProjectImage(image));
+        }
 
-            List<Project> projects = new List<Project>
+        List<Project> projects = new List<Project>
             {
                 new Project { UserID = users[0].UserID, ImageURI = imageIDS[0], Name = "Smart Home System", Description = "System automatyzacji domu", CreatedAt = DateTime.Now },
                 new Project { UserID = users[0].UserID, ImageURI = imageIDS[1], Name = "Weather Station", Description = "Monitorowanie pogody", CreatedAt = DateTime.Now },
@@ -1075,10 +1074,10 @@ public static class SingleUserTestingDataSeeder
                 new Project { UserID = users[0].UserID, ImageURI = imageIDS[12], Name = "Voice Controlled Assistant", Description = "Asystent głosowy do sterowania urządzeniami w domu", CreatedAt = DateTime.Now },
                 new Project { UserID = users[0].UserID, ImageURI = imageIDS[13], Name = "Smart Thermostat", Description = "Inteligentny system zarządzania temperaturą w domu", CreatedAt = DateTime.Now }
             };
-            context.Projects.AddRange(projects);
-            await context.SaveChangesAsync();
+        context.Projects.AddRange(projects);
+        await context.SaveChangesAsync();
 
-            List<ProjectComponent> projectComponents = new List<ProjectComponent>
+        List<ProjectComponent> projectComponents = new List<ProjectComponent>
             {
                 new ProjectComponent { ProjectID = projects[0].ProjectID, ComponentID = components[77].ComponentID, Quantity = 1 },
                 new ProjectComponent { ProjectID = projects[0].ProjectID, ComponentID = components[2].ComponentID, Quantity = 1 },
@@ -1134,10 +1133,10 @@ public static class SingleUserTestingDataSeeder
                 new ProjectComponent { ProjectID = projects[13].ProjectID, ComponentID = components[45].ComponentID, Quantity = 1 },
                 new ProjectComponent { ProjectID = projects[13].ProjectID, ComponentID = components[46].ComponentID, Quantity = 1 }
             };
-            context.ProjectComponents.AddRange(projectComponents);
-            await context.SaveChangesAsync();
+        context.ProjectComponents.AddRange(projectComponents);
+        await context.SaveChangesAsync();
 
-            List<PredefinedImage> predefinedImages = new List<PredefinedImage>()
+        List<PredefinedImage> predefinedImages = new List<PredefinedImage>()
             {
                 new PredefinedImage(){ Name = "IC: Default", Category = "SMD", Image = File.ReadAllBytes(predefinedTableFullPath + "1.png") },
                 new PredefinedImage(){ Name = "IC: ", Category = "TH", Image = File.ReadAllBytes(predefinedTableFullPath + "2.png") },
@@ -1166,10 +1165,10 @@ public static class SingleUserTestingDataSeeder
                 new PredefinedImage(){ Name = "Diode", Category = "TH", Image = File.ReadAllBytes(predefinedTableFullPath + "25.png") },
                 new PredefinedImage(){ Name = "GPIO Header", Category = "TH", Image = File.ReadAllBytes(predefinedTableFullPath + "26.png") },
             };
-            context.PredefinedImage.AddRange(predefinedImages);
-            await context.SaveChangesAsync();
+        context.PredefinedImage.AddRange(predefinedImages);
+        await context.SaveChangesAsync();
 
-            List<OwnsComponent> ownsComponents = new List<OwnsComponent>
+        List<OwnsComponent> ownsComponents = new List<OwnsComponent>
             {
                 new OwnsComponent { UserID = users[0].UserID, ComponentID = components[0].ComponentID, Quantity = 2 },
                 new OwnsComponent { UserID = users[0].UserID, ComponentID = components[1].ComponentID, Quantity = 2 },
@@ -1215,8 +1214,7 @@ public static class SingleUserTestingDataSeeder
                 new OwnsComponent { UserID = users[0].UserID, ComponentID = components[83].ComponentID, Quantity = 6 }
             };
 
-            context.OwnsComponent.AddRange(ownsComponents);
-            await context.SaveChangesAsync();
-        }
+        context.OwnsComponent.AddRange(ownsComponents);
+        await context.SaveChangesAsync();
     }
 }
